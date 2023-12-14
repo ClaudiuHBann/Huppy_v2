@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace Huppy.Models
+namespace Huppy.Models;
+
+public partial class Package
 {
-class Package
-{
-    public int Id { get; set; } = 0;
-    public Guid Uuid { get; set; } = Guid.Empty;
-    public required List<int> Apps { get; set; }
-}
+    public int Id { get; set; }
+
+    public Guid Uuid { get; set; }
+
+    public int[] Apps { get; set; } = null!;
 }

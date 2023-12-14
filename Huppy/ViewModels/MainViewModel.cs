@@ -1,6 +1,13 @@
-﻿namespace Huppy.ViewModels;
+﻿using System.Linq;
 
-public partial class MainViewModel : ViewModelBase
+using Huppy.Models;
+
+namespace Huppy.ViewModels;
+
+public class MainViewModel
+(HuppyContext context) : ViewModelBase
 {
-    public string Greeting => "Welcome to Avalonia!";
+    readonly HuppyContext _context = context;
+
+    public string Greeting => _context.Apps.Count().ToString();
 }

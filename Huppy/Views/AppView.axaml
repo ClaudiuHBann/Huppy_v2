@@ -1,0 +1,45 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+             xmlns:vm="clr-namespace:Huppy.ViewModels"
+             mc:Ignorable="d"
+             x:Class="Huppy.Views.AppView"
+             x:DataType="vm:AppViewModel">
+
+	<ScrollViewer HorizontalScrollBarVisibility="Auto"
+				  VerticalScrollBarVisibility="Disabled">
+		<ItemsRepeater ItemsSource="{Binding Apps}" >
+
+			<ItemsRepeater.Layout>
+				<StackLayout Orientation="Horizontal"
+							 Spacing="15" />
+			</ItemsRepeater.Layout>
+
+			<ItemsRepeater.ItemTemplate>
+				<DataTemplate>
+
+					<StackPanel Width="125"
+								Height="100"
+							    PointerReleased="OnPointerReleasedApp"
+								Background="#FF9966">
+
+						<TextBlock Text="{Binding Name}"
+								   Margin="0, 5, 0, 0"
+								   FontSize="18"
+								   HorizontalAlignment="Center" />
+
+						<Image asyncImageLoader:ImageLoader.Source="{Binding Image}"
+							   Margin="0, 5, 0, 0"
+							   Width="60"/>
+
+					</StackPanel>
+
+				</DataTemplate>
+			</ItemsRepeater.ItemTemplate>
+
+		</ItemsRepeater>
+	</ScrollViewer>
+
+</UserControl>

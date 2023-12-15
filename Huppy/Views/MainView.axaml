@@ -6,6 +6,6 @@
 			 xmlns:views="clr-namespace:Huppy.Views"
              x:Class="Huppy.Views.MainView">
 
-	<views:CategoryView />
+	<views:HuppyView />
 
 </UserControl>

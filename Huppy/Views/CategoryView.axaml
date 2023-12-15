@@ -2,11 +2,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:vm="clr-namespace:Huppy.ViewModels"
+			 xmlns:viewModels="clr-namespace:Huppy.ViewModels"
 			 xmlns:views="clr-namespace:Huppy.Views"
-             mc:Ignorable="d"
+			 xmlns:models="clr-namespace:Huppy.Models"
              x:Class="Huppy.Views.CategoryView"
-             x:DataType="vm:CategoryViewModel">
+             x:DataType="viewModels:CategoryViewModel">
 
 	<ScrollViewer>
 		<ItemsRepeater ItemsSource="{Binding CategoryToApps}">

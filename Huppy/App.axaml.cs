@@ -29,12 +29,12 @@ public partial class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow =
-                new MainWindow { DataContext = ActivatorUtilities.CreateInstance<CategoryViewModel>(services) };
+                new MainWindow { DataContext = ActivatorUtilities.CreateInstance<HuppyViewModel>(services) };
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
             singleViewPlatform.MainView =
-                new MainView { DataContext = ActivatorUtilities.CreateInstance<CategoryViewModel>(services) };
+                new MainView { DataContext = ActivatorUtilities.CreateInstance<HuppyViewModel>(services) };
         }
 
         base.OnFrameworkInitializationCompleted();

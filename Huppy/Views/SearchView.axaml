@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:viewModels="clr-namespace:Huppy.ViewModels"
+			 xmlns:views="clr-namespace:Huppy.Views"
+			 xmlns:models="clr-namespace:Huppy.Models"
+			 x:DataType="viewModels:SearchViewModel"
+             x:Class="Huppy.Views.SearchView">
+
+	<Grid ColumnDefinitions="*, 250">
+
+		<TextBox Text="{Binding Search.Query, Mode=TwoWay}"
+				 Watermark="Search for an app or a category"
+				 VerticalAlignment="Center" />
+
+		<ComboBox Grid.Column="1"
+				  PlaceholderText="Choose a category"
+				  Margin="10, 0, 10, 0"
+				  HorizontalAlignment="Stretch"
+				  VerticalAlignment="Center"
+				  ItemsSource="{Binding Categories}">
+			
+			<ComboBox.ItemTemplate>
+				<DataTemplate>
+					
+					<TextBlock Text="{Binding Name}" />
+					
+				</DataTemplate>
+			</ComboBox.ItemTemplate>
+			
+		</ComboBox>
+
+	</Grid>
+
+</UserControl>

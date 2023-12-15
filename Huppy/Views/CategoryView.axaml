@@ -20,9 +20,12 @@
 
 					<StackPanel>
 
-						<TextBlock Text="{Binding Key.Name}" />
+						<TextBlock Text="{Binding Key.Name}"
+								   FontSize="22"
+								   Margin="10, 0, 0, 0" />
 
-						<views:AppView DataContext="{Binding Value}" />
+						<views:AppView DataContext="{Binding Value}"
+									   Margin="25, 10, 0, 0"/>
 
 					</StackPanel>
 

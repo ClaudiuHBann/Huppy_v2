@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vm="clr-namespace:Huppy.ViewModels"
+			 xmlns:views="clr-namespace:Huppy.Views"
+             mc:Ignorable="d"
+             x:Class="Huppy.Views.CategoryView"
+             x:DataType="vm:CategoryViewModel">
+
+	<ScrollViewer>
+		<ItemsRepeater ItemsSource="{Binding CategoryToApps}">
+
+			<ItemsRepeater.Layout>
+				<StackLayout Spacing="15" />
+			</ItemsRepeater.Layout>
+
+			<ItemsRepeater.ItemTemplate>
+				<DataTemplate>
+
+					<StackPanel>
+
+						<TextBlock Text="{Binding Key.Name}" />
+
+						<views:AppView DataContext="{Binding Value}" />
+
+					</StackPanel>
+
+				</DataTemplate>
+			</ItemsRepeater.ItemTemplate>
+
+		</ItemsRepeater>
+	</ScrollViewer>
+
+</UserControl>

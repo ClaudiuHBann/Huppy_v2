@@ -3,14 +3,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
-             xmlns:vm="clr-namespace:Huppy.ViewModels"
+             xmlns:m="clr-namespace:Huppy.Models"
              mc:Ignorable="d"
-             x:Class="Huppy.Views.AppView"
-             x:DataType="vm:AppViewModel">
+             x:Class="Huppy.Views.AppView">
 
 	<ScrollViewer HorizontalScrollBarVisibility="Auto"
 				  VerticalScrollBarVisibility="Disabled">
-		<ItemsRepeater ItemsSource="{Binding Apps}" >
+		<ItemsRepeater Loaded="OnLoadedItemsRepeaterApps">
 
 			<ItemsRepeater.Layout>
 				<StackLayout Orientation="Horizontal"
@@ -18,7 +17,7 @@
 			</ItemsRepeater.Layout>
 
 			<ItemsRepeater.ItemTemplate>
-				<DataTemplate>
+				<DataTemplate DataType="m:App">
 
 					<StackPanel Width="125"
 								Height="100"

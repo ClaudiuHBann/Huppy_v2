@@ -4,9 +4,19 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Huppy.ViewModels
 {
-public class AppViewModel
-(ObservableCollection<Models.App> apps) : ObservableObject
+    public class AppViewModel
+(ObservableCollection<AppV> apps, PackageViewModel packageViewModel) : ObservableObject
 {
-    public ObservableCollection<Models.App> Apps { get; set; } = apps;
+    public ObservableCollection<AppV> Apps { get; set; } = apps;
+
+    public void PackageAdd(AppV appView)
+    {
+        packageViewModel.Apps.Add(appView);
+    }
+
+    public void PackageRemove(AppV appView)
+    {
+        packageViewModel.Apps.Remove(appView);
+    }
 }
 }

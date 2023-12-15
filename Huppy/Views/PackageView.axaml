@@ -13,37 +13,42 @@
 	<StackPanel>
 
 		<TextBlock Text="Your Package:"
+				   FontSize="22"
+				   Margin="0, 10, 0, 5"
 				   HorizontalAlignment="Center" />
 
-		<ScrollViewer HorizontalScrollBarVisibility="Auto"
-				  VerticalScrollBarVisibility="Disabled">
-			<ItemsRepeater>
+		<ScrollViewer HorizontalScrollBarVisibility="Disabled">
+			<ItemsRepeater ItemsSource="{Binding Apps}">
 
 				<ItemsRepeater.Layout>
-					<StackLayout Orientation="Horizontal"
-								 Spacing="15" />
+					<StackLayout Spacing="10" />
 				</ItemsRepeater.Layout>
 
 				<ItemsRepeater.ItemTemplate>
-					<DataTemplate x:DataType="models:App">
+					<DataTemplate x:DataType="viewModels:AppV">
 
 						<Border ClipToBounds="True"
+								Margin="5, 0, 5, 0"
 								CornerRadius="10">
-							<StackPanel Width="125"
-										Height="100"
-										UseLayoutRounding="True"
-										Background="#FF9966">
+							<Grid ColumnDefinitions="40, *, 40"
+								  Height="50"
+								  UseLayoutRounding="True"
+								  Background="#FF9966">
 
-								<TextBlock Text="{Binding Name}"
-										   Margin="0, 5, 0, 0"
+								<Image asyncImageLoader:ImageLoader.Source="{Binding App.Image}"
+									   Margin="5, 0, 0, 0" />
+
+								<TextBlock Text="{Binding App.Name}"
+										   VerticalAlignment="Center"
+										   Grid.Column="1"
 										   FontSize="18"
-										   HorizontalAlignment="Center" />
+										   Margin="5, 0, 0, 0" />
 
-								<Image asyncImageLoader:ImageLoader.Source="{Binding Image}"
-									   Margin="0, 5, 0, 0"
-									   Width="60"/>
+								<Button Content="X"
+										Grid.Column="2"
+										Click="OnButtonClickRemove" />
 
-							</StackPanel>
+							</Grid>
 						</Border>
 
 					</DataTemplate>
@@ -51,7 +56,7 @@
 
 			</ItemsRepeater>
 		</ScrollViewer>
-		
+
 	</StackPanel>
-			 
+
 </UserControl>

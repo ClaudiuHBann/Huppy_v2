@@ -8,10 +8,12 @@
              x:Class="Huppy.Views.HuppyView"
              x:DataType="viewModels:HuppyViewModel">
 
-	<Grid ColumnDefinitions="20*, 80*">
+	<Grid ColumnDefinitions="200, *">
 
-		<views:PackageView />
+		<views:PackageView DataContext="{Binding PackageViewModel}" />
+
 		<views:CategoryView Grid.Column="1"
+							Margin="0, 10, 0, 0"
 							DataContext="{Binding CategoryViewModel}" />
 
 	</Grid>

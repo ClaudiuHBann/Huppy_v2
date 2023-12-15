@@ -1,5 +1,4 @@
 using Avalonia.Input;
-using Avalonia.Media;
 using Avalonia.Controls;
 
 using Huppy.ViewModels;
@@ -13,28 +12,23 @@ public partial class AppView : UserControl
         InitializeComponent();
     }
 
-    private void OnPointerReleasedApp(object? aSender, PointerReleasedEventArgs aArgs)
+    private void OnPointerReleasedApp(object? sender, PointerReleasedEventArgs e)
     {
-        if (aArgs.InitialPressMouseButton != MouseButton.Left || aSender is not StackPanel stackPanel)
+        if (e.InitialPressMouseButton != MouseButton.Left || sender is not StackPanel stackPanel ||
+            stackPanel.DataContext is not AppV appView || DataContext is not AppViewModel appViewModel)
         {
             return;
         }
 
-        var colorChecked = Brush.Parse("#FF9966");
-        var colorUnchecked = Brush.Parse("#00A550");
-        var isChecked = stackPanel.Background?.ToString() == colorChecked.ToString();
-
-        stackPanel.Background = isChecked ? colorUnchecked : colorChecked;
-    }
-
-    private void OnLoadedItemsRepeaterApps(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
-    {
-        if (sender is not ItemsRepeater itemsRepeater)
+        appView.IsChecked = !appView.IsChecked;
+        if (appView.IsChecked)
         {
-            return;
+            appViewModel.PackageAdd(appView);
         }
-
-        itemsRepeater.ItemsSource = (DataContext as AppViewModel)?.Apps;
+        else
+        {
+            appViewModel.PackageRemove(appView);
+        }
     }
 }
 }

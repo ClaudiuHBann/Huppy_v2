@@ -6,6 +6,6 @@ namespace Huppy.ViewModels
 {
 public class PackageViewModel : ObservableObject
 {
-    public ObservableCollection<App> Apps { get; set; } = [];
+    public ObservableCollection<AppV> Apps { get; set; } = [];
 }
 }

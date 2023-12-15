@@ -12,7 +12,7 @@
 		<ItemsRepeater ItemsSource="{Binding CategoryToApps}">
 
 			<ItemsRepeater.Layout>
-				<StackLayout Spacing="15" />
+				<StackLayout Spacing="10" />
 			</ItemsRepeater.Layout>
 
 			<ItemsRepeater.ItemTemplate>

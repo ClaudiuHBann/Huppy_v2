@@ -4,9 +4,14 @@ using Huppy.Models;
 
 namespace Huppy.ViewModels
 {
-public class HuppyViewModel
-(HuppyContext context) : ObservableObject
+public class HuppyViewModel : ObservableObject
 {
-    public CategoryViewModel CategoryViewModel { get; set; } = new(context);
+    public PackageViewModel PackageViewModel { get; set; } = new();
+    public CategoryViewModel CategoryViewModel { get; set; }
+
+    public HuppyViewModel(HuppyContext context)
+    {
+        CategoryViewModel = new(context, PackageViewModel);
+    }
 }
 }

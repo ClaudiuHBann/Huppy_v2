@@ -8,6 +8,9 @@ public partial class AppV
     public Models.App App { get; set; } = app;
 
     [ObservableProperty]
-    public bool isChecked;
+    public bool isVisible = false;
+
+    [ObservableProperty]
+    public bool isChecked = false;
 }
 }

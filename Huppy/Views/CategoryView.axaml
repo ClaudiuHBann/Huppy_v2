@@ -18,9 +18,9 @@
 			<ItemsRepeater.ItemTemplate>
 				<DataTemplate>
 
-					<StackPanel>
+					<StackPanel IsVisible="{Binding Key.IsVisible}">
 
-						<TextBlock Text="{Binding Key.Name}"
+						<TextBlock Text="{Binding Key.Category.Name}"
 								   FontSize="22"
 								   Margin="10, 0, 0, 0" />
 

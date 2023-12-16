@@ -11,10 +11,12 @@
 	<Grid ColumnDefinitions="*, 250">
 
 		<TextBox Text="{Binding Search.Query, Mode=TwoWay}"
-				 Watermark="Search for an app or a category"
+				 TextChanged="OnTextChangedQuery"
+				 Watermark="Search for apps"
 				 VerticalAlignment="Center" />
 
 		<ComboBox Grid.Column="1"
+				  SelectionChanged="OnSelectionChangedCategory"
 				  PlaceholderText="Choose a category"
 				  Margin="10, 0, 10, 0"
 				  HorizontalAlignment="Stretch"
@@ -24,7 +26,7 @@
 			<ComboBox.ItemTemplate>
 				<DataTemplate>
 					
-					<TextBlock Text="{Binding Name}" />
+					<TextBlock Text="{Binding Category.Name}" />
 					
 				</DataTemplate>
 			</ComboBox.ItemTemplate>

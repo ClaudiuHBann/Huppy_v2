@@ -27,6 +27,7 @@
 				<DataTemplate DataType="viewModels:AppV">
 
 					<Border ClipToBounds="True"
+							IsVisible="{Binding IsVisible}"
 							CornerRadius="10">
 						<StackPanel Width="125"
 									Height="100"

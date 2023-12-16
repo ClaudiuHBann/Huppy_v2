@@ -11,7 +11,7 @@ namespace Huppy.ViewModels
 public class CategoryViewModel : ObservableObject
 {
     // TODO: can we make this a map?
-    public ObservableCollection<KeyValuePair<Category, AppViewModel>> CategoryToApps { get; set; } = [];
+    public ObservableCollection<KeyValuePair<CategoryV, AppViewModel>> CategoryToApps { get; set; } = [];
 
     public CategoryViewModel(HuppyContext context, PackageViewModel packageViewModel)
     {
@@ -23,7 +23,7 @@ public class CategoryViewModel : ObservableObject
                 appViews.Add(new AppV(app));
             }
 
-            CategoryToApps.Add(new(group.Key, new(appViews, packageViewModel)));
+            CategoryToApps.Add(new(new(group.Key), new(appViews, packageViewModel)));
         }
     }
 }

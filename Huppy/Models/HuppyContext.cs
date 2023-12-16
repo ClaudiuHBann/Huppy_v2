@@ -84,7 +84,7 @@ public partial class HuppyContext : DbContext
 
                                          entity.Property(e => e.Id).ValueGeneratedNever().HasColumnName("id");
                                          entity.Property(e => e.Apps).HasColumnName("apps");
-                                         entity.Property(e => e.Uuid).HasColumnName("uuid");
+                                         entity.Property(e => e.Name).HasMaxLength(32).HasColumnName("name");
                                      });
 
         OnModelCreatingPartial(modelBuilder);

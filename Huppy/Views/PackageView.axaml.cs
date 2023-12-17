@@ -23,5 +23,41 @@ public partial class PackageView : UserControl
         appView.IsChecked = !appView.IsChecked;
         packageViewModel.Apps.Remove(appView);
     }
+
+    private void OnClickButtonCreatePackage(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not PackageViewModel packageViewModel || packageID.Text is null)
+        {
+            return;
+        }
+
+        packageViewModel.PackageCreate(int.Parse(packageID.Text), packageName.Text);
+    }
+
+    private void OnClickButtonEdit(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not PackageViewModel packageViewModel || packageID.Text is null || packageName.Text is null)
+        {
+            return;
+        }
+
+        packageID.Text = string.Empty;
+        packageName.Text = string.Empty;
+
+        packageViewModel.PackageUpdate(int.Parse(packageID.Text), packageName.Text);
+    }
+
+    private void OnClickButtonClear(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not PackageViewModel packageViewModel || packageID.Text is null || packageName.Text is null)
+        {
+            return;
+        }
+
+        packageID.Text = "None";
+        packageName.Text = "None";
+
+        packageViewModel.PackageClear();
+    }
 }
 }

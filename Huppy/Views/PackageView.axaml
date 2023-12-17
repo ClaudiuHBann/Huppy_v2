@@ -10,14 +10,18 @@
              x:Class="Huppy.Views.PackageView"
              x:DataType="viewModels:PackageViewModel">
 
-	<Grid RowDefinitions="50, *, 50, 80">
+	<Grid RowDefinitions="40, *, 40, 40, 30, 30"
+		  Background="#0E0E10"
+		  ColumnDefinitions="50*, 50*">
 
 		<TextBlock Text="Your Package:"
+				   Grid.ColumnSpan="2"
 				   FontSize="22"
-				   Margin="0, 10, 0, 5"
+				   VerticalAlignment="Center"
 				   HorizontalAlignment="Center" />
 
 		<ScrollViewer HorizontalScrollBarVisibility="Disabled"
+					  Grid.ColumnSpan="2"
 					  Grid.Row="1">
 			<ItemsRepeater ItemsSource="{Binding Apps}">
 
@@ -60,54 +64,60 @@
 
 		<Button Grid.Row="2"
 				Content="Create Package"
-				FontSize="22"
-				HorizontalAlignment="Center" />
+				Grid.ColumnSpan="2"
+				Click="OnClickButtonCreatePackage"
+			    FontSize="22"
+			    VerticalAlignment="Center"
+			    HorizontalAlignment="Center" />
 
-		<Border BorderBrush="White"
-				BorderThickness="2"
-				ClipToBounds="True"
-				CornerRadius="5"
-				Margin="5"
-				Grid.Row="3">
+		<Button Content="Clear"
+				Click="OnClickButtonClear"
+				Margin="0, 5, 0, 0"
+				Grid.Row="3"
+				FontSize="18"
+			    VerticalAlignment="Center"
+			    HorizontalAlignment="Center" />
+		
+		<Button Grid.Column="1"
+				Margin="0, 5, 0, 0"
+				Content="Edit"
+				Grid.Row="3"
+				Click="OnClickButtonEdit"
+				FontSize="18"
+			    VerticalAlignment="Center"
+			    HorizontalAlignment="Center" />
+
+		<StackPanel Grid.Row="4"
+					Orientation="Horizontal">
+					 
+			<TextBlock Text=" ID: "
+					   FontSize="18"
+					   VerticalAlignment="Center"
+					   HorizontalAlignment="Center" />
+
+			<TextBlock Text="None"
+					   x:Name="packageID"
+					   FontSize="18"
+			           VerticalAlignment="Center"
+			           HorizontalAlignment="Center" />
+					 
+		</StackPanel>
+
+		<StackPanel Grid.Row="5"
+					Orientation="Horizontal">
 			
-			<Grid ColumnDefinitions="55, *, 50"
-				  UseLayoutRounding="True"
-				  RowDefinitions="35, 35">
-				
-				<TextBlock Text="ID:"
-						   Margin="5, 0, 0, 0"
-						   VerticalAlignment="Center"
-						   FontSize="14" />
+			<TextBlock Text=" Name: "
+					   FontSize="18"
+			           VerticalAlignment="Center"
+			           HorizontalAlignment="Center" />
 
-				<TextBlock Text="None"
-						   x:Name="packageID"
-						   Grid.Column="1"
-						   VerticalAlignment="Center"
-						   FontSize="14" />
-
-				<Button Grid.Column="2"
-						Content="Edit"
-						FontSize="14"
-						VerticalAlignment="Center"
-						HorizontalAlignment="Center" />
-
-				<TextBlock Grid.Row="1"
-						   VerticalAlignment="Center"
-						   Margin="5, 0, 0, 0"
-						   Text="Name:"
-						   FontSize="14" />
-
-				<TextBlock Text="None"
-						   x:Name="packageName"
-						   Grid.ColumnSpan="2"
-						   Grid.Column="1"
-						   Grid.Row="1"
-						   VerticalAlignment="Center"
-						   FontSize="14" />
-				
-			</Grid>
-			
-		</Border>
+			<TextBlock Text="None"
+					   x:Name="packageName"
+					   FontSize="18"
+					   VerticalAlignment="Center"
+					   HorizontalAlignment="Center" />
+		
+		</StackPanel>
 
 	</Grid>
 

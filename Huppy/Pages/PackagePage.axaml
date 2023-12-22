@@ -4,24 +4,24 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
 			 xmlns:viewModels="clr-namespace:Huppy.ViewModels"
-			 xmlns:views="clr-namespace:Huppy.Views"
+			 xmlns:pages="clr-namespace:Huppy.Pages"
 			 xmlns:models="clr-namespace:Huppy.Models"
              mc:Ignorable="d"
-             x:Class="Huppy.Views.PackageView"
+             x:Class="Huppy.Pages.PackageView"
              x:DataType="viewModels:PackageViewModel">
 
 	<Grid RowDefinitions="40, *, 40, 40, 30, 30"
 		  Background="#0E0E10"
-		  ColumnDefinitions="50*, 50*">
+		  ColumnDefinitions="33*, 33*, 33*">
 
 		<TextBlock Text="Your Package:"
-				   Grid.ColumnSpan="2"
+				   Grid.ColumnSpan="3"
 				   FontSize="22"
 				   VerticalAlignment="Center"
 				   HorizontalAlignment="Center" />
 
 		<ScrollViewer HorizontalScrollBarVisibility="Disabled"
-					  Grid.ColumnSpan="2"
+					  Grid.ColumnSpan="3"
 					  Grid.Row="1">
 			<ItemsRepeater ItemsSource="{Binding Apps}">
 
@@ -63,22 +63,37 @@
 		</ScrollViewer>
 
 		<Button Grid.Row="2"
+				x:Name="buttonPackageCreate"
 				Content="Create Package"
-				Grid.ColumnSpan="2"
+				Grid.ColumnSpan="3"
 				Click="OnClickButtonCreatePackage"
 			    FontSize="22"
 			    VerticalAlignment="Center"
 			    HorizontalAlignment="Center" />
 
 		<Button Content="Clear"
+				IsEnabled="false"
 				Click="OnClickButtonClear"
 				Margin="0, 5, 0, 0"
 				Grid.Row="3"
 				FontSize="18"
 			    VerticalAlignment="Center"
 			    HorizontalAlignment="Center" />
+
+		<Button Content="Save"
+				x:Name="buttonPackageSave"
+				Click="OnClickButtonSave"
+				IsEnabled="false"
+				Grid.Column="1"
+				Margin="0, 5, 0, 0"
+				Grid.Row="3"
+				FontSize="18"
+				VerticalAlignment="Center"
+				HorizontalAlignment="Center" />
 		
-		<Button Grid.Column="1"
+		<Button Grid.Column="2"
+				x:Name="buttonPackageEdit"
+				IsEnabled="false"
 				Margin="0, 5, 0, 0"
 				Content="Edit"
 				Grid.Row="3"
@@ -95,7 +110,7 @@
 					   VerticalAlignment="Center"
 					   HorizontalAlignment="Center" />
 
-			<TextBlock Text="None"
+			<TextBlock Text="0"
 					   x:Name="packageID"
 					   FontSize="18"
 			           VerticalAlignment="Center"

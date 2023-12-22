@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace Huppy.Views
+namespace Huppy.Pages
 {
 public partial class HuppyView : UserControl
 {

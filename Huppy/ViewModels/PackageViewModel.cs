@@ -1,9 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.ObjectModel;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using Huppy.Models;
+using Huppy.Utilities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Huppy.ViewModels
 {
@@ -12,20 +15,34 @@ public class PackageViewModel
 {
     public ObservableCollection<AppV> Apps { get; set; } = [];
 
-    public void PackageCreate(int id, string? name = null)
+    public int ? PackageCreate(string? name = null)
     {
-        var apps = Apps.Select(appView => appView.App.Id).ToArray();
-        Package package = new() { Id = id, Apps = apps, Name = name ?? id.ToString() };
+        // create a valid name
+        if (name == null || name == "")
+        {
+            name = Guid.NewGuid().ToString();
+        }
 
-        context.Add(package);
+        var apps = Apps.Select(appView => appView.App.Id).ToArray();
+        Package package = new() { Id = context.Packages.Count() + 1, Apps = apps, Name = FindUniquePackageName(name) };
+
+        context.Packages.Add(package);
+        return context.SaveChanges() > 0 ? package.Id : null;
     }
 
-    public void PackageUpdate(int id, string? name = null)
+    public bool PackageUpdate(int id, string name)
     {
-        var apps = Apps.Select(appView => appView.App.Id).ToArray();
-        Package package = new() { Id = id, Apps = apps, Name = name ?? id.ToString() };
+        if (!context.Packages.Any(package => package.Id == id) || context.Packages.Any(package => package.Name == name))
+        {
+            return false;
+        }
 
-        context.Update(package);
+        var package = context.Packages.First(package => package.Id == id);
+        package.Apps = Apps.Select(appView => appView.App.Id).ToArray();
+        package.Name = name;
+
+        context.Packages.Update(package);
+        return context.SaveChanges() > 0;
     }
 
     public void PackageClear()
@@ -34,5 +51,8 @@ public class PackageViewModel
         Apps.ToList().ForEach(appView => appView.IsChecked = false);
         Apps.Clear();
     }
+
+    private string FindUniquePackageName(string name) =>
+        context.Packages.Any(package => package.Name == name) ? Guid.NewGuid().ToString() : name;
 }
 }

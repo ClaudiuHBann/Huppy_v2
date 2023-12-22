@@ -3,9 +3,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:viewModels="clr-namespace:Huppy.ViewModels"
-			 xmlns:views="clr-namespace:Huppy.Views"
+			 xmlns:pages="clr-namespace:Huppy.Pages"
 			 xmlns:models="clr-namespace:Huppy.Models"
-             x:Class="Huppy.Views.CategoryView"
+             x:Class="Huppy.Pages.CategoryView"
              x:DataType="viewModels:CategoryViewModel">
 
 	<ScrollViewer>
@@ -24,7 +24,7 @@
 								   FontSize="22"
 								   Margin="10, 0, 0, 0" />
 
-						<views:AppView DataContext="{Binding Value}"
+						<pages:AppView DataContext="{Binding Value}"
 									   Margin="25, 10, 0, 0"/>
 
 					</StackPanel>

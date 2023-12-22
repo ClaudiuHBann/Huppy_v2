@@ -29,9 +29,9 @@
 
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.6" />
-    <PackageReference Include="DialogHost.Avalonia" Version="0.7.7" />
     <PackageReference Include="DynamicData" Version="8.3.27" />
     <PackageReference Include="EntityFramework" Version="6.2.0" />
+    <PackageReference Include="FluentAvaloniaUI" Version="2.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.14" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.14">
       <PrivateAssets>all</PrivateAssets>
@@ -57,6 +57,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Pages\AppPage.axaml.cs">
+      <DependentUpon>AppPage.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\CategoryPage.axaml.cs">
+      <DependentUpon>CategoryPage.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\HuppyPage.axaml.cs">
+      <DependentUpon>HuppyPage.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\PackagePage.axaml.cs">
+      <DependentUpon>PackagePage.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\SearchPage.axaml.cs">
+      <DependentUpon>SearchPage.axaml</DependentUpon>
+    </Compile>
     <Compile Update="xxx.Context.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

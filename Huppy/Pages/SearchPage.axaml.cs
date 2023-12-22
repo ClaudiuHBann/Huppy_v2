@@ -2,7 +2,7 @@ using Avalonia.Controls;
 
 using Huppy.ViewModels;
 
-namespace Huppy.Views
+namespace Huppy.Pages
 {
 public partial class SearchView : UserControl
 {

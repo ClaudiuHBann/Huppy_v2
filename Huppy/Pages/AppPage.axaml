@@ -2,16 +2,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:resourcesConverters="clr-namespace:Huppy.Resources.Converters;assembly=Huppy"
+			 xmlns:converters="clr-namespace:Huppy.Converters;assembly=Huppy"
 			 xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
 			 xmlns:viewModels="clr-namespace:Huppy.ViewModels"
-			 xmlns:views="clr-namespace:Huppy.Views"
+			 xmlns:pages="clr-namespace:Huppy.Pages"
 			 xmlns:models="clr-namespace:Huppy.Models"
 			 x:DataType="viewModels:AppViewModel"
-             x:Class="Huppy.Views.AppView">
+             x:Class="Huppy.Pages.AppView">
 
 	<UserControl.Resources>
-		<resourcesConverters:BoolToColorConverter x:Key="BoolToColorConverter"/>
+		<converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
 	</UserControl.Resources>
 
 	<ScrollViewer HorizontalScrollBarVisibility="Auto"

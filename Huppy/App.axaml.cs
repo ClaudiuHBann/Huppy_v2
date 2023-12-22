@@ -3,10 +3,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Controls.ApplicationLifetimes;
 
-using Microsoft.Extensions.DependencyInjection;
-
 using Huppy.Views;
-using Huppy.Models;
 using Huppy.ViewModels;
 
 namespace Huppy;
@@ -24,17 +21,13 @@ public partial class App : Application
         // Without this line you will get duplicate validations from both Avalonia and CT
         BindingPlugins.DataValidators.RemoveAt(0);
 
-        var services = new ServiceCollection().AddDbContext<HuppyContext>().BuildServiceProvider();
-
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow =
-                new MainWindow { DataContext = ActivatorUtilities.CreateInstance<HuppyViewModel>(services) };
+            desktop.MainWindow = new MainWindow { DataContext = new HuppyViewModel() };
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
-            singleViewPlatform.MainView =
-                new MainView { DataContext = ActivatorUtilities.CreateInstance<HuppyViewModel>(services) };
+            singleViewPlatform.MainView = new MainView { DataContext = new HuppyViewModel() };
         }
 
         base.OnFrameworkInitializationCompleted();

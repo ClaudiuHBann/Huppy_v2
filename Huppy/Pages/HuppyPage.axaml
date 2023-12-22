@@ -3,21 +3,21 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:viewModels="clr-namespace:Huppy.ViewModels"
-			 xmlns:views="clr-namespace:Huppy.Views"
+			 xmlns:pages="clr-namespace:Huppy.Pages"
 			 xmlns:models="clr-namespace:Huppy.Models"
-             x:Class="Huppy.Views.HuppyView"
+             x:Class="Huppy.Pages.HuppyView"
              x:DataType="viewModels:HuppyViewModel">
 
 	<Grid RowDefinitions="50, *"
 		  ColumnDefinitions="200, *">
 
-		<views:PackageView Grid.RowSpan="2"
+		<pages:PackageView Grid.RowSpan="2"
 						   DataContext="{Binding PackageViewModel}" />
 
-		<views:SearchView Grid.Column="1"
+		<pages:SearchView Grid.Column="1"
 						  DataContext="{Binding SearchViewModel}" />
 		
-		<views:CategoryView Grid.Column="1"
+		<pages:CategoryView Grid.Column="1"
 							Grid.Row="1"
 							Margin="0, 10, 0, 0"
 							DataContext="{Binding CategoryViewModel}" />

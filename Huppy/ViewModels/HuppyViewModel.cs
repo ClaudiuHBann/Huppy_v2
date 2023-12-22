@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-using Huppy.Models;
+using Huppy.Utilities;
 
 namespace Huppy.ViewModels
 {
@@ -10,10 +10,10 @@ public class HuppyViewModel : ObservableObject
     public CategoryViewModel CategoryViewModel { get; set; }
     public SearchViewModel SearchViewModel { get; set; }
 
-    public HuppyViewModel(HuppyContext context)
+    public HuppyViewModel()
     {
-        PackageViewModel = new PackageViewModel(context);
-        CategoryViewModel = new(context, PackageViewModel);
+        PackageViewModel = DI.Create<PackageViewModel>();
+        CategoryViewModel = DI.Create<CategoryViewModel>(PackageViewModel);
         SearchViewModel = new(CategoryViewModel);
     }
 }

@@ -2,9 +2,9 @@
 
 using Huppy.Models;
 
-namespace Huppy.ViewModels
+namespace Huppy.Models
 {
-public partial class CategoryV
+public partial class CategoryView
 (Category category) : ObservableObject
 {
     public Category Category { get; set; } = category;

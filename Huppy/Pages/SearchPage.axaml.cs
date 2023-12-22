@@ -25,7 +25,8 @@ public partial class SearchView : UserControl
     private void OnSelectionChangedCategory(object? sender, SelectionChangedEventArgs e)
     {
         if (sender is not ComboBox comboBox || comboBox.SelectedItem is null ||
-            comboBox.SelectedItem is not CategoryV categoryView || DataContext is not SearchViewModel searchViewModel)
+            comboBox.SelectedItem is not Models.CategoryView categoryView ||
+            DataContext is not SearchViewModel searchViewModel)
         {
             return;
         }

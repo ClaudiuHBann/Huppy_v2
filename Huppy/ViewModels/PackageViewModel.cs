@@ -13,7 +13,7 @@ namespace Huppy.ViewModels
 public class PackageViewModel
 (HuppyContext context) : ObservableObject
 {
-    public ObservableCollection<AppV> Apps { get; set; } = [];
+    public ObservableCollection<AppView> Apps { get; set; } = [];
 
     public int ? PackageCreate(string? name = null)
     {

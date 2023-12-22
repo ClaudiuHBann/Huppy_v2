@@ -15,7 +15,7 @@ public partial class AppView : UserControl
     private void OnPointerReleasedApp(object? sender, PointerReleasedEventArgs e)
     {
         if (e.InitialPressMouseButton != MouseButton.Left || sender is not StackPanel stackPanel ||
-            stackPanel.DataContext is not AppV appView || DataContext is not AppViewModel appViewModel)
+            stackPanel.DataContext is not Models.AppView appView || DataContext is not AppViewModel appViewModel)
         {
             return;
         }

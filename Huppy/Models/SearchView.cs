@@ -2,7 +2,7 @@
 
 namespace Huppy.Models
 {
-public partial class SearchV : ObservableObject
+public partial class SearchView : ObservableObject
 {
     [ObservableProperty]
     public string query = "";

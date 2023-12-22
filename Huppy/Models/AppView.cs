@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace Huppy.ViewModels
+namespace Huppy.Models
 {
-public partial class AppV
+public partial class AppView
 (Models.App app) : ObservableObject
 {
     public Models.App App { get; set; } = app;

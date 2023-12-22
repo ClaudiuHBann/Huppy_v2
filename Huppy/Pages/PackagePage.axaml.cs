@@ -16,7 +16,7 @@ public partial class PackageView : UserControl
 
     private void OnButtonClickRemove(object? sender, RoutedEventArgs e)
     {
-        if (sender is not Button button || button.DataContext is not AppV appView ||
+        if (sender is not Button button || button.DataContext is not Models.AppView appView ||
             DataContext is not PackageViewModel packageViewModel)
         {
             return;

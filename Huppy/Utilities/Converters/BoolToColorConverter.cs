@@ -4,7 +4,7 @@ using System.Globalization;
 using Avalonia.Media;
 using Avalonia.Data.Converters;
 
-namespace Huppy.Converters
+namespace Huppy.Utilities.Converters
 {
     public class BoolToColorConverter : IValueConverter
     {

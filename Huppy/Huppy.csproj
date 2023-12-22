@@ -78,4 +78,8 @@
       <DependentUpon>xxx.Context.tt</DependentUpon>
     </Compile>
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Utilities\Notifications\" />
+  </ItemGroup>
 </Project>

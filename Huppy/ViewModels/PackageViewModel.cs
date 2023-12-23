@@ -5,8 +5,6 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using Huppy.Models;
-using Huppy.Utilities;
-using Microsoft.EntityFrameworkCore;
 
 namespace Huppy.ViewModels
 {
@@ -15,7 +13,7 @@ public class PackageViewModel
 {
     public ObservableCollection<AppView> Apps { get; set; } = [];
 
-    public int ? PackageCreate(string? name = null)
+    public (int id, string name) ? PackageCreate(string? name = null)
     {
         // create a valid name
         if (name == null || name == "")
@@ -27,7 +25,7 @@ public class PackageViewModel
         Package package = new() { Id = context.Packages.Count() + 1, Apps = apps, Name = FindUniquePackageName(name) };
 
         context.Packages.Add(package);
-        return context.SaveChanges() > 0 ? package.Id : null;
+        return context.SaveChanges() > 0 ? (package.Id, package.Name) : null;
     }
 
     public bool PackageUpdate(int id, string name)

@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 
+using Huppy.Utilities;
 using Huppy.ViewModels;
 using Huppy.Views.Dialogs;
 
@@ -33,19 +34,21 @@ public partial class PackageView : UserControl
             return;
         }
 
-        var id = packageViewModel.PackageCreate(packageName.Text);
-        if (id == null)
+        var idAndName = packageViewModel.PackageCreate(packageName.Text);
+        if (idAndName == null)
         {
+            Notifications.NotifyE("Could not create a package!");
             return;
         }
 
-        packageID.Text = id.ToString();
+        packageID.Text = idAndName.Value.id.ToString();
+        packageName.Text = idAndName.Value.name;
         buttonPackageEdit.IsEnabled = true;
     }
 
     private async void OnClickButtonEdit(object? sender, RoutedEventArgs e)
     {
-        if (DataContext is not PackageViewModel packageViewModel || packageID.Text is null || packageName.Text is null)
+        if (packageID.Text is null || packageName.Text is null)
         {
             return;
         }
@@ -54,11 +57,6 @@ public partial class PackageView : UserControl
         EditPackageDialog dialog = new(VisualRoot as Visual, context);
         var result = await dialog.Show();
         if (result == null)
-        {
-            return;
-        }
-
-        if (!packageViewModel.PackageUpdate(int.Parse(packageID.Text), result.PackageName))
         {
             return;
         }
@@ -91,10 +89,15 @@ public partial class PackageView : UserControl
     {
         if (DataContext is not PackageViewModel packageViewModel || packageID.Text is null || packageName.Text is null)
         {
+            Notifications.NotifyE("Could not update the package!");
             return;
         }
 
-        packageViewModel.PackageUpdate(int.Parse(packageID.Text), packageName.Text);
+        if (!packageViewModel.PackageUpdate(int.Parse(packageID.Text), packageName.Text))
+        {
+            return;
+        }
+
         buttonPackageSave.IsEnabled = false;
     }
 }

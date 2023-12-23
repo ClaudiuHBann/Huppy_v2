@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         x:Class="Huppy.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
+		Loaded="OnLoadedWindow"
         Title="Huppy">
 
 	<views:MainView />

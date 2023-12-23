@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:ui="using:FluentAvalonia.UI.Controls"
+			 xmlns:viewModels="clr-namespace:Huppy.ViewModels"
+			 xmlns:models="clr-namespace:Huppy.Models"
+			 xmlns:views="clr-namespace:Huppy.Views"
+			 xmlns:pages="clr-namespace:Huppy.Pages"
+             x:Class="Huppy.Views.HuppyView"
+             x:DataType="viewModels:HuppyViewModel">
+
+	<ui:NavigationView PaneDisplayMode="Top"
+					   x:Name="navigationView"
+					   IsSettingsVisible="False">
+
+		<ui:NavigationView.MenuItems>
+
+			<ui:NavigationViewItem Content="Create / Edit"
+								   Tag="CreateEditView" />
+
+			<ui:NavigationViewItem Content="Install"
+								   Tag="InstallView"
+								   IconSource="Download" />
+
+			<ui:NavigationViewItem Content="About"
+								   Tag="About"
+								   IconSource="Contact" />
+
+		</ui:NavigationView.MenuItems>
+
+	</ui:NavigationView>
+
+</UserControl>

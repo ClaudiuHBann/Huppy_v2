@@ -7,9 +7,7 @@ namespace Huppy.Utilities
 public static class DI
 {
     private static readonly ServiceProvider _services =
-        new ServiceCollection()
-            .AddDbContext<HuppyContext>(options => options.EnableSensitiveDataLogging())
-            .BuildServiceProvider();
+        new ServiceCollection().AddDbContext<HuppyContext>().BuildServiceProvider();
 
     public static Type Create<Type>(params object[] parameters)
     {

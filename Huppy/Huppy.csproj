@@ -63,8 +63,11 @@
     <Compile Update="Pages\CategoryPage.axaml.cs">
       <DependentUpon>CategoryPage.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Pages\HuppyPage.axaml.cs">
-      <DependentUpon>HuppyPage.axaml</DependentUpon>
+    <Compile Update="Views\CreateEditView.axaml.cs">
+      <DependentUpon>CreateEditView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\HuppyView.axaml.cs">
+      <DependentUpon>HuppyView.axaml</DependentUpon>
     </Compile>
     <Compile Update="Pages\PackagePage.axaml.cs">
       <DependentUpon>PackagePage.axaml</DependentUpon>

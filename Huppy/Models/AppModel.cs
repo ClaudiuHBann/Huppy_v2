@@ -2,10 +2,10 @@
 
 namespace Huppy.Models
 {
-public partial class AppView
-(Models.App app) : ObservableObject
+public partial class AppModel
+(Shared.Models.App app) : ObservableObject
 {
-    public Models.App App { get; set; } = app;
+    public Shared.Models.App App { get; set; } = app;
 
     [ObservableProperty]
     public bool isVisible = false;

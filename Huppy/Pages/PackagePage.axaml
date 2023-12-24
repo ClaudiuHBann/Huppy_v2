@@ -30,7 +30,7 @@
 				</ItemsRepeater.Layout>
 
 				<ItemsRepeater.ItemTemplate>
-					<DataTemplate x:DataType="models:AppView">
+					<DataTemplate x:DataType="models:AppModel">
 
 						<Border ClipToBounds="True"
 								Margin="5, 0, 5, 0"

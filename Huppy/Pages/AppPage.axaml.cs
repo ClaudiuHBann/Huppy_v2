@@ -1,6 +1,7 @@
 using Avalonia.Input;
 using Avalonia.Controls;
 
+using Huppy.Models;
 using Huppy.ViewModels;
 
 namespace Huppy.Pages
@@ -15,19 +16,19 @@ public partial class AppView : UserControl
     private void OnPointerReleasedApp(object? sender, PointerReleasedEventArgs e)
     {
         if (e.InitialPressMouseButton != MouseButton.Left || sender is not StackPanel stackPanel ||
-            stackPanel.DataContext is not Models.AppView appView || DataContext is not AppViewModel appViewModel)
+            stackPanel.DataContext is not AppModel app || DataContext is not AppViewModel appViewModel)
         {
             return;
         }
 
-        appView.IsChecked = !appView.IsChecked;
-        if (appView.IsChecked)
+        app.IsChecked = !app.IsChecked;
+        if (app.IsChecked)
         {
-            appViewModel.PackageAdd(appView);
+            appViewModel.PackageAdd(app);
         }
         else
         {
-            appViewModel.PackageRemove(appView);
+            appViewModel.PackageRemove(app);
         }
     }
 }

@@ -9,7 +9,8 @@
              x:DataType="viewModels:CategoryViewModel">
 
 	<ScrollViewer>
-		<ItemsRepeater ItemsSource="{Binding CategoryToApps}">
+		<ItemsRepeater ItemsSource="{Binding CategoryToApps}"
+					   Loaded="OnLoadedCategoryToApps">
 
 			<ItemsRepeater.Layout>
 				<StackLayout Spacing="10" />

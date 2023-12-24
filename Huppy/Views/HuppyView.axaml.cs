@@ -31,21 +31,29 @@ public partial class HuppyView : UserControl
 
         if (item.Tag?.ToString() == "About")
         {
+            navigationView.SelectedItem = navigationView.MenuItems[0];
             return;
         }
+        else
+        {
+            navigationView.Content = CreateView(item);
+        }
+    }
 
+    private static UserControl? CreateView(NavigationViewItem item)
+    {
         // create the view
         var viewTypeName = $"Huppy.Views.{item.Tag}";
         var viewType = Type.GetType(viewTypeName);
         if (viewType == null)
         {
-            return;
+            return null;
         }
 
         var view = Activator.CreateInstance(viewType);
         if (view is not UserControl userControl)
         {
-            return;
+            return null;
         }
 
         // create the view model
@@ -53,12 +61,13 @@ public partial class HuppyView : UserControl
         var viewModelType = Type.GetType(viewModelTypeName);
         if (viewModelType == null)
         {
-            return;
+            return null;
         }
         var viewModel = Activator.CreateInstance(viewModelType);
 
         userControl.DataContext = viewModel;
-        navigationView.Content = userControl;
+
+        return userControl;
     }
 }
 }

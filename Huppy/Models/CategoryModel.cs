@@ -1,10 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-using Huppy.Models;
+using Shared.Models;
 
 namespace Huppy.Models
 {
-public partial class CategoryView
+public partial class CategoryModel
 (Category category) : ObservableObject
 {
     public Category Category { get; set; } = category;

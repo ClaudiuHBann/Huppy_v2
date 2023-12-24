@@ -9,8 +9,8 @@ namespace Huppy.ViewModels
 {
 public class SearchViewModel : ObservableObject
 {
-    public ObservableCollection<CategoryView> Categories { get; set; }
-    public SearchView Search { get; set; } = new();
+    public ObservableCollection<CategoryModel> Categories { get; set; }
+    public SearchModel Search { get; set; } = new();
 
     private readonly CategoryViewModel _categoryViewModel;
 
@@ -19,7 +19,7 @@ public class SearchViewModel : ObservableObject
         _categoryViewModel = categoryViewModel;
 
         Categories = new(_categoryViewModel.CategoryToApps.Select(pair => pair.Key));
-        Categories.Insert(0, new(SearchView.CategoryAll));
+        Categories.Insert(0, SearchModel.CategoryAll);
     }
 
     private static bool CanBe(string query, string app)
@@ -44,10 +44,10 @@ public class SearchViewModel : ObservableObject
             .ForEach(appView => appView.IsVisible = true);
 
         // first hide whole categories to speed up the app hiding
-        if (Search.Category != null && Search.Category.Id != SearchView.CategoryAll.Id)
+        if (Search.Category != null && Search.Category.Category.Id != SearchModel.CategoryAll.Category.Id)
         {
             _categoryViewModel.CategoryToApps.ToList().ForEach(pair => pair.Key.IsVisible =
-                                                                   pair.Key.Category.Id == Search.Category.Id);
+                                                                   pair.Key.Category.Id == Search.Category.Category.Id);
         }
 
         if (Search.Query.Length != 0)

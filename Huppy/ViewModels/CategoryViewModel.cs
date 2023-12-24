@@ -1,29 +1,32 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using Huppy.Models;
+using Huppy.Utilities;
+
+using Avalonia.Threading;
 
 namespace Huppy.ViewModels
 {
-public class CategoryViewModel : ObservableObject
+public partial class CategoryViewModel
+(Database database, PackageViewModel packageViewModel) : ObservableObject
 {
     // TODO: can we make this a map?
-    public ObservableCollection<KeyValuePair<CategoryView, AppViewModel>> CategoryToApps { get; set; } = [];
+    public ObservableCollection<KeyValuePair<CategoryModel, AppViewModel>> CategoryToApps { get; set; } = [];
 
-    public CategoryViewModel(HuppyContext context, PackageViewModel packageViewModel)
+    public async Task Populate()
     {
-        foreach (var group in context.Apps.GroupBy(app => app.CategoryNavigation))
+        foreach (var pair in await database.GetCategoryToApps())
         {
-            ObservableCollection<AppView> appViews = [];
-            foreach (var app in group)
-            {
-                appViews.Add(new AppView(app));
-            }
+            ObservableCollection<AppModel> collection = [];
+            pair.Value.Select(app => new AppModel(app)).ToList().ForEach(collection.Add);
 
-            CategoryToApps.Add(new(new(group.Key), new(appViews, packageViewModel)));
+            await Dispatcher.UIThread.InvokeAsync(
+                () => CategoryToApps.Add(new(new(pair.Key), new(collection, packageViewModel))));
         }
     }
 }

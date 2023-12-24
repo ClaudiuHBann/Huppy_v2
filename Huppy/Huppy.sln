@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Huppy.Desktop", "..\Huppy.D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Huppy.Browser", "..\Huppy.Browser\Huppy.Browser.csproj", "{57BCFCC3-F120-49D2-9037-2B6AA978CEB0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Huppy.API", "..\Huppy.API\Huppy.API.csproj", "{BD232DC2-24CF-457A-BFE4-3368BF8D504C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "..\Shared\Shared.csproj", "{C924D67B-2F7D-4350-8D06-4E22DE8E09A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{57BCFCC3-F120-49D2-9037-2B6AA978CEB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57BCFCC3-F120-49D2-9037-2B6AA978CEB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57BCFCC3-F120-49D2-9037-2B6AA978CEB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD232DC2-24CF-457A-BFE4-3368BF8D504C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD232DC2-24CF-457A-BFE4-3368BF8D504C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD232DC2-24CF-457A-BFE4-3368BF8D504C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD232DC2-24CF-457A-BFE4-3368BF8D504C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C924D67B-2F7D-4350-8D06-4E22DE8E09A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C924D67B-2F7D-4350-8D06-4E22DE8E09A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C924D67B-2F7D-4350-8D06-4E22DE8E09A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C924D67B-2F7D-4350-8D06-4E22DE8E09A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

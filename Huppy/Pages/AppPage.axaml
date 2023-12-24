@@ -24,7 +24,7 @@
 			</ItemsRepeater.Layout>
 
 			<ItemsRepeater.ItemTemplate>
-				<DataTemplate DataType="models:AppView">
+				<DataTemplate DataType="models:AppModel">
 
 					<Border ClipToBounds="True"
 							IsVisible="{Binding IsVisible}"

@@ -1,13 +1,11 @@
-﻿using Huppy.Models;
-
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace Huppy.Utilities
 {
 public static class DI
 {
     private static readonly ServiceProvider _services =
-        new ServiceCollection().AddDbContext<HuppyContext>().BuildServiceProvider();
+        new ServiceCollection().AddSingleton<Database>().BuildServiceProvider();
 
     public static Type Create<Type>(params object[] parameters)
     {

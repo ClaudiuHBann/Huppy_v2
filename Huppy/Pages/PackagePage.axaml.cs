@@ -1,7 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-
+using Huppy.Models;
 using Huppy.Utilities;
 using Huppy.ViewModels;
 using Huppy.Views.Dialogs;
@@ -17,14 +17,14 @@ public partial class PackageView : UserControl
 
     private void OnButtonClickRemove(object? sender, RoutedEventArgs e)
     {
-        if (sender is not Button button || button.DataContext is not Models.AppView appView ||
+        if (sender is not Button button || button.DataContext is not AppModel app ||
             DataContext is not PackageViewModel packageViewModel)
         {
             return;
         }
 
-        appView.IsChecked = !appView.IsChecked;
-        packageViewModel.Apps.Remove(appView);
+        app.IsChecked = !app.IsChecked;
+        packageViewModel.Apps.Remove(app);
     }
 
     private void OnClickButtonCreatePackage(object? sender, RoutedEventArgs e)

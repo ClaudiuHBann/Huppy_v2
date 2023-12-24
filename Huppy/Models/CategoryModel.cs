@@ -10,6 +10,6 @@ public partial class CategoryModel
     public Category Category { get; set; } = category;
 
     [ObservableProperty]
-    public bool isVisible = false;
+    public bool isVisible = true;
 }
 }

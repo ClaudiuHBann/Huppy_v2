@@ -8,7 +8,7 @@ public partial class AppModel
     public Shared.Models.App App { get; set; } = app;
 
     [ObservableProperty]
-    public bool isVisible = false;
+    public bool isVisible = true;
 
     [ObservableProperty]
     public bool isChecked = false;

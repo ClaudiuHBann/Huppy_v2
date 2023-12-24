@@ -7,7 +7,7 @@ using FluentAvalonia.UI.Controls;
 
 namespace Huppy.Views.Dialogs
 {
-public class EditPackageDialog
+public class EditPackageDialog : Dialog
 {
     public class Context
     (string packageName)
@@ -15,26 +15,23 @@ public class EditPackageDialog
         public string PackageName { get; set; } = packageName;
     }
 
-    private readonly TaskDialog _dialog = new();
+    private const string _header = "Edit Package";
+    private const string _headerSub = "Choose a unique name:";
+
     private readonly Context _context;
 
     private readonly TextBox _packageName = new();
     private static readonly int _packageNameMaxLength = 36; // 36 for a string GUID
 
-    public EditPackageDialog(Visual? root, Context context)
+    public EditPackageDialog(Visual? root, Context context) : base(root, _header, _headerSub)
     {
-        _dialog.XamlRoot = root;
         _context = context;
 
         _packageName.Text = _context.PackageName;
         _packageName.TextChanged += OnTextBoxTextChangedPackageName;
 
-        _dialog.Header = "Edit Package";
-        _dialog.SubHeader = "Choose a unique name:";
-        _dialog.Content = CreateContent();
-
-        _dialog.Buttons.Add(TaskDialogButton.OKButton);
-        _dialog.Buttons.Add(TaskDialogButton.CancelButton);
+        Buttons.Add(TaskDialogButton.OKButton);
+        Buttons.Add(TaskDialogButton.CancelButton);
     }
 
     private void OnTextBoxTextChangedPackageName(object? sender, TextChangedEventArgs e)
@@ -45,7 +42,7 @@ public class EditPackageDialog
         }
     }
 
-    private Control CreateContent()
+    protected override Control CreateContent()
     {
         var stackPanel = new StackPanel() { Spacing = 5 };
 
@@ -57,7 +54,7 @@ public class EditPackageDialog
 
     public async Task<Context?> Show()
     {
-        var button = await _dialog.ShowAsync(true);
+        var button = await base.Show();
         if (button is null || (TaskDialogStandardResult)button != TaskDialogStandardResult.OK)
         {
             return null;

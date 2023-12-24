@@ -1,5 +1,7 @@
-﻿namespace Huppy.Models;
+﻿using Newtonsoft.Json;
 
+namespace Shared.Models
+{
 public partial class Link
 {
     public int Id { get; set; }
@@ -8,5 +10,7 @@ public partial class Link
 
     public string Url { get; set; } = null!;
 
+    [JsonIgnore]
     public virtual App AppNavigation { get; set; } = null!;
+}
 }

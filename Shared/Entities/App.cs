@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
 
-namespace Huppy.Models;
-
+namespace Shared.Models
+{
 public partial class App
 {
     public int Id { get; set; }
@@ -14,7 +14,10 @@ public partial class App
 
     public string Image { get; set; } = null!;
 
+    [JsonIgnore]
     public virtual Category CategoryNavigation { get; set; } = null!;
 
+    [JsonIgnore]
     public virtual ICollection<Link> Links { get; set; } = new List<Link>();
+}
 }

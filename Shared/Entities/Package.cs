@@ -1,5 +1,5 @@
-﻿namespace Huppy.Models;
-
+﻿namespace Shared.Models
+{
 public partial class Package
 {
     public int Id { get; set; }
@@ -7,4 +7,5 @@ public partial class Package
     public int[] Apps { get; set; } = null!;
 
     public string Name { get; set; } = null!;
+}
 }

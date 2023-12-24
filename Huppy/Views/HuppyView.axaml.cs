@@ -1,13 +1,19 @@
 using System;
+using System.Collections.Generic;
 
 using Avalonia.Controls;
-
+using Avalonia.Threading;
 using FluentAvalonia.UI.Controls;
+
+using Huppy.Views.Dialogs;
 
 namespace Huppy.Views
 {
 public partial class HuppyView : UserControl
 {
+    private Dictionary<string, UserControl> _views = [];
+    private int _NVSelectedIndexLast = 0;
+
     public HuppyView()
     {
         InitializeComponent();
@@ -19,10 +25,10 @@ public partial class HuppyView : UserControl
         }
 
         navigationView.SelectionChanged += OnNavigationViewSelectionChanged;
-        navigationView.SelectedItem = navigationView.MenuItems[0];
+        navigationView.SelectedItem = navigationView.MenuItems[_NVSelectedIndexLast];
     }
 
-    private void OnNavigationViewSelectionChanged(object? sender, NavigationViewSelectionChangedEventArgs e)
+    private async void OnNavigationViewSelectionChanged(object? sender, NavigationViewSelectionChangedEventArgs e)
     {
         if (sender is not NavigationView navigationView || e.SelectedItem is not NavigationViewItem item)
         {
@@ -31,19 +37,31 @@ public partial class HuppyView : UserControl
 
         if (item.Tag?.ToString() == "About")
         {
-            navigationView.SelectedItem = navigationView.MenuItems[0];
-            return;
+            // TODO: can we remove this workaround?
+            // select back the last item outside this method so the property changed will propagate
+            await Dispatcher.UIThread.InvokeAsync(() => navigationView.SelectedItem =
+                                                      navigationView.MenuItems[_NVSelectedIndexLast]);
+
+            await new AboutDialog(this).Show();
         }
         else
         {
             navigationView.Content = CreateView(item);
         }
+
+        _NVSelectedIndexLast = navigationView.MenuItems.IndexOf(e.SelectedItem);
     }
 
-    private static UserControl? CreateView(NavigationViewItem item)
+    private UserControl? CreateView(NavigationViewItem item)
     {
-        // create the view
+        // search the view cache first
         var viewTypeName = $"Huppy.Views.{item.Tag}";
+        if (_views.TryGetValue(viewTypeName, out UserControl? value))
+        {
+            return value;
+        }
+
+        // create the view
         var viewType = Type.GetType(viewTypeName);
         if (viewType == null)
         {
@@ -66,6 +84,9 @@ public partial class HuppyView : UserControl
         var viewModel = Activator.CreateInstance(viewModelType);
 
         userControl.DataContext = viewModel;
+
+        // add the view to our cache
+        _views.Add(viewTypeName, userControl);
 
         return userControl;
     }

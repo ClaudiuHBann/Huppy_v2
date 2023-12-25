@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using Shared.Models;
+using Shared.Utilities;
 
 namespace Huppy.Utilities
 {

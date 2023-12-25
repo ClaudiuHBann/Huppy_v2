@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Collections.ObjectModel;
 
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -9,7 +11,7 @@ namespace Huppy.ViewModels
 {
 public class SearchViewModel : ObservableObject
 {
-    public ObservableCollection<CategoryModel> Categories { get; set; }
+    public ObservableCollection<CategoryModel> Categories { get; set; } = [];
     public SearchModel Search { get; set; } = new();
 
     private readonly CategoryViewModel _categoryViewModel;
@@ -18,8 +20,27 @@ public class SearchViewModel : ObservableObject
     {
         _categoryViewModel = categoryViewModel;
 
-        Categories = new(_categoryViewModel.CategoryToApps.Select(pair => pair.Key));
+        _categoryViewModel.CategoryToApps.CollectionChanged += OnCollectionChanged;
         Categories.Insert(0, SearchModel.CategoryAll);
+    }
+
+    private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.NewItems == null)
+        {
+            return;
+        }
+
+        var pair = (KeyValuePair<CategoryModel, AppViewModel>?)e.NewItems[0];
+        if (pair == null)
+        {
+            return;
+        }
+
+        if (e.Action == NotifyCollectionChangedAction.Add)
+        {
+            Categories.Insert(0, pair.Value.Key);
+        }
     }
 
     private static bool CanBe(string query, string app)

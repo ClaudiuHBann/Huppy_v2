@@ -12,21 +12,31 @@ using Avalonia.Threading;
 
 namespace Huppy.ViewModels
 {
-public partial class CategoryViewModel
-(Database database, PackageViewModel packageViewModel) : ObservableObject
+public partial class CategoryViewModel : ObservableObject
 {
     // TODO: can we make this a map?
     public ObservableCollection<KeyValuePair<CategoryModel, AppViewModel>> CategoryToApps { get; set; } = [];
 
+    private readonly Database _database;
+    private readonly PackageViewModel _packageViewModel;
+
+    public CategoryViewModel(Database database, PackageViewModel packageViewModel)
+    {
+        _database = database;
+        _packageViewModel = packageViewModel;
+
+        Dispatcher.UIThread.Invoke(Populate);
+    }
+
     public async Task Populate()
     {
-        foreach (var pair in await database.GetCategoryToApps())
+        foreach (var pair in await _database.GetCategoryToApps())
         {
             ObservableCollection<AppModel> collection = [];
             pair.Value.Select(app => new AppModel(app)).ToList().ForEach(collection.Add);
 
             await Dispatcher.UIThread.InvokeAsync(
-                () => CategoryToApps.Add(new(new(pair.Key), new(collection, packageViewModel))));
+                () => CategoryToApps.Add(new(new(pair.Key), new(collection, _packageViewModel))));
         }
     }
 }

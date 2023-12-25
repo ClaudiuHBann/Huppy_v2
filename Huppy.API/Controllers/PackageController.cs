@@ -16,7 +16,9 @@ public class PackageController
     public ActionResult GetCategoryToApps()
     {
         List<KeyValuePair<Category, List<App>>> categoryToApps = [];
-        foreach (var group in context.Apps.GroupBy(app => app.CategoryNavigation))
+
+        var groups = context.Apps.GroupBy(app => app.CategoryNavigation).ToList().OrderBy(group => group.Key.Name);
+        foreach (var group in groups)
         {
             categoryToApps.Add(new(group.Key, [..group]));
         }

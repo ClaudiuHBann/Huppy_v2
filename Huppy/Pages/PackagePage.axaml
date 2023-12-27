@@ -23,7 +23,8 @@
 		<ScrollViewer HorizontalScrollBarVisibility="Disabled"
 					  Grid.ColumnSpan="3"
 					  Grid.Row="1">
-			<ItemsRepeater ItemsSource="{Binding Apps}">
+			<ItemsRepeater ItemsSource="{Binding Apps}"
+						   Loaded="OnLoaded">
 
 				<ItemsRepeater.Layout>
 					<StackLayout Spacing="10" />
@@ -62,45 +63,59 @@
 			</ItemsRepeater>
 		</ScrollViewer>
 
-		<Button Grid.Row="2"
-				x:Name="buttonPackageCreate"
-				Content="Create Package"
-				Grid.ColumnSpan="3"
-				Click="OnClickButtonCreatePackage"
-			    FontSize="22"
-			    VerticalAlignment="Center"
-			    HorizontalAlignment="Center" />
+		<Grid Grid.Row="2"
+			  Grid.ColumnSpan="3"
+			  ColumnDefinitions="50*, 50*">
+			
+			<Button x:Name="buttonPackageCreate"
+					Content="Create"
+					IsEnabled="False"
+					Click="OnClickButtonCreatePackage"
+				    FontSize="22"
+				    VerticalAlignment="Center"
+				    HorizontalAlignment="Stretch" />
+
+			<Button x:Name="buttonPackageLoad"
+					Grid.Column="1"
+					Content="Load"
+					Click="OnClickButtonLoadPackage"
+				    FontSize="22"
+				    VerticalAlignment="Center"
+				    HorizontalAlignment="Stretch" />
+			
+		</Grid>
 
 		<Button Content="Clear"
-				IsEnabled="false"
+				x:Name="buttonPackageClear"
+				IsEnabled="False"
 				Click="OnClickButtonClear"
 				Margin="0, 5, 0, 0"
 				Grid.Row="3"
 				FontSize="18"
 			    VerticalAlignment="Center"
-			    HorizontalAlignment="Center" />
+			    HorizontalAlignment="Stretch" />
 
 		<Button Content="Save"
 				x:Name="buttonPackageSave"
 				Click="OnClickButtonSave"
-				IsEnabled="false"
+				IsEnabled="False"
 				Grid.Column="1"
 				Margin="0, 5, 0, 0"
 				Grid.Row="3"
 				FontSize="18"
 				VerticalAlignment="Center"
-				HorizontalAlignment="Center" />
+				HorizontalAlignment="Stretch" />
 		
 		<Button Grid.Column="2"
 				x:Name="buttonPackageEdit"
-				IsEnabled="false"
+				IsEnabled="False"
 				Margin="0, 5, 0, 0"
 				Content="Edit"
 				Grid.Row="3"
 				Click="OnClickButtonEdit"
 				FontSize="18"
 			    VerticalAlignment="Center"
-			    HorizontalAlignment="Center" />
+			    HorizontalAlignment="Stretch" />
 
 		<StackPanel Grid.Row="4"
 					Orientation="Horizontal">
@@ -110,7 +125,7 @@
 					   VerticalAlignment="Center"
 					   HorizontalAlignment="Center" />
 
-			<TextBlock Text="0"
+			<TextBlock Text="{Binding PackageIDDefault}"
 					   x:Name="packageID"
 					   FontSize="18"
 			           VerticalAlignment="Center"
@@ -126,7 +141,7 @@
 			           VerticalAlignment="Center"
 			           HorizontalAlignment="Center" />
 
-			<TextBlock Text="None"
+			<TextBlock Text="{Binding PackageNameDefault}"
 					   x:Name="packageName"
 					   FontSize="18"
 					   VerticalAlignment="Center"

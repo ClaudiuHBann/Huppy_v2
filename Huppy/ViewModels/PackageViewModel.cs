@@ -1,9 +1,13 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using Huppy.Models;
+using Huppy.Utilities;
+
+using Shared.Models;
 
 namespace Huppy.ViewModels
 {
@@ -11,14 +15,40 @@ public class PackageViewModel : ObservableObject
 {
     public ObservableCollection<AppModel> Apps { get; set; } = [];
 
-    public (int id, string name)? PackageCreate(string? name = null)
+    public static string PackageIDDefault { get; } = "0";
+    public static string PackageNameDefault { get; } = "None";
+
+    private readonly DatabaseService _database;
+    private readonly NotificationService _notification;
+
+    public PackageViewModel(DatabaseService database, NotificationService notification)
     {
-        return (0, "Ma-ta");
+        _database = database;
+        _notification = notification;
     }
 
-    public bool PackageUpdate(int id, string name)
+    public async Task<PackageEntity?> PackageCreate(PackageEntity packageEntity)
     {
-        return false;
+        var response = await _database.PackageCreate(new(packageEntity));
+        if (response == null)
+        {
+            _notification.NotifyE(_database.LastError);
+            return null;
+        }
+
+        return new(response);
+    }
+
+    public async Task<bool?> PackageUpdate(PackageEntity packageEntity)
+    {
+        var response = await _database.PackageUpdate(new(packageEntity));
+        if (response == null)
+        {
+            _notification.NotifyE(_database.LastError);
+            return null;
+        }
+
+        return response;
     }
 
     public void PackageClear()

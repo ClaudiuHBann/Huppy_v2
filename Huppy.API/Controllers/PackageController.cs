@@ -20,9 +20,7 @@ public class PackageController
     {
         if (!await AreAppsValid(packageRequest.Apps))
         {
-            const string message = "The package could not be created because it contains invalid apps!";
-            logger.LogError(message);
-            return BadRequest(message);
+            return MakeAndLogBadRequest("The package could not be created because it contains invalid apps!");
         }
 
         // this method will never fail on name not unqiue so:
@@ -45,9 +43,7 @@ public class PackageController
         }
         else
         {
-            const string message = "The package could not be created.";
-            logger.LogError(message);
-            return BadRequest(message);
+            return MakeAndLogBadRequest("The package could not be created.");
         }
     }
 
@@ -56,27 +52,37 @@ public class PackageController
     {
         if (!await AreAppsValid(packageRequest.Apps))
         {
-            const string message = "The package could not be created because it contains invalid apps!";
-            logger.LogError(message);
-            return BadRequest(message);
+            return MakeAndLogBadRequest("The package could not be created because it contains invalid apps!");
         }
 
         var packageEntity = await context.Packages.FirstOrDefaultAsync(package => package.Id == packageRequest.Id);
         if (packageEntity == null)
         {
-            const string message = "The package could not be found!";
-            logger.LogError(message);
-            return BadRequest(message);
+            return MakeAndLogBadRequest("The package could not be found!");
+        }
+
+        var packageEntityWithSameName =
+            await context.Packages.FirstOrDefaultAsync(package => package.Name == packageRequest.Name);
+        if (packageEntityWithSameName != null && packageRequest.Id != packageEntityWithSameName.Id)
+        {
+            return MakeAndLogBadRequest($"The package with the name \"{packageRequest.Name}\" already exists!");
         }
 
         packageEntity.Apps = packageRequest.Apps;
         packageEntity.Name = packageRequest.Name;
 
         // if the properties are the same SaveChanges will return 0 but it's fine so:
-        var updated = Enumerable.SequenceEqual(packageEntity.Apps, packageRequest.Apps) &&
+        var savedChanges = context.SaveChanges();
+        var updated = savedChanges == 0 && Enumerable.SequenceEqual(packageEntity.Apps, packageRequest.Apps) &&
                       packageEntity.Name == packageRequest.Name;
 
-        return Ok(updated || context.SaveChanges() > 0);
+        return Ok(savedChanges > 0 || updated);
+    }
+
+    private BadRequestObjectResult MakeAndLogBadRequest(string message)
+    {
+        logger.LogError(message);
+        return BadRequest(message);
     }
 
     private async Task<bool> AreAppsValid(int[] apps)

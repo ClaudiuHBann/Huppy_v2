@@ -1,18 +1,83 @@
+using System.Linq;
+using System.Collections.Specialized;
+
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+
 using Huppy.Models;
-using Huppy.Utilities;
 using Huppy.ViewModels;
 using Huppy.Views.Dialogs;
+
+using Shared.Models;
 
 namespace Huppy.Pages
 {
 public partial class PackageView : UserControl
 {
+    private int _packageCurrentID => packageID.Text != null && int.TryParse(packageID.Text, out int id) ? id : 0;
+
     public PackageView()
     {
         InitializeComponent();
+    }
+
+    private void OnLoaded(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not PackageViewModel packageViewModel)
+        {
+            return;
+        }
+
+        packageViewModel.Apps.CollectionChanged += OnCollectionChangedApps;
+        packageID.PropertyChanged += (s, e) => EnableButtonPackageEdit();
+    }
+
+    private void OnCollectionChangedApps(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        EnableButtonPackageSave(true);
+        EnableButtonPackageCreate();
+        EnableButtonPackageClear();
+        EnableButtonPackageEdit();
+    }
+
+    private void EnableButtonPackageClear()
+    {
+        if (DataContext is not PackageViewModel packageViewModel)
+        {
+            return;
+        }
+
+        // can clear if at least an app is in the package
+        // can clear if a package was create and it is in edit mode
+        buttonPackageClear.IsEnabled = packageViewModel.Apps.Count > 0 || _packageCurrentID != 0;
+    }
+
+    private void EnableButtonPackageEdit()
+    {
+        // can edit if there is a package active
+        buttonPackageEdit.IsEnabled = _packageCurrentID != 0;
+    }
+
+    private void EnableButtonPackageCreate()
+    {
+        if (DataContext is not PackageViewModel packageViewModel)
+        {
+            return;
+        }
+
+        // can create if there isn't a package active and at least an app in the package
+        buttonPackageCreate.IsEnabled = packageViewModel.Apps.Count > 0 && _packageCurrentID == 0;
+    }
+
+    // TODO: if operations are done on apps and they end up the same we dont need to enable save
+    // same with the package name
+    private void EnableButtonPackageSave(bool enable)
+    {
+        // can save if something in the apps has changed
+        // can save if the name has changed
+        // there must be a package active
+        buttonPackageSave.IsEnabled = _packageCurrentID != 0 && enable;
     }
 
     private void OnButtonClickRemove(object? sender, RoutedEventArgs e)
@@ -27,23 +92,31 @@ public partial class PackageView : UserControl
         packageViewModel.Apps.Remove(app);
     }
 
-    private void OnClickButtonCreatePackage(object? sender, RoutedEventArgs e)
+    private void OnClickButtonLoadPackage(object? sender, RoutedEventArgs e)
+    {
+        PackageReset();
+    }
+
+    private async void OnClickButtonCreatePackage(object? sender, RoutedEventArgs e)
     {
         if (DataContext is not PackageViewModel packageViewModel || packageID.Text is null || packageName.Text is null)
         {
             return;
         }
 
-        var idAndName = packageViewModel.PackageCreate(packageName.Text);
-        if (idAndName == null)
+        var apps = packageViewModel.Apps.Select(app => app.App.Id).ToArray();
+        var packageEntity = await packageViewModel.PackageCreate(new() { Apps = apps, Name = packageName.Text });
+        if (packageEntity == null)
         {
-            Notifications.NotifyE("Could not create a package!");
             return;
         }
 
-        packageID.Text = idAndName.Value.id.ToString();
-        packageName.Text = idAndName.Value.name;
-        buttonPackageEdit.IsEnabled = true;
+        packageID.Text = packageEntity.Id.ToString();
+        packageName.Text = packageEntity.Name;
+
+        EnableButtonPackageCreate();
+        EnableButtonPackageClear();
+        EnableButtonPackageEdit();
     }
 
     private async void OnClickButtonEdit(object? sender, RoutedEventArgs e)
@@ -63,42 +136,47 @@ public partial class PackageView : UserControl
 
         if (packageName.Text != result.PackageName)
         {
-            buttonPackageSave.IsEnabled = true;
+            EnableButtonPackageSave(true);
         }
         packageName.Text = result.PackageName;
     }
 
     private void OnClickButtonClear(object? sender, RoutedEventArgs e)
     {
-        if (DataContext is not PackageViewModel packageViewModel || packageID.Text is null || packageName.Text is null)
-        {
-            return;
-        }
-
-        packageID.Text = "0";
-        packageName.Text = "None";
-
-        packageViewModel.PackageClear();
-
-        buttonPackageCreate.IsEnabled = true;
-        buttonPackageSave.IsEnabled = false;
-        buttonPackageEdit.IsEnabled = false;
+        PackageReset();
+        // updates buttons automatically in the Apps OnCollectionChanged event
     }
 
-    private void OnClickButtonSave(object? sender, RoutedEventArgs e)
+    private void PackageReset()
     {
         if (DataContext is not PackageViewModel packageViewModel || packageID.Text is null || packageName.Text is null)
         {
-            Notifications.NotifyE("Could not update the package!");
             return;
         }
 
-        if (!packageViewModel.PackageUpdate(int.Parse(packageID.Text), packageName.Text))
+        packageID.Text = PackageViewModel.PackageIDDefault;
+        packageName.Text = PackageViewModel.PackageNameDefault;
+
+        packageViewModel.PackageClear();
+    }
+
+    private async void OnClickButtonSave(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not PackageViewModel packageViewModel || packageID.Text is null || packageName.Text is null)
         {
             return;
         }
 
-        buttonPackageSave.IsEnabled = false;
+        var apps = packageViewModel.Apps.Select(app => app.App.Id).ToArray();
+        var packageEntity = new PackageEntity() { Id = _packageCurrentID, Apps = apps, Name = packageName.Text };
+
+        var updated = await packageViewModel.PackageUpdate(packageEntity);
+        if (updated == null || updated == false)
+        {
+            return;
+        }
+
+        EnableButtonPackageSave(false);
     }
 }
 }

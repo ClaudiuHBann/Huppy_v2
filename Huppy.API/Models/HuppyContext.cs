@@ -14,10 +14,10 @@ public partial class HuppyContext : DbContext
     {
     }
 
-    public virtual DbSet<App> Apps { get; set; }
-    public virtual DbSet<Category> Categories { get; set; }
-    public virtual DbSet<Link> Links { get; set; }
-    public virtual DbSet<Package> Packages { get; set; }
+    public virtual DbSet<AppEntity> Apps { get; set; }
+    public virtual DbSet<CategoryEntity> Categories { get; set; }
+    public virtual DbSet<LinkEntity> Links { get; set; }
+    public virtual DbSet<PackageEntity> Packages { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -29,26 +29,26 @@ public partial class HuppyContext : DbContext
             .HasPostgresEnum("Format", ["EXE", "DMG"])
             .HasPostgresEnum("OS", ["Windows", "Mac"]);
 
-        modelBuilder.Entity<App>(entity =>
-                                 {
-                                     entity.HasKey(e => e.Id).HasName("app_id_pk");
+        modelBuilder.Entity<AppEntity>(entity =>
+                                       {
+                                           entity.HasKey(e => e.Id).HasName("app_id_pk");
 
-                                     entity.ToTable("app", tb => tb.HasComment("Apps"));
+                                           entity.ToTable("app", tb => tb.HasComment("Apps"));
 
-                                     entity.Property(e => e.Id).ValueGeneratedNever().HasColumnName("id");
-                                     entity.Property(e => e.Category).HasColumnName("category");
-                                     entity.Property(e => e.Image).HasMaxLength(255).HasColumnName("image");
-                                     entity.Property(e => e.Name).HasMaxLength(128).HasColumnName("name");
-                                     entity.Property(e => e.Proposed).HasColumnName("proposed");
+                                           entity.Property(e => e.Id).ValueGeneratedNever().HasColumnName("id");
+                                           entity.Property(e => e.Category).HasColumnName("category");
+                                           entity.Property(e => e.Image).HasMaxLength(255).HasColumnName("image");
+                                           entity.Property(e => e.Name).HasMaxLength(128).HasColumnName("name");
+                                           entity.Property(e => e.Proposed).HasColumnName("proposed");
 
-                                     entity.HasOne(d => d.CategoryNavigation)
-                                         .WithMany(p => p.Apps)
-                                         .HasForeignKey(d => d.Category)
-                                         .OnDelete(DeleteBehavior.ClientSetNull)
-                                         .HasConstraintName("category_fk");
-                                 });
+                                           entity.HasOne(d => d.CategoryNavigation)
+                                               .WithMany(p => p.Apps)
+                                               .HasForeignKey(d => d.Category)
+                                               .OnDelete(DeleteBehavior.ClientSetNull)
+                                               .HasConstraintName("category_fk");
+                                       });
 
-        modelBuilder.Entity<Category>(
+        modelBuilder.Entity<CategoryEntity>(
             entity =>
             {
                 entity.HasKey(e => e.Id).HasName("category_id_pk");
@@ -61,33 +61,33 @@ public partial class HuppyContext : DbContext
                 entity.Property(e => e.Name).HasMaxLength(64).HasColumnName("name");
             });
 
-        modelBuilder.Entity<Link>(entity =>
-                                  {
-                                      entity.HasKey(e => e.Id).HasName("link_id_pk");
+        modelBuilder.Entity<LinkEntity>(entity =>
+                                        {
+                                            entity.HasKey(e => e.Id).HasName("link_id_pk");
 
-                                      entity.ToTable("link", tb => tb.HasComment("App's Links"));
+                                            entity.ToTable("link", tb => tb.HasComment("App's Links"));
 
-                                      entity.Property(e => e.Id).ValueGeneratedNever().HasColumnName("id");
-                                      entity.Property(e => e.App).HasColumnName("app");
-                                      entity.Property(e => e.Url).HasMaxLength(1024).HasColumnName("url");
+                                            entity.Property(e => e.Id).ValueGeneratedNever().HasColumnName("id");
+                                            entity.Property(e => e.App).HasColumnName("app");
+                                            entity.Property(e => e.Url).HasMaxLength(1024).HasColumnName("url");
 
-                                      entity.HasOne(d => d.AppNavigation)
-                                          .WithMany(p => p.Links)
-                                          .HasForeignKey(d => d.App)
-                                          .OnDelete(DeleteBehavior.ClientSetNull)
-                                          .HasConstraintName("link_app_fk");
-                                  });
+                                            entity.HasOne(d => d.AppNavigation)
+                                                .WithMany(p => p.Links)
+                                                .HasForeignKey(d => d.App)
+                                                .OnDelete(DeleteBehavior.ClientSetNull)
+                                                .HasConstraintName("link_app_fk");
+                                        });
 
-        modelBuilder.Entity<Package>(entity =>
-                                     {
-                                         entity.HasKey(e => e.Id).HasName("package_id_pk");
+        modelBuilder.Entity<PackageEntity>(entity =>
+                                           {
+                                               entity.HasKey(e => e.Id).HasName("package_id_pk");
 
-                                         entity.ToTable("package");
+                                               entity.ToTable("package");
 
-                                         entity.Property(e => e.Id).ValueGeneratedNever().HasColumnName("id");
-                                         entity.Property(e => e.Apps).HasColumnName("apps");
-                                         entity.Property(e => e.Name).HasMaxLength(32).HasColumnName("name");
-                                     });
+                                               entity.Property(e => e.Id).ValueGeneratedNever().HasColumnName("id");
+                                               entity.Property(e => e.Apps).HasColumnName("apps");
+                                               entity.Property(e => e.Name).HasMaxLength(32).HasColumnName("name");
+                                           });
 
         OnModelCreatingPartial(modelBuilder);
     }

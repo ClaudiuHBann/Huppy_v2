@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -17,18 +16,18 @@ public partial class CategoryViewModel : ObservableObject
     // TODO: can we make this a map?
     public ObservableCollection<KeyValuePair<CategoryModel, AppViewModel>> CategoryToApps { get; set; } = [];
 
-    private readonly Database _database;
+    private readonly DatabaseService _database;
     private readonly PackageViewModel _packageViewModel;
 
-    public CategoryViewModel(Database database, PackageViewModel packageViewModel)
+    public CategoryViewModel(DatabaseService database, PackageViewModel packageViewModel)
     {
         _database = database;
         _packageViewModel = packageViewModel;
 
-        Dispatcher.UIThread.Invoke(Populate);
+        Populate();
     }
 
-    public async Task Populate()
+    public async void Populate()
     {
         foreach (var pair in await _database.GetCategoryToApps())
         {

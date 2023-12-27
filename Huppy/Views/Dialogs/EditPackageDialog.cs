@@ -21,7 +21,7 @@ public class EditPackageDialog : Dialog
     private readonly Context _context;
 
     private readonly TextBox _packageName = new();
-    private static readonly int _packageNameMaxLength = 36; // 36 for a string GUID
+    private const int _packageNameMaxLength = 36; // 36 for a string GUID
 
     public EditPackageDialog(Visual? root, Context context) : base(root, _header, _headerSub)
     {
@@ -52,7 +52,8 @@ public class EditPackageDialog : Dialog
         return stackPanel;
     }
 
-    public async Task<Context?> Show()
+    // clang-format off
+    public new async Task<Context?> Show()
     {
         var button = await base.Show();
         if (button is null || (TaskDialogStandardResult)button != TaskDialogStandardResult.OK)
@@ -62,5 +63,6 @@ public class EditPackageDialog : Dialog
 
         return new(_packageName.Text ?? "");
     }
+// clang-format on
 }
 }

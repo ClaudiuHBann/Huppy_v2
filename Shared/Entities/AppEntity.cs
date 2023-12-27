@@ -2,7 +2,7 @@
 
 namespace Shared.Models
 {
-public partial class App
+public partial class AppEntity
 {
     public int Id { get; set; }
 
@@ -15,9 +15,9 @@ public partial class App
     public string Image { get; set; } = null!;
 
     [JsonIgnore]
-    public virtual Category CategoryNavigation { get; set; } = null!;
+    public virtual CategoryEntity CategoryNavigation { get; set; } = null!;
 
     [JsonIgnore]
-    public virtual ICollection<Link> Links { get; set; } = new List<Link>();
+    public virtual ICollection<LinkEntity> Links { get; set; } = new List<LinkEntity>();
 }
 }

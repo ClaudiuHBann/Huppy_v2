@@ -20,11 +20,7 @@ if (app.Environment.IsDevelopment())
 app.UseCors(config => config.AllowAnyMethod()
                           .AllowAnyHeader()
                           .SetIsOriginAllowed(origin => true)
-#if DEBUG
-                          .WithOrigins("https://localhost:7194/")
-#else
-                          .WithOrigins("https://162.55.32.18:80/")
-#endif
+                          .WithOrigins("https://localhost:5001/")
                           .AllowCredentials());
 
 app.UseHttpsRedirection();

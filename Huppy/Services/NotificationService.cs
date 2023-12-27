@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 
+using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Controls.ApplicationLifetimes;
 
@@ -18,10 +19,13 @@ public class NotificationService
         {
             _manager = new(desktop.MainWindow);
         }
+        else if (Avalonia.Application.Current?.ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
+        {
+            _manager = new(TopLevel.GetTopLevel(singleViewPlatform.MainView));
+        }
         else
         {
-            // TODO: what can we do for the web?
-            throw new NotImplementedException();
+            throw new NotImplementedException("NotificationService is only for Desktop and Browser!");
         }
 
         _manager.Position = NotificationPosition.BottomRight;

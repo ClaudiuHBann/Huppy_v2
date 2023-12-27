@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 
 using Huppy.Models;
+using Huppy.Services;
 using Huppy.Utilities;
 
 using Shared.Models;
@@ -18,12 +19,16 @@ public class PackageViewModel : ViewModelBase
 
     private readonly DatabaseService _database;
     private readonly NotificationService _notification;
+    private readonly ClipboardService _clipboard;
 
-    public PackageViewModel(DatabaseService database, NotificationService notification)
+    public PackageViewModel(DatabaseService database, NotificationService notification, ClipboardService clipboard)
     {
         _database = database;
         _notification = notification;
+        _clipboard = clipboard;
     }
+
+    public async void ClipboardSaveText(string? text) => await _clipboard.SetText(text);
 
     public async Task<PackageEntity?> PackageCreate(PackageEntity packageEntity)
     {

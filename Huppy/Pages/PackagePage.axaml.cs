@@ -15,7 +15,8 @@ namespace Huppy.Pages
 {
 public partial class PackageView : UserControl
 {
-    private int _packageCurrentID => packageID.Text != null && int.TryParse(packageID.Text, out int id) ? id : 0;
+    private int _packageCurrentID =>
+        packageID.Content != null && int.TryParse(packageID.Content as string, out int id) ? id : 0;
 
     public PackageView()
     {
@@ -99,20 +100,21 @@ public partial class PackageView : UserControl
 
     private async void OnClickButtonCreatePackage(object? sender, RoutedEventArgs e)
     {
-        if (DataContext is not PackageViewModel packageViewModel || packageID.Text is null || packageName.Text is null)
+        if (DataContext is not PackageViewModel packageViewModel || packageID.Content is null ||
+            packageName.Content is not string packageNameContent)
         {
             return;
         }
 
         var apps = packageViewModel.Apps.Select(app => app.App.Id).ToArray();
-        var packageEntity = await packageViewModel.PackageCreate(new() { Apps = apps, Name = packageName.Text });
+        var packageEntity = await packageViewModel.PackageCreate(new() { Apps = apps, Name = packageNameContent });
         if (packageEntity == null)
         {
             return;
         }
 
-        packageID.Text = packageEntity.Id.ToString();
-        packageName.Text = packageEntity.Name;
+        packageID.Content = packageEntity.Id.ToString();
+        packageName.Content = packageEntity.Name;
 
         EnableButtonPackageCreate();
         EnableButtonPackageClear();
@@ -121,12 +123,12 @@ public partial class PackageView : UserControl
 
     private async void OnClickButtonEdit(object? sender, RoutedEventArgs e)
     {
-        if (packageID.Text is null || packageName.Text is null)
+        if (packageID.Content is null || packageName.Content is not string packageNameContent)
         {
             return;
         }
 
-        EditPackageDialog.Context context = new(packageName.Text);
+        EditPackageDialog.Context context = new(packageNameContent);
         EditPackageDialog dialog = new(VisualRoot as Visual, context);
         var result = await dialog.Show();
         if (result == null)
@@ -134,11 +136,11 @@ public partial class PackageView : UserControl
             return;
         }
 
-        if (packageName.Text != result.PackageName)
+        if (packageNameContent != result.PackageName)
         {
             EnableButtonPackageSave(true);
         }
-        packageName.Text = result.PackageName;
+        packageName.Content = result.PackageName;
     }
 
     private void OnClickButtonClear(object? sender, RoutedEventArgs e)
@@ -149,26 +151,28 @@ public partial class PackageView : UserControl
 
     private void PackageReset()
     {
-        if (DataContext is not PackageViewModel packageViewModel || packageID.Text is null || packageName.Text is null)
+        if (DataContext is not PackageViewModel packageViewModel || packageID.Content is null ||
+            packageName.Content is null)
         {
             return;
         }
 
-        packageID.Text = PackageViewModel.PackageIDDefault;
-        packageName.Text = PackageViewModel.PackageNameDefault;
+        packageID.Content = PackageViewModel.PackageIDDefault;
+        packageName.Content = PackageViewModel.PackageNameDefault;
 
         packageViewModel.PackageClear();
     }
 
     private async void OnClickButtonSave(object? sender, RoutedEventArgs e)
     {
-        if (DataContext is not PackageViewModel packageViewModel || packageID.Text is null || packageName.Text is null)
+        if (DataContext is not PackageViewModel packageViewModel || packageID.Content is null ||
+            packageName.Content is not string packageNameContent)
         {
             return;
         }
 
         var apps = packageViewModel.Apps.Select(app => app.App.Id).ToArray();
-        var packageEntity = new PackageEntity() { Id = _packageCurrentID, Apps = apps, Name = packageName.Text };
+        var packageEntity = new PackageEntity() { Id = _packageCurrentID, Apps = apps, Name = packageNameContent };
 
         var updated = await packageViewModel.PackageUpdate(packageEntity);
         if (updated == null || updated == false)
@@ -177,6 +181,25 @@ public partial class PackageView : UserControl
         }
 
         EnableButtonPackageSave(false);
+    }
+
+    private void OnClickButtonPackageIDName(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Button button || DataContext is not PackageViewModel packageViewModel)
+        {
+            return;
+        }
+
+        switch (button.Name)
+        {
+        case "packageID":
+            packageViewModel.ClipboardSaveText(packageID.Content as string);
+            break;
+
+        case "packageName":
+            packageViewModel.ClipboardSaveText(packageName.Content as string);
+            break;
+        }
     }
 }
 }

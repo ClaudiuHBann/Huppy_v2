@@ -125,11 +125,14 @@
 					   VerticalAlignment="Center"
 					   HorizontalAlignment="Center" />
 
-			<TextBlock Text="{Binding PackageIDDefault}"
-					   x:Name="packageID"
-					   FontSize="18"
-			           VerticalAlignment="Center"
-			           HorizontalAlignment="Center" />
+			<Button Content="{Binding PackageIDDefault}"
+					Click="OnClickButtonPackageIDName"
+					BorderBrush="Transparent"
+					Background="Transparent"
+					x:Name="packageID"
+					FontSize="18"
+			        VerticalAlignment="Center"
+			        HorizontalAlignment="Center" />
 					 
 		</StackPanel>
 
@@ -141,11 +144,14 @@
 			           VerticalAlignment="Center"
 			           HorizontalAlignment="Center" />
 
-			<TextBlock Text="{Binding PackageNameDefault}"
-					   x:Name="packageName"
-					   FontSize="18"
-					   VerticalAlignment="Center"
-					   HorizontalAlignment="Center" />
+			<Button Content="{Binding PackageNameDefault}"
+					Click="OnClickButtonPackageIDName"
+					BorderBrush="Transparent"
+					Background="Transparent"
+					x:Name="packageName"
+					FontSize="18"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center" />
 		
 		</StackPanel>
 

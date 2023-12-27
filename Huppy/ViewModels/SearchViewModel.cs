@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Collections.ObjectModel;
 
-using CommunityToolkit.Mvvm.ComponentModel;
-
 using Huppy.Models;
 
 namespace Huppy.ViewModels
 {
-public class SearchViewModel : ObservableObject
+public class SearchViewModel : ViewModelBase
 {
     public ObservableCollection<CategoryModel> Categories { get; set; } = [];
     public SearchModel Search { get; set; } = new();

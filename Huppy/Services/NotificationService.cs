@@ -8,11 +8,11 @@ namespace Huppy.Utilities
 {
 public class NotificationService
 {
-    private readonly WindowNotificationManager? _manager = null;
+    private WindowNotificationManager? _manager = null;
 
     private ObservableCollection<INotification>? _cache = [];
 
-    public NotificationService()
+    public void Initialize()
     {
         if (Avalonia.Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
@@ -20,6 +20,7 @@ public class NotificationService
         }
         else
         {
+            // TODO: what can we do for the web?
             throw new NotImplementedException();
         }
 

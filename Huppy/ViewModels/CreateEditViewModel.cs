@@ -1,10 +1,8 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-
-using Huppy.Utilities;
+﻿using Huppy.Utilities;
 
 namespace Huppy.ViewModels
 {
-public class CreateEditViewModel : ObservableObject
+public class CreateEditViewModel : ViewModelBase
 {
     public PackageViewModel PackageViewModel { get; set; }
     public CategoryViewModel CategoryViewModel { get; set; }

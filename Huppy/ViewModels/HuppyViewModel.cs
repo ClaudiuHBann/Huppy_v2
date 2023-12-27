@@ -1,7 +1,6 @@
 ﻿namespace Huppy.ViewModels
 {
-public class HuppyViewModel
-()
+public class HuppyViewModel : ViewModelBase
 {
 }
 }

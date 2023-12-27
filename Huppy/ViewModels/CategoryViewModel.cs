@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-using CommunityToolkit.Mvvm.ComponentModel;
-
 using Huppy.Models;
 using Huppy.Utilities;
 
@@ -11,7 +9,7 @@ using Avalonia.Threading;
 
 namespace Huppy.ViewModels
 {
-public partial class CategoryViewModel : ObservableObject
+public partial class CategoryViewModel : ViewModelBase
 {
     // TODO: can we make this a map?
     public ObservableCollection<KeyValuePair<CategoryModel, AppViewModel>> CategoryToApps { get; set; } = [];

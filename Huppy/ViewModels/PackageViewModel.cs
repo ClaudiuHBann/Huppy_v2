@@ -2,8 +2,6 @@
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 
-using CommunityToolkit.Mvvm.ComponentModel;
-
 using Huppy.Models;
 using Huppy.Utilities;
 
@@ -11,7 +9,7 @@ using Shared.Models;
 
 namespace Huppy.ViewModels
 {
-public class PackageViewModel : ObservableObject
+public class PackageViewModel : ViewModelBase
 {
     public ObservableCollection<AppModel> Apps { get; set; } = [];
 

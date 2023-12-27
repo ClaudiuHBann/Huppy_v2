@@ -4,14 +4,14 @@ namespace Huppy.Utilities
 {
 public static class DI
 {
-    private static readonly ServiceProvider _services = new ServiceCollection()
-                                                            .AddSingleton<DatabaseService>()
-                                                            .AddSingleton<NotificationService>()
-                                                            .BuildServiceProvider();
+    public static ServiceProvider Services { get; set; } = new ServiceCollection()
+                                                               .AddSingleton<DatabaseService>()
+                                                               .AddSingleton<NotificationService>()
+                                                               .BuildServiceProvider();
 
     public static Type Create<Type>(params object[] parameters)
     {
-        return ActivatorUtilities.CreateInstance<Type>(_services, parameters);
+        return ActivatorUtilities.CreateInstance<Type>(Services, parameters);
     }
 }
 }

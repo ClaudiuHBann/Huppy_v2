@@ -1,8 +1,11 @@
 using Huppy.API.Models;
+using Huppy.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<HuppyContext>();
+builder.Services.AddTransient<PackageService>();
+builder.Services.AddTransient<CategoryService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

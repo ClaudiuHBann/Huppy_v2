@@ -1,30 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
-using Huppy.API.Models;
+using Huppy.API.Services;
 
-using Shared.Models;
 using Shared.Utilities;
 
 namespace Huppy.API.Controllers
 {
 [ApiController]
 [Route("[controller]")]
-public class CategoryController
-(ILogger<CategoryController> logger, HuppyContext context) : ControllerBase
+public class CategoryController : BaseController<CategoryController>
 {
+    private readonly CategoryService _categoryService;
+
+    public CategoryController(ILogger<CategoryController> logger, CategoryService categoryService) : base(logger)
+    {
+        _categoryService = categoryService;
+    }
+
     [HttpGet("[action]")]
     public async Task<ActionResult> GetCategoryToApps()
     {
-        List<KeyValuePair<CategoryEntity, List<AppEntity>>> categoryToApps = [];
-
-        var groupsUnordered = await context.Apps.GroupBy(app => app.CategoryNavigation).ToListAsync();
-        var groupsOrdered = groupsUnordered.OrderBy(group => group.Key.Name);
-        foreach (var group in groupsOrdered)
-        {
-            categoryToApps.Add(new(group.Key, [..group]));
-        }
-
+        var categoryToApps = await _categoryService.GetCategoryToApps();
         return Ok(categoryToApps.ToJSON());
     }
 }

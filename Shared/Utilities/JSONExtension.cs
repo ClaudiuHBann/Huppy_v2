@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
 
 namespace Shared.Utilities
 {
@@ -6,12 +6,13 @@ public static class JSONExtension
 {
     public static string ToJSON(this object data)
     {
-        return JsonConvert.SerializeObject(data, Formatting.Indented);
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        return JsonSerializer.Serialize(data, options);
     }
 
     public static T? FromJSON<T>(this string json)
     {
-        return JsonConvert.DeserializeObject<T>(json);
+        return JsonSerializer.Deserialize<T>(json);
     }
 }
 }

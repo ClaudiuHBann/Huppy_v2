@@ -93,14 +93,33 @@ public partial class PackageView : UserControl
         packageViewModel.Apps.Remove(app);
     }
 
-    private void OnClickButtonLoadPackage(object? sender, RoutedEventArgs e)
+    private async void OnClickButtonLoadPackage(object? sender, RoutedEventArgs e)
     {
+        if (DataContext is not PackageViewModel packageViewModel)
+        {
+            return;
+        }
+
+        PackageLoadDialog dialog = new(this);
+        var resultDialog = await dialog.Show();
+        if (resultDialog == null)
+        {
+            return;
+        }
+
+        var resultRequest = await packageViewModel.PackageLoad(resultDialog);
+        if (resultRequest == null)
+        {
+            return;
+        }
+
         PackageReset();
+        PackageLoad(resultRequest);
     }
 
     private async void OnClickButtonCreatePackage(object? sender, RoutedEventArgs e)
     {
-        if (DataContext is not PackageViewModel packageViewModel || packageID.Content is null ||
+        if (DataContext is not PackageViewModel packageViewModel ||
             packageName.Content is not string packageNameContent)
         {
             return;
@@ -123,7 +142,7 @@ public partial class PackageView : UserControl
 
     private async void OnClickButtonEdit(object? sender, RoutedEventArgs e)
     {
-        if (packageID.Content is null || packageName.Content is not string packageNameContent)
+        if (packageName.Content is not string packageNameContent)
         {
             return;
         }
@@ -151,8 +170,7 @@ public partial class PackageView : UserControl
 
     private void PackageReset()
     {
-        if (DataContext is not PackageViewModel packageViewModel || packageID.Content is null ||
-            packageName.Content is null)
+        if (DataContext is not PackageViewModel packageViewModel)
         {
             return;
         }
@@ -161,6 +179,19 @@ public partial class PackageView : UserControl
         packageName.Content = PackageViewModel.PackageNameDefault;
 
         packageViewModel.PackageClear();
+    }
+
+    private void PackageLoad(PackageEntity packageEntity)
+    {
+        if (DataContext is not PackageViewModel packageViewModel)
+        {
+            return;
+        }
+
+        packageID.Content = packageEntity.Id;
+        packageName.Content = packageEntity.Name;
+
+        packageViewModel.PackageLoad(packageEntity.Apps);
     }
 
     private async void OnClickButtonSave(object? sender, RoutedEventArgs e)

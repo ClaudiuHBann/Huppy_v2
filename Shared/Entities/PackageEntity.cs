@@ -17,6 +17,10 @@ public partial class PackageEntity
     public PackageEntity(PackageResponse packageResponse)
     {
         Id = packageResponse.Id;
+        if (packageResponse.Apps != null)
+        {
+            Apps = packageResponse.Apps;
+        }
         Name = packageResponse.Name;
     }
 }

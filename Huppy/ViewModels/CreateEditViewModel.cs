@@ -11,8 +11,11 @@ public class CreateEditViewModel : ViewModelBase
     public CreateEditViewModel()
     {
         PackageViewModel = DI.Create<PackageViewModel>();
-        CategoryViewModel = DI.Create<CategoryViewModel>(PackageViewModel);
+        CategoryViewModel = DI.Create<CategoryViewModel>();
         SearchViewModel = new(CategoryViewModel);
+
+        CategoryViewModel.Apps = PackageViewModel.Apps;
+        PackageViewModel.CategoryToApps = CategoryViewModel.CategoryToApps;
     }
 }
 }

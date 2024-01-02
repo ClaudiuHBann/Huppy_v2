@@ -82,6 +82,29 @@ public class DatabaseService
         }
     }
 
+    public async Task<PackageEntity?> PackageLoad(PackageRequest packageRequest)
+    {
+        ClearLastError();
+
+        var response = await _client.PostAsJsonAsync(_URLPackage + nameof(PackageLoad), packageRequest);
+        var result = await response.Content.ReadAsStringAsync();
+        if (result == null)
+        {
+            return null;
+        }
+
+        if (response.IsSuccessStatusCode)
+        {
+            var packageResponse = result.FromJSON<PackageResponse>();
+            return packageResponse == null ? null : new(packageResponse);
+        }
+        else
+        {
+            LastError = result;
+            return null;
+        }
+    }
+
     private void ClearLastError() => LastError = "";
 }
 }

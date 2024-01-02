@@ -7,12 +7,15 @@ using Huppy.Services;
 using Huppy.Utilities;
 
 using Shared.Models;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Huppy.ViewModels
 {
 public class PackageViewModel : ViewModelBase
 {
     public ObservableCollection<AppModel> Apps { get; set; } = [];
+    public ObservableCollection<KeyValuePair<CategoryModel, AppViewModel>>? CategoryToApps { get; set; } = null;
 
     public static string PackageIDDefault { get; } = "0";
     public static string PackageNameDefault { get; } = "None";
@@ -52,6 +55,33 @@ public class PackageViewModel : ViewModelBase
         }
 
         return response;
+    }
+
+    public async Task<PackageEntity?> PackageLoad(PackageEntity packageEntity)
+    {
+        var response = await _database.PackageLoad(new(packageEntity));
+        if (response == null)
+        {
+            _notification.NotifyE(_database.LastError);
+            return null;
+        }
+
+        return response;
+    }
+
+    public void PackageLoad(int[] apps)
+    {
+        CategoryToApps?.SelectMany(pair => pair.Value.Apps)
+            .ToList()
+            .ForEach(appView =>
+                     {
+                         // update the real app is checked state
+                         appView.IsChecked = apps.Contains(appView.App.Id);
+                         if (appView.IsChecked)
+                         {
+                             Apps.Add(appView);
+                         }
+                     });
     }
 
     public void PackageClear()

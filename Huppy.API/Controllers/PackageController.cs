@@ -25,7 +25,7 @@ public class PackageController : BaseController<PackageController>
     [HttpPost("[action]")]
     public async Task<ActionResult> PackageCreate([FromBody] PackageRequest packageRequest)
     {
-        if (!await _packageService.AreAppsValid(packageRequest.Apps))
+        if (packageRequest.Apps != null && !await _packageService.AreAppsValid(packageRequest.Apps))
         {
             return MakeAndLogBadRequest("The package could not be created because it contains invalid apps!");
         }
@@ -40,7 +40,7 @@ public class PackageController : BaseController<PackageController>
         var id = await _packageService.Count() + 1;
         var nameUnique = await _packageService.FindUniquePackageName(packageRequest.Name);
 
-        PackageEntity packageEntity = new() { Id = id, Apps = packageRequest.Apps, Name = nameUnique };
+        PackageEntity packageEntity = new() { Id = id, Apps = packageRequest.Apps ?? [], Name = nameUnique };
         if (await _packageService.Add(packageEntity))
         {
             var packageResponse = new PackageResponse(packageEntity);
@@ -55,7 +55,7 @@ public class PackageController : BaseController<PackageController>
     [HttpPost("[action]")]
     public async Task<ActionResult> PackageUpdate([FromBody] PackageRequest packageRequest)
     {
-        if (!await _packageService.AreAppsValid(packageRequest.Apps))
+        if (packageRequest.Apps != null && !await _packageService.AreAppsValid(packageRequest.Apps))
         {
             return MakeAndLogBadRequest("The package could not be created because it contains invalid apps!");
         }
@@ -73,15 +73,41 @@ public class PackageController : BaseController<PackageController>
             return MakeAndLogBadRequest($"The package with the name \"{packageRequest.Name}\" already exists!");
         }
 
-        packageEntity.Apps = packageRequest.Apps;
         packageEntity.Name = packageRequest.Name;
+        if (packageRequest.Apps != null)
+        {
+            packageEntity.Apps = packageRequest.Apps;
+        }
 
         // if the properties are the same SaveChanges will return 0 but it's fine so:
         var savedChanges = await _packageService.Update(packageEntity);
-        var updated = savedChanges == 0 && Enumerable.SequenceEqual(packageEntity.Apps, packageRequest.Apps) &&
-                      packageEntity.Name == packageRequest.Name;
+        var updatedApps =
+            packageRequest.Apps == null || Enumerable.SequenceEqual(packageEntity.Apps, packageRequest.Apps);
+        var updated = savedChanges == 0 && updatedApps && packageEntity.Name == packageRequest.Name;
 
         return Ok(savedChanges > 0 || updated);
+    }
+
+    [HttpPost("[action]")]
+    public async Task<ActionResult> PackageLoad([FromBody] PackageRequest packageRequest)
+    {
+        PackageEntity? packageEntity = null;
+        if (packageRequest.Id != -1)
+        {
+            packageEntity = await _packageService.FirstOrDefault(package => package.Id == packageRequest.Id);
+        }
+        else
+        {
+            packageEntity = await _packageService.FirstOrDefault(package => package.Name == packageRequest.Name);
+        }
+
+        if (packageEntity == null)
+        {
+            return MakeAndLogBadRequest("The package could not be found!");
+        }
+
+        var packageResponse = new PackageResponse(packageEntity);
+        return Ok(packageResponse.ToJSON());
     }
 }
 }

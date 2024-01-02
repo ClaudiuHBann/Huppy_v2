@@ -13,14 +13,13 @@ public partial class CategoryViewModel : ViewModelBase
 {
     // TODO: can we make this a map?
     public ObservableCollection<KeyValuePair<CategoryModel, AppViewModel>> CategoryToApps { get; set; } = [];
+    public ObservableCollection<AppModel>? Apps { get; set; } = null;
 
     private readonly DatabaseService _database;
-    private readonly PackageViewModel _packageViewModel;
 
-    public CategoryViewModel(DatabaseService database, PackageViewModel packageViewModel)
+    public CategoryViewModel(DatabaseService database)
     {
         _database = database;
-        _packageViewModel = packageViewModel;
 
         Populate();
     }
@@ -32,8 +31,7 @@ public partial class CategoryViewModel : ViewModelBase
             ObservableCollection<AppModel> collection = [];
             pair.Value.Select(app => new AppModel(app)).ToList().ForEach(collection.Add);
 
-            await Dispatcher.UIThread.InvokeAsync(
-                () => CategoryToApps.Add(new(new(pair.Key), new(collection, _packageViewModel))));
+            await Dispatcher.UIThread.InvokeAsync(() => CategoryToApps.Add(new(new(pair.Key), new(collection, Apps))));
         }
     }
 }

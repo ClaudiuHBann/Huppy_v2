@@ -73,4 +73,8 @@
       <DependentUpon>xxx.Context.tt</DependentUpon>
     </Compile>
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\Fonts\" />
+  </ItemGroup>
 </Project>

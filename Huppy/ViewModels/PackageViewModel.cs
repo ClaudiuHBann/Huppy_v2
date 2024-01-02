@@ -1,14 +1,14 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using Huppy.Models;
 using Huppy.Services;
 using Huppy.Utilities;
+using Huppy.Services.Database;
 
 using Shared.Models;
-using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace Huppy.ViewModels
 {
@@ -35,10 +35,10 @@ public class PackageViewModel : ViewModelBase
 
     public async Task<PackageEntity?> PackageCreate(PackageEntity packageEntity)
     {
-        var response = await _database.PackageCreate(new(packageEntity));
+        var response = await _database.Package.Create(new(packageEntity));
         if (response == null)
         {
-            _notification.NotifyE(_database.LastError);
+            _notification.NotifyE(_database.Package.LastError);
             return null;
         }
 
@@ -47,26 +47,26 @@ public class PackageViewModel : ViewModelBase
 
     public async Task<bool?> PackageUpdate(PackageEntity packageEntity)
     {
-        var response = await _database.PackageUpdate(new(packageEntity));
+        var response = await _database.Package.Update(new(packageEntity));
         if (response == null)
         {
-            _notification.NotifyE(_database.LastError);
+            _notification.NotifyE(_database.Package.LastError);
             return null;
         }
 
-        return response;
+        return response.Updated;
     }
 
     public async Task<PackageEntity?> PackageLoad(PackageEntity packageEntity)
     {
-        var response = await _database.PackageLoad(new(packageEntity));
+        var response = await _database.Package.Load(new(packageEntity));
         if (response == null)
         {
-            _notification.NotifyE(_database.LastError);
+            _notification.NotifyE(_database.Package.LastError);
             return null;
         }
 
-        return response;
+        return new(response);
     }
 
     public void PackageLoad(int[] apps)

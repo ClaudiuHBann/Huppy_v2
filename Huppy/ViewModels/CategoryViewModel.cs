@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using Huppy.Models;
-using Huppy.Utilities;
+using Huppy.Services.Database;
 
 using Avalonia.Threading;
 
@@ -26,7 +26,7 @@ public partial class CategoryViewModel : ViewModelBase
 
     public async void Populate()
     {
-        foreach (var pair in await _database.GetCategoryToApps())
+        foreach (var pair in await _database.Category.GetCategoryToApps())
         {
             ObservableCollection<AppModel> collection = [];
             pair.Value.Select(app => new AppModel(app)).ToList().ForEach(collection.Add);

@@ -23,15 +23,15 @@ public class PackageController : BaseController<PackageController>
     }
 
     [HttpPost("[action]")]
-    public async Task<ActionResult> PackageCreate([FromBody] PackageRequest packageRequest)
+    public async Task<ActionResult> Create([FromBody] PackageRequest packageRequest)
     {
-        if (packageRequest.Apps != null && !await _packageService.AreAppsValid(packageRequest.Apps))
+        if (!await _packageService.AreAppsValid(packageRequest.Apps))
         {
             return MakeAndLogBadRequest("The package could not be created because it contains invalid apps!");
         }
 
         // this method will never fail on name not unqiue so:
-        if (packageRequest.Name == null || packageRequest.Name == "")
+        if (packageRequest.Name == "")
         {
             packageRequest.Name = Guid.NewGuid().ToString();
             Logger.LogInformation($"The package did not have any name so we generated one: {packageRequest.Name}");
@@ -53,9 +53,9 @@ public class PackageController : BaseController<PackageController>
     }
 
     [HttpPost("[action]")]
-    public async Task<ActionResult> PackageUpdate([FromBody] PackageRequest packageRequest)
+    public async Task<ActionResult> Update([FromBody] PackageRequest packageRequest)
     {
-        if (packageRequest.Apps != null && !await _packageService.AreAppsValid(packageRequest.Apps))
+        if (!await _packageService.AreAppsValid(packageRequest.Apps))
         {
             return MakeAndLogBadRequest("The package could not be created because it contains invalid apps!");
         }
@@ -74,22 +74,19 @@ public class PackageController : BaseController<PackageController>
         }
 
         packageEntity.Name = packageRequest.Name;
-        if (packageRequest.Apps != null)
-        {
-            packageEntity.Apps = packageRequest.Apps;
-        }
+        packageEntity.Apps = packageRequest.Apps;
 
         // if the properties are the same SaveChanges will return 0 but it's fine so:
         var savedChanges = await _packageService.Update(packageEntity);
-        var updatedApps =
-            packageRequest.Apps == null || Enumerable.SequenceEqual(packageEntity.Apps, packageRequest.Apps);
-        var updated = savedChanges == 0 && updatedApps && packageEntity.Name == packageRequest.Name;
+        var updated = savedChanges == 0 && Enumerable.SequenceEqual(packageEntity.Apps, packageRequest.Apps) &&
+                      packageEntity.Name == packageRequest.Name;
 
-        return Ok(savedChanges > 0 || updated);
+        var packageResponse = new PackageResponse(savedChanges > 0 || updated);
+        return Ok(packageResponse.ToJSON());
     }
 
     [HttpPost("[action]")]
-    public async Task<ActionResult> PackageLoad([FromBody] PackageRequest packageRequest)
+    public async Task<ActionResult> Load([FromBody] PackageRequest packageRequest)
     {
         PackageEntity? packageEntity = null;
         if (packageRequest.Id != -1)

@@ -1,4 +1,5 @@
 ﻿using Huppy.Services;
+using Huppy.Services.Database;
 
 using Microsoft.Extensions.DependencyInjection;
 

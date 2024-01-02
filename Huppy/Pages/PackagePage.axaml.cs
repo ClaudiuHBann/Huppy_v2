@@ -188,7 +188,7 @@ public partial class PackageView : UserControl
             return;
         }
 
-        packageID.Content = packageEntity.Id;
+        packageID.Content = packageEntity.Id.ToString();
         packageName.Content = packageEntity.Name;
 
         packageViewModel.PackageLoad(packageEntity.Apps);

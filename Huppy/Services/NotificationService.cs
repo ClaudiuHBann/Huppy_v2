@@ -5,15 +5,17 @@ using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Controls.ApplicationLifetimes;
 
-namespace Huppy.Utilities
+using Huppy.Services;
+
+namespace Huppy.Services
 {
-public class NotificationService
+public class NotificationService : BaseService
 {
     private WindowNotificationManager? _manager = null;
 
     private ObservableCollection<INotification>? _cache = [];
 
-    public void Initialize()
+    public override void Initialize()
     {
         if (Avalonia.Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
@@ -25,7 +27,7 @@ public class NotificationService
         }
         else
         {
-            throw new NotImplementedException("NotificationService is only for Desktop and Browser!");
+            throw new NotSupportedException("Unsupported platform");
         }
 
         _manager.Position = NotificationPosition.BottomRight;

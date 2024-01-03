@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 
 using Huppy.Models;
 using Huppy.Services;
-using Huppy.Utilities;
 using Huppy.Services.Database;
 
 using Shared.Models;

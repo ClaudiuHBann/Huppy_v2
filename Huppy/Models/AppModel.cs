@@ -1,16 +1,28 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
+using Shared.Models;
+using Huppy.Services;
+
 namespace Huppy.Models
 {
 public partial class AppModel
-(Shared.Models.AppEntity app) : ObservableObject
+(AppEntity app) : ObservableObject
 {
-    public Shared.Models.AppEntity App { get; set; } = app;
-
-    [ObservableProperty]
-    public bool isVisible = true;
+    public AppEntity App { get; set; } = app;
 
     [ObservableProperty]
     public bool isChecked = false;
+
+    private bool isVisible = !app.Proposed;
+    public bool IsVisible
+    {
+        get => isVisible;
+
+    private
+        set => SetProperty(ref isVisible, value);
+    }
+
+    public bool SetVisibility(bool visible, SettingsService settings) => IsVisible =
+        visible && (!App.Proposed || settings.Settings.ShowProposedApps);
 }
 }

@@ -1,4 +1,4 @@
-﻿using Huppy.Utilities;
+﻿using Huppy.Services;
 
 namespace Huppy.ViewModels
 {
@@ -12,7 +12,7 @@ public class CreateEditViewModel : ViewModelBase
     {
         PackageViewModel = DI.Create<PackageViewModel>();
         CategoryViewModel = DI.Create<CategoryViewModel>();
-        SearchViewModel = new(CategoryViewModel);
+        SearchViewModel = DI.Create<SearchViewModel>(CategoryViewModel);
 
         CategoryViewModel.Apps = PackageViewModel.Apps;
         PackageViewModel.CategoryToApps = CategoryViewModel.CategoryToApps;

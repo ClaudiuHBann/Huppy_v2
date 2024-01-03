@@ -3,9 +3,9 @@
 namespace Huppy.API.Controllers
 {
 [Controller]
-public abstract class BaseController<T>(ILogger<T> logger) : ControllerBase
+public abstract class BaseController<Type>(ILogger<Type> logger) : ControllerBase
 {
-    public ILogger<T> Logger { get; } = logger;
+    public ILogger<Type> Logger { get; } = logger;
 
     protected ActionResult MakeAndLogBadRequest(string message)
     {

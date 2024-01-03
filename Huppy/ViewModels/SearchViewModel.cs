@@ -1,9 +1,10 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 using Huppy.Models;
+using Huppy.Services;
 
 namespace Huppy.ViewModels
 {
@@ -13,10 +14,12 @@ public class SearchViewModel : ViewModelBase
     public SearchModel Search { get; set; } = new();
 
     private readonly CategoryViewModel _categoryViewModel;
+    private readonly SettingsService _settings;
 
-    public SearchViewModel(CategoryViewModel categoryViewModel)
+    public SearchViewModel(CategoryViewModel categoryViewModel, SettingsService settings)
     {
         _categoryViewModel = categoryViewModel;
+        _settings = settings;
 
         _categoryViewModel.CategoryToApps.CollectionChanged += OnCollectionChanged;
         Categories.Insert(0, SearchModel.CategoryAll);
@@ -60,7 +63,7 @@ public class SearchViewModel : ViewModelBase
                         })
             // clear the visible flag for apps
             .ToList()
-            .ForEach(appView => appView.IsVisible = true);
+            .ForEach(appView => appView.SetVisibility(true, _settings));
 
         // first hide whole categories to speed up the app hiding
         if (Search.Category != null && Search.Category.Category.Id != SearchModel.CategoryAll.Category.Id)
@@ -74,7 +77,7 @@ public class SearchViewModel : ViewModelBase
             _categoryViewModel.CategoryToApps.Where(pair => pair.Key.IsVisible)
                 .SelectMany(pair => pair.Value.Apps)
                 .ToList()
-                .ForEach(appView => appView.IsVisible = CanBe(Search.Query, appView.App.Name));
+                .ForEach(appView => appView.SetVisibility(CanBe(Search.Query, appView.App.Name), _settings));
 
             // hide the categories with 0 apps
             _categoryViewModel.CategoryToApps

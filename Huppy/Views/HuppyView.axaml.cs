@@ -1,11 +1,16 @@
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Threading;
+
 using FluentAvalonia.UI.Controls;
 
+using Huppy.Services;
 using Huppy.Views.Dialogs;
+using Microsoft.Extensions.DependencyInjection;
+using Shared.Utilities;
 
 namespace Huppy.Views
 {
@@ -90,5 +95,8 @@ public partial class HuppyView : UserControl
 
         return userControl;
     }
+
+    private void OnHuppyLoaded(object? sender, RoutedEventArgs e) => DI.Initialize();
+    private void OnHuppyUnloaded(object? sender, RoutedEventArgs e) => DI.Uninitialize();
 }
 }

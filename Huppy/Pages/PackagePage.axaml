@@ -127,6 +127,7 @@
 
 			<Button Content="{Binding PackageIDDefault}"
 					Click="OnClickButtonPackageIDName"
+					ToolTip.Tip="Copy to clipboard"
 					BorderBrush="Transparent"
 					Background="Transparent"
 					x:Name="packageID"
@@ -146,6 +147,7 @@
 
 			<Button Content="{Binding PackageNameDefault}"
 					Click="OnClickButtonPackageIDName"
+					ToolTip.Tip="Copy to clipboard"
 					BorderBrush="Transparent"
 					Background="Transparent"
 					x:Name="packageName"

@@ -4,15 +4,9 @@ namespace Shared.Utilities
 {
 public static class JSONExtension
 {
-    public static string ToJSON(this object data)
-    {
-        var options = new JsonSerializerOptions { WriteIndented = true };
-        return JsonSerializer.Serialize(data, options);
-    }
+    private static readonly JsonSerializerOptions options = new() { WriteIndented = true };
 
-    public static T? FromJSON<T>(this string json)
-    {
-        return JsonSerializer.Deserialize<T>(json);
-    }
+    public static string ToJSON(this object data) => JsonSerializer.Serialize(data, options);
+    public static Type? FromJSON<Type>(this string json) => JsonSerializer.Deserialize<Type>(json, options);
 }
 }

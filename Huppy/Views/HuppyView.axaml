@@ -7,6 +7,8 @@
 			 xmlns:models="clr-namespace:Huppy.Models"
 			 xmlns:views="clr-namespace:Huppy.Views"
 			 xmlns:pages="clr-namespace:Huppy.Pages"
+			 Loaded="OnHuppyLoaded"
+			 Unloaded="OnHuppyUnloaded"
              x:Class="Huppy.Views.HuppyView"
              x:DataType="viewModels:HuppyViewModel">
 

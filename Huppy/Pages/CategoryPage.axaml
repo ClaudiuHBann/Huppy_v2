@@ -8,31 +8,47 @@
              x:Class="Huppy.Pages.CategoryView"
              x:DataType="viewModels:CategoryViewModel">
 
-	<ScrollViewer>
-		<ItemsRepeater ItemsSource="{Binding CategoryToApps}">
+	<Grid RowDefinitions="*, 35">
+		<ScrollViewer>
+			<ItemsRepeater ItemsSource="{Binding CategoryToApps}">
 
-			<ItemsRepeater.Layout>
-				<StackLayout Spacing="10" />
-			</ItemsRepeater.Layout>
+				<ItemsRepeater.Layout>
+					<StackLayout Spacing="10" />
+				</ItemsRepeater.Layout>
 
-			<ItemsRepeater.ItemTemplate>
-				<DataTemplate>
+				<ItemsRepeater.ItemTemplate>
+					<DataTemplate>
 
-					<StackPanel IsVisible="{Binding Key.IsVisible}">
+						<StackPanel IsVisible="{Binding Key.IsVisible}">
 
-						<TextBlock Text="{Binding Key.Category.Name}"
-								   FontSize="22"
-								   Margin="10, 0, 0, 0" />
+							<TextBlock Text="{Binding Key.Category.Name}"
+									   FontSize="22"
+									   Margin="10, 0, 0, 0" />
 
-						<pages:AppView DataContext="{Binding Value}"
-									   Margin="25, 10, 0, 0"/>
+							<pages:AppView DataContext="{Binding Value}"
+										   Margin="25, 10, 0, 0"/>
 
-					</StackPanel>
+						</StackPanel>
 
-				</DataTemplate>
-			</ItemsRepeater.ItemTemplate>
+					</DataTemplate>
+				</ItemsRepeater.ItemTemplate>
 
-		</ItemsRepeater>
-	</ScrollViewer>
+			</ItemsRepeater>
+		</ScrollViewer>
+
+		<StackPanel Grid.Row="1"
+					HorizontalAlignment="Right"
+					Orientation="Horizontal">
+			
+			<CheckBox Content="Show Proposed Apps"
+					  IsChecked="{Binding Settings.ShowProposedApps}"
+					  Name="checkBoxShowProposedApps"
+					  Checked="OnCheckedCheckBoxShowProposedApps" />
+			
+			<Button Content="Propose An App"
+					Click="OnClickButtonProposeAnApp" />
+			
+		</StackPanel>
+	</Grid>
 
 </UserControl>

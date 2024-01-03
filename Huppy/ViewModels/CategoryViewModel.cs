@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using Huppy.Models;
+using Huppy.Services;
 using Huppy.Services.Database;
 
 using Avalonia.Threading;
+
+using Shared.Entities;
 
 namespace Huppy.ViewModels
 {
@@ -16,10 +19,14 @@ public partial class CategoryViewModel : ViewModelBase
     public ObservableCollection<AppModel>? Apps { get; set; } = null;
 
     private readonly DatabaseService _database;
+    private readonly SettingsService _settings;
 
-    public CategoryViewModel(DatabaseService database)
+    public SettingsEntity Settings => _settings.Settings;
+
+    public CategoryViewModel(DatabaseService database, SettingsService settings)
     {
         _database = database;
+        _settings = settings;
 
         Populate();
     }
@@ -29,10 +36,18 @@ public partial class CategoryViewModel : ViewModelBase
         foreach (var pair in await _database.Category.GetCategoryToApps())
         {
             ObservableCollection<AppModel> collection = [];
-            pair.Value.Select(app => new AppModel(app)).ToList().ForEach(collection.Add);
+
+            // order by name first and next by proposed because the proposed apps are at the end
+            pair.Value.OrderBy(app => app.Name)
+                .OrderBy(app => app.Proposed)
+                .Select(app => new AppModel(app))
+                .ToList()
+                .ForEach(collection.Add);
 
             await Dispatcher.UIThread.InvokeAsync(() => CategoryToApps.Add(new(new(pair.Key), new(collection, Apps))));
         }
     }
+
+    public void ShowProposedApps(bool show) => _settings.Settings.ShowProposedApps = show;
 }
 }

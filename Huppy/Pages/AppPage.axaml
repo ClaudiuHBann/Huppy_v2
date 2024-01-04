@@ -29,22 +29,37 @@
 					<Border ClipToBounds="True"
 							IsVisible="{Binding IsVisible}"
 							CornerRadius="10">
-						<StackPanel Width="125"
-									Height="100"
-									Background="{Binding IsChecked, Converter={StaticResource BoolToColorConverter}}"
-								    PointerReleased="OnPointerReleasedApp"
-									UseLayoutRounding="True">
+						
+						<Canvas UseLayoutRounding="True"
+								Width="125"
+								Height="100">
+							
+							<StackPanel Width="125"
+										Height="100"
+										Background="{Binding IsChecked, Converter={StaticResource BoolToColorConverter}}"
+									    PointerReleased="OnPointerReleasedApp">
 
-							<TextBlock Text="{Binding App.Name}"
+
+								<TextBlock Text="{Binding App.Name}"
+										   Margin="0, 5, 0, 0"
+										   FontSize="18"
+										   HorizontalAlignment="Center" />
+
+								<Image asyncImageLoader:ImageLoader.Source="{Binding App.Image}"
 									   Margin="0, 5, 0, 0"
-									   FontSize="18"
-									   HorizontalAlignment="Center" />
+									   Width="60"/>
 
-							<Image asyncImageLoader:ImageLoader.Source="{Binding App.Image}"
-								   Margin="0, 5, 0, 0"
-								   Width="60"/>
+							</StackPanel>
 
-						</StackPanel>
+							<Image Source="avares://Huppy/Assets/Icons/Warning.png"
+								   Canvas.Right="0"
+								   ToolTip.Tip="This app was not fully verified!"
+								   IsVisible="{Binding App.Proposed}"
+								   Width="22"
+								   Height="22" />
+
+						</Canvas>
+						
 					</Border>
 
 				</DataTemplate>

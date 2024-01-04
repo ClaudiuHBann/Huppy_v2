@@ -63,7 +63,7 @@ public class SearchViewModel : ViewModelBase
                         })
             // clear the visible flag for apps
             .ToList()
-            .ForEach(appView => appView.SetVisibility(true, _settings));
+            .ForEach(appView => appView.IsVisible = true);
 
         // first hide whole categories to speed up the app hiding
         if (Search.Category != null && Search.Category.Category.Id != SearchModel.CategoryAll.Category.Id)
@@ -77,7 +77,7 @@ public class SearchViewModel : ViewModelBase
             _categoryViewModel.CategoryToApps.Where(pair => pair.Key.IsVisible)
                 .SelectMany(pair => pair.Value.Apps)
                 .ToList()
-                .ForEach(appView => appView.SetVisibility(CanBe(Search.Query, appView.App.Name), _settings));
+                .ForEach(appView => appView.IsVisible = CanBe(Search.Query, appView.App.Name));
 
             // hide the categories with 0 apps
             _categoryViewModel.CategoryToApps

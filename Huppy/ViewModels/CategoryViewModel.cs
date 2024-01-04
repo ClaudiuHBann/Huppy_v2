@@ -40,7 +40,12 @@ public partial class CategoryViewModel : ViewModelBase
             // order by name first and next by proposed because the proposed apps are at the end
             pair.Value.OrderBy(app => app.Name)
                 .OrderBy(app => app.Proposed)
-                .Select(app => new AppModel(app))
+                .Select(app =>
+                        {
+                            var appModel = new AppModel(app);
+                            appModel.Update(_settings.Settings);
+                            return appModel;
+                        })
                 .ToList()
                 .ForEach(collection.Add);
 
@@ -48,6 +53,11 @@ public partial class CategoryViewModel : ViewModelBase
         }
     }
 
-    public void ShowProposedApps(bool show) => _settings.Settings.ShowProposedApps = show;
+    public void ShowProposedApps(bool show)
+    {
+        _settings.Settings.ShowProposedApps = show;
+        // update the apps
+        CategoryToApps.SelectMany(pair => pair.Value.Apps).ToList().ForEach(app => app.Update(_settings.Settings));
+    }
 }
 }

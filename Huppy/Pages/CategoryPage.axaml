@@ -43,6 +43,7 @@
 			<CheckBox Content="Show Proposed Apps"
 					  IsChecked="{Binding Settings.ShowProposedApps}"
 					  Name="checkBoxShowProposedApps"
+					  Unchecked="OnCheckedCheckBoxShowProposedApps"
 					  Checked="OnCheckedCheckBoxShowProposedApps" />
 			
 			<Button Content="Propose An App"

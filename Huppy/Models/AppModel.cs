@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 using Shared.Models;
-using Huppy.Services;
+using Shared.Entities;
 
 namespace Huppy.Models
 {
@@ -13,16 +13,9 @@ public partial class AppModel
     [ObservableProperty]
     public bool isChecked = false;
 
+    [ObservableProperty]
     private bool isVisible = !app.Proposed;
-    public bool IsVisible
-    {
-        get => isVisible;
 
-    private
-        set => SetProperty(ref isVisible, value);
-    }
-
-    public bool SetVisibility(bool visible, SettingsService settings) => IsVisible =
-        visible && (!App.Proposed || settings.Settings.ShowProposedApps);
+    public bool Update(SettingsEntity settings) => IsVisible = !App.Proposed || settings.ShowProposedApps;
 }
 }

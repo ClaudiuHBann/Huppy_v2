@@ -5,7 +5,7 @@ namespace Shared.Requests
 public class PackageRequest
 {
     public int Id { get; set; } = -1;
-    public int[] Apps { get; set; } = [];
+    public int[] Apps { get; set; } = Array.Empty<int>();
     public string Name { get; set; } = "";
 
     public PackageRequest()
@@ -15,7 +15,7 @@ public class PackageRequest
     public PackageRequest(PackageEntity packageEntity)
     {
         Id = packageEntity.Id;
-        Apps = packageEntity.Apps ?? [];
+        Apps = packageEntity.Apps ?? Array.Empty<int>();
         Name = packageEntity.Name ?? "";
     }
 }

@@ -5,7 +5,7 @@ namespace Shared.Responses
 public class PackageResponse
 {
     public int Id { get; set; } = -1;
-    public int[] Apps { get; set; } = [];
+    public int[] Apps { get; set; } = Array.Empty<int>();
     public string Name { get; set; } = "";
     public bool Updated { get; set; } = false;
 

@@ -22,7 +22,7 @@ public class PackageController : BaseController<PackageController>
         _packageService = packageService;
     }
 
-    [HttpPost("[action]")]
+    [HttpPost(nameof(Create))]
     public async Task<ActionResult> Create([FromBody] PackageRequest packageRequest)
     {
         if (!await _packageService.AreAppsValid(packageRequest.Apps))
@@ -52,7 +52,7 @@ public class PackageController : BaseController<PackageController>
         }
     }
 
-    [HttpPost("[action]")]
+    [HttpPost(nameof(Update))]
     public async Task<ActionResult> Update([FromBody] PackageRequest packageRequest)
     {
         if (!await _packageService.AreAppsValid(packageRequest.Apps))
@@ -85,7 +85,7 @@ public class PackageController : BaseController<PackageController>
         return Ok(packageResponse.ToJSON());
     }
 
-    [HttpPost("[action]")]
+    [HttpPost(nameof(Load))]
     public async Task<ActionResult> Load([FromBody] PackageRequest packageRequest)
     {
         PackageEntity? packageEntity = null;

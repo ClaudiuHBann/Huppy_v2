@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
 			 xmlns:viewModels="clr-namespace:Huppy.ViewModels"
 			 xmlns:pages="clr-namespace:Huppy.Pages"
 			 xmlns:models="clr-namespace:Huppy.Models"
@@ -41,7 +40,7 @@
 								  UseLayoutRounding="True"
 								  Background="#FF9966">
 
-								<Image asyncImageLoader:ImageLoader.Source="{Binding App.Image}"
+								<Image Source="{Binding Image}"
 									   Margin="5, 0, 0, 0" />
 
 								<TextBlock Text="{Binding App.Name}"

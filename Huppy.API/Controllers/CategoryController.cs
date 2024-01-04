@@ -17,7 +17,7 @@ public class CategoryController : BaseController<CategoryController>
         _categoryService = categoryService;
     }
 
-    [HttpGet("[action]")]
+    [HttpGet(nameof(GetCategoryToApps))]
     public async Task<ActionResult> GetCategoryToApps()
     {
         var categoryToApps = await _categoryService.GetCategoryToApps();

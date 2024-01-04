@@ -37,7 +37,7 @@ public partial class HuppyContext : DbContext
 
                                            entity.Property(e => e.Id).ValueGeneratedNever().HasColumnName("id");
                                            entity.Property(e => e.Category).HasColumnName("category");
-                                           entity.Property(e => e.Image).HasMaxLength(255).HasColumnName("image");
+                                           entity.Property(e => e.ImageRaw).HasColumnName("image");
                                            entity.Property(e => e.Name).HasMaxLength(128).HasColumnName("name");
                                            entity.Property(e => e.Proposed).HasColumnName("proposed");
 

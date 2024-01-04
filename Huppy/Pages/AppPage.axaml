@@ -3,7 +3,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:converters="clr-namespace:Huppy.Converters;assembly=Huppy"
-			 xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
 			 xmlns:viewModels="clr-namespace:Huppy.ViewModels"
 			 xmlns:pages="clr-namespace:Huppy.Pages"
 			 xmlns:models="clr-namespace:Huppy.Models"
@@ -45,7 +44,7 @@
 										   FontSize="18"
 										   HorizontalAlignment="Center" />
 
-								<Image asyncImageLoader:ImageLoader.Source="{Binding App.Image}"
+								<Image Source="{Binding Image}"
 									   Margin="0, 5, 0, 0"
 									   Width="60"/>
 

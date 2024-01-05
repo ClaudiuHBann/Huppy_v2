@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Shared.Models;
 using Shared.Entities;
 
+using Avalonia.Platform;
 using Avalonia.Media.Imaging;
 
 namespace Huppy.Models
@@ -26,7 +27,15 @@ public partial class AppModel : ObservableObject
     {
         App = app;
         IsVisible = !App.Proposed;
-        Image = new(new MemoryStream(App.ImageRaw));
+
+        if (App.ImageRaw.Length == 0)
+        {
+            Image = new(AssetLoader.Open(new("avares://Huppy/Assets/Icons/App.png")));
+        }
+        else
+        {
+            Image = new(new MemoryStream(App.ImageRaw));
+        }
     }
 
     public bool Update(SettingsEntity settings) => IsVisible = !App.Proposed || settings.ShowProposedApps;

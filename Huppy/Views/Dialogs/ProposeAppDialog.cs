@@ -161,11 +161,6 @@ public class ProposeAppDialog : Dialog
             return null;
         }
 
-        if (_appIcon.Source == null)
-        {
-            return null;
-        }
-
         return new(
             _categoryModels[_appCategory.SelectedIndex].Id,
             _appName.Text ?? "",

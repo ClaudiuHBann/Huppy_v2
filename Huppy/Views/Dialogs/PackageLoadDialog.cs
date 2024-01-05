@@ -29,6 +29,8 @@ public class PackageLoadDialog : Dialog
         _nameOrID.SelectionChanged += OnComboBoxSelectionChangedNameOrID;
         _nameOrID.SelectedIndex = 0;
 
+        _description.VerticalAlignment = VerticalAlignment.Center;
+
         _packageName.TextChanged += OnTextBoxTextChangedPackageName;
 
         _packageID.Maximum = int.MaxValue;
@@ -71,17 +73,22 @@ public class PackageLoadDialog : Dialog
 
     protected override Control CreateContent()
     {
-        var stackPanelHorizontal = new StackPanel() { Spacing = 5, Orientation = Orientation.Horizontal };
+        var gridNameOrID = new Grid() { ColumnDefinitions = new("Auto, 5, *") };
 
-        stackPanelHorizontal.Children.Add(
-            new TextBlock() { Text = "Find by:", VerticalAlignment = VerticalAlignment.Center });
-        stackPanelHorizontal.Children.Add(_nameOrID);
+        gridNameOrID.Children.Add(new TextBlock() { Text = "Find by:", VerticalAlignment = VerticalAlignment.Center });
+        gridNameOrID.Children.Add(_nameOrID);
+        Grid.SetColumn(_nameOrID, 2);
+
+        var gridContent = new Grid() { ColumnDefinitions = new("Auto, 5, *") };
+
+        gridContent.Children.Add(_description);
+        gridContent.Children.Add(_content);
+        Grid.SetColumn(_content, 2);
 
         var stackPanel = new StackPanel() { Spacing = 10 };
 
-        stackPanel.Children.Add(stackPanelHorizontal);
-        stackPanel.Children.Add(_description);
-        stackPanel.Children.Add(_content);
+        stackPanel.Children.Add(gridNameOrID);
+        stackPanel.Children.Add(gridContent);
 
         return stackPanel;
     }

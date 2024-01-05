@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using Avalonia.Layout;
 using Avalonia.Controls;
 
 using System.Threading.Tasks;
@@ -44,12 +45,13 @@ public class EditPackageDialog : Dialog
 
     protected override Control CreateContent()
     {
-        var stackPanel = new StackPanel() { Spacing = 5 };
+        var grid = new Grid() { ColumnDefinitions = new("Auto, 5, *") };
 
-        stackPanel.Children.Add(new TextBlock() { Text = "Package name:" });
-        stackPanel.Children.Add(_packageName);
+        grid.Children.Add(new TextBlock() { Text = "Package name:", VerticalAlignment = VerticalAlignment.Center });
+        grid.Children.Add(_packageName);
+        Grid.SetColumn(_packageName, 2);
 
-        return stackPanel;
+        return grid;
     }
 
     // clang-format off

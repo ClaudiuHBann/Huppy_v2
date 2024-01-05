@@ -1,3 +1,5 @@
+using System.Linq;
+
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -31,7 +33,9 @@ public partial class CategoryView : UserControl
             return;
         }
 
-        ProposeAppDialog dialog = new(VisualRoot as Visual);
+        var categoryModels = categoryViewModel.CategoryToApps.Select(pair => pair.Key).ToList();
+
+        ProposeAppDialog dialog = new(VisualRoot as Visual, categoryModels);
         var result = await dialog.Show();
         if (result == null)
         {

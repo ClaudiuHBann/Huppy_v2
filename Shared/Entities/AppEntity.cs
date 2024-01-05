@@ -12,7 +12,7 @@ public partial class AppEntity
 
     public string Name { get; set; } = null!;
 
-    public bool Proposed { get; set; } = false;
+    public bool Proposed { get; set; } = true;
 
     public byte[] ImageRaw { get; set; } = null!;
 

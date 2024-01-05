@@ -13,6 +13,8 @@ using FluentAvalonia.UI.Controls;
 
 using Huppy.Models;
 
+using Shared.Models;
+
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 
@@ -21,16 +23,15 @@ namespace Huppy.Views.Dialogs
 public class ProposeAppDialog : Dialog
 {
     public class Context
-    (CategoryModel appCategory, string appName, byte[] appImageRaw)
+    (AppEntity appEntity, LinkEntity linkEntity)
     {
-        public CategoryModel AppCategory { get; set; } = appCategory;
-        public string AppName { get; set; } = appName;
-        public byte[] AppImageRaw { get; set; } = appImageRaw;
+        public AppEntity AppEntity { get; set; } = appEntity;
+        public LinkEntity LinkEntity { get; set; } = linkEntity;
     }
 
     private readonly Visual? _root = null;
 
-    private readonly List<CategoryModel> _categoryModels;
+    private readonly List<CategoryEntity> _categoryModels;
 
     private MemoryStream _appIconRaw = new();
 
@@ -39,6 +40,7 @@ public class ProposeAppDialog : Dialog
 
     private readonly ComboBox _appCategory = new();
     private readonly TextBox _appName = new();
+    private readonly TextBox _appLink = new();
     private readonly Button _appIconFind = new();
     private readonly Avalonia.Controls.Image _appIcon = new();
 
@@ -49,13 +51,13 @@ public class ProposeAppDialog : Dialog
                             AppleUniformTypeIdentifiers = new[] { "public.image" },
                             MimeTypes = new[] { "image/png", "image/jpeg", "image/webp" } };
 
-    public ProposeAppDialog(Visual? root, List<CategoryModel> categoryModels) : base(root, _header, _headerSub)
+    public ProposeAppDialog(Visual? root, List<CategoryEntity> categoryModels) : base(root, _header, _headerSub)
     {
         _root = root;
         _categoryModels = categoryModels;
 
-        _appCategory.ItemsSource = categoryModels.Select(categoryModel => categoryModel.Category.Name);
-        var categoryModelOthers = categoryModels.First(cm => cm.Category.Id == CategoryModel.CategoryOtherIndex);
+        _appCategory.ItemsSource = categoryModels.Select(category => category.Name);
+        var categoryModelOthers = categoryModels.First(category => category.Id == CategoryModel.CategoryOtherIndex);
         _appCategory.SelectedIndex = categoryModels.IndexOf(categoryModelOthers);
 
         _appIconFind.Content = "Choose App Icon";
@@ -86,6 +88,8 @@ public class ProposeAppDialog : Dialog
             return;
         }
 
+        // TODO: why this shit is slow AF in browser?
+        // https://github.com/dotnet/designs/blob/346cd7db900a917dde7ca67fbcd6785a73935709/accepted/2023/wasm-browser-threads.md
         var stream = await files[0].OpenReadAsync();
         using var image = await SixLabors.ImageSharp.Image.LoadAsync(stream);
         if (image == null)
@@ -116,44 +120,63 @@ public class ProposeAppDialog : Dialog
         gridAppName.Children.Add(_appName);
         Grid.SetColumn(_appName, 2);
 
-        Grid grid = new() { RowDefinitions = new("Auto, 10, Auto, 10, Auto, 10, Auto") };
+        Grid gridAppLink = new() { ColumnDefinitions = new("Auto, 5, *") };
+
+        gridAppLink.Children.Add(new TextBlock() { Text = "App link:", VerticalAlignment = VerticalAlignment.Center });
+        gridAppLink.Children.Add(_appLink);
+        Grid.SetColumn(_appLink, 2);
+
+        Grid grid = new() { RowDefinitions = new("Auto, 10, Auto, 10, Auto, 10, Auto, 10, Auto") };
 
         grid.Children.Add(gridAppCategory);
         grid.Children.Add(gridAppName);
         Grid.SetRow(gridAppName, 2);
+        grid.Children.Add(gridAppLink);
+        Grid.SetRow(gridAppLink, 4);
 
         grid.Children.Add(_appIconFind);
-        Grid.SetRow(_appIconFind, 4);
+        Grid.SetRow(_appIconFind, 6);
 
         // text that shows until an icon is loaded
         var text =
             new TextBlock() { Text = "Your Icon Will Be Shown Here", VerticalAlignment = VerticalAlignment.Center,
                               HorizontalAlignment = HorizontalAlignment.Center };
         grid.Children.Add(text);
-        Grid.SetRow(text, 6);
+        Grid.SetRow(text, 8);
 
         grid.Children.Add(_appIcon);
-        Grid.SetRow(_appIcon, 6);
+        Grid.SetRow(_appIcon, 8);
 
         return grid;
     }
 
     // clang-format off
-        public new async Task<Context?> Show()
+    public new async Task<Context?> Show()
+    {
+        var button = await base.Show();
+        if (button is null || (TaskDialogStandardResult)button != TaskDialogStandardResult.OK)
         {
-            var button = await base.Show();
-            if (button is null || (TaskDialogStandardResult)button != TaskDialogStandardResult.OK)
-            {
-                return null;
-            }
-
-            if (_appIcon.Source == null)
-            {
-                return null;
-            }
-    
-            return new(_categoryModels[_appCategory.SelectedIndex], _appName.Text ?? "", _appIconRaw.ToArray());
+            return null;
         }
+
+        if (_appIcon.Source == null)
+        {
+            return null;
+        }
+
+        var appEntity = new AppEntity() {
+            Name = _appName.Text ?? "",
+            Category = _categoryModels[_appCategory.SelectedIndex].Id,
+            ImageRaw = _appIconRaw.ToArray()
+        };
+
+        var linkEntity = new LinkEntity() {
+            App = appEntity.Id,
+            Url = _appLink.Text ?? "",
+        };
+
+        return new(appEntity, linkEntity);
+    }
 // clang-format on
 }
 }

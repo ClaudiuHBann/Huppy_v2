@@ -44,6 +44,7 @@ public partial class HuppyView : UserControl
         {
             // TODO: can we remove this workaround?
             // select back the last item outside this method so the property changed will propagate
+            // https://github.com/amwx/FluentAvalonia/discussions/501
             await Dispatcher.UIThread.InvokeAsync(() => navigationView.SelectedItem =
                                                       navigationView.MenuItems[_NVSelectedIndexLast]);
 

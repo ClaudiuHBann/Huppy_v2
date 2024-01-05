@@ -17,6 +17,7 @@ public class StorageService : BaseService
 
     private void FindOrCreateDirectories()
     {
+        // TODO: fix this ervice for browser: https://github.com/AvaloniaUI/Avalonia/discussions/14119
         AppDataDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
         AppDataHuppyDirectory = Path.Combine(AppDataDirectory, "Huppy");

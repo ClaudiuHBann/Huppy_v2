@@ -33,9 +33,9 @@ public partial class CategoryView : UserControl
             return;
         }
 
-        var categoryModels = categoryViewModel.CategoryToApps.Select(pair => pair.Key).ToList();
+        var categories = categoryViewModel.CategoryToApps.Select(pair => pair.Key.Category).ToList();
 
-        ProposeAppDialog dialog = new(VisualRoot as Visual, categoryModels);
+        ProposeAppDialog dialog = new(VisualRoot as Visual, categories);
         var result = await dialog.Show();
         if (result == null)
         {

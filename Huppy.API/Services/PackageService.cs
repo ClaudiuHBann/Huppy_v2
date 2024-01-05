@@ -37,15 +37,10 @@ public class PackageService
         return await context.SaveChangesAsync();
     }
 
-    public async Task<int> Count()
-    {
-        return await context.Packages.CountAsync();
-    }
+    public async Task<int> Count() => await context.Packages.CountAsync();
 
-    public async Task < PackageEntity ? > FirstOrDefault(Expression<Func<PackageEntity, bool>> func)
-    {
-        return await context.Packages.FirstOrDefaultAsync(func);
-    }
+    public async Task < PackageEntity ? > FirstOrDefault(Expression<Func<PackageEntity, bool>> func) =>
+                                            await context.Packages.FirstOrDefaultAsync(func);
 
     public async Task<string> FindUniquePackageName(string name)
     {

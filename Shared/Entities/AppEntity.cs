@@ -1,6 +1,7 @@
-﻿using Shared.Requests;
+﻿using System.Text.Json.Serialization;
 
-using System.Text.Json.Serialization;
+using Shared.Requests;
+using Shared.Responses;
 
 namespace Shared.Models
 {
@@ -28,11 +29,18 @@ public partial class AppEntity
 
     public AppEntity(AppRequest appRequest)
     {
-        Id = appRequest.Id;
         Category = appRequest.Category;
         Name = appRequest.Name;
-        Proposed = appRequest.Proposed;
         ImageRaw = appRequest.ImageRaw;
+    }
+
+    public AppEntity(AppResponse appResponse)
+    {
+        Id = appResponse.Id;
+        Category = appResponse.Category;
+        Name = appResponse.Name;
+        Proposed = appResponse.Proposed;
+        ImageRaw = appResponse.ImageRaw;
     }
 }
 }

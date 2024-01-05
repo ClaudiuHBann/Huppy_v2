@@ -25,10 +25,6 @@ public partial class HuppyContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasPostgresEnum("Arch", ["32", "64"])
-            .HasPostgresEnum("Format", ["EXE", "DMG"])
-            .HasPostgresEnum("OS", ["Windows", "Mac"]);
-
         modelBuilder.Entity<AppEntity>(entity =>
                                        {
                                            entity.HasKey(e => e.Id).HasName("app_id_pk");

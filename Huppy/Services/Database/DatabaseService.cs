@@ -4,5 +4,6 @@ public class DatabaseService : BaseService
 {
     public PackageDatabaseService Package { get; set; } = new();
     public CategoryDatabaseService Category { get; set; } = new();
+    public AppDatabaseService App { get; set; } = new();
 }
 }

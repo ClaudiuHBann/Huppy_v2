@@ -86,7 +86,8 @@ public class ProposeAppDialog : Dialog
             return;
         }
 
-        using var image = await SixLabors.ImageSharp.Image.LoadAsync(files[0].Path.LocalPath);
+        var stream = await files[0].OpenReadAsync();
+        using var image = await SixLabors.ImageSharp.Image.LoadAsync(stream);
         if (image == null)
         {
             return;

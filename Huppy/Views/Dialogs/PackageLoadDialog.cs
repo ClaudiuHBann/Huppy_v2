@@ -6,12 +6,22 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 
 using FluentAvalonia.UI.Controls;
+
 using Shared.Models;
 
 namespace Huppy.Views.Dialogs
 {
 public class PackageLoadDialog : Dialog
 {
+    public class Context
+    {
+        public int? Id { get; set; } = null;
+        public string? Name { get; set; } = null;
+
+        public Context(int id) => Id = id;
+        public Context(string name) => Name = name;
+    }
+
     private const string _header = "Load Package";
     private const string _headerSub = "Find your package by it's name or ID:";
 
@@ -94,7 +104,7 @@ public class PackageLoadDialog : Dialog
     }
 
     // clang-format off
-        public new async Task<PackageEntity?> Show()
+        public new async Task<Context?> Show()
         {
             var button = await base.Show();
             if (button is null || (TaskDialogStandardResult)button != TaskDialogStandardResult.OK)
@@ -104,8 +114,8 @@ public class PackageLoadDialog : Dialog
 
             return (string?)_nameOrID.SelectedValue switch
             {
-                "Name" => new() { Name = _packageName.Text ?? "" },
-                "ID" => new() {  Id = (int)_packageID.Value },
+                "Name" => new(_packageName.Text ?? ""),
+                "ID" => new((int)_packageID.Value),
                 _ => null,
             };
         }

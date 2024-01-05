@@ -107,7 +107,9 @@ public partial class PackageView : UserControl
             return;
         }
 
-        var resultRequest = await packageViewModel.PackageLoad(resultDialog);
+        var packageEntity = new PackageEntity() { Id = resultDialog.Id ?? -1, Name = resultDialog.Name ?? "" };
+
+        var resultRequest = await packageViewModel.PackageLoad(packageEntity);
         if (resultRequest == null)
         {
             return;

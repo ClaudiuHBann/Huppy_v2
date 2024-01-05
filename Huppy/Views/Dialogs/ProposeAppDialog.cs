@@ -23,10 +23,12 @@ namespace Huppy.Views.Dialogs
 public class ProposeAppDialog : Dialog
 {
     public class Context
-    (AppEntity appEntity, LinkEntity linkEntity)
+    (int category, string name, byte[] imageRaw, string url)
     {
-        public AppEntity AppEntity { get; set; } = appEntity;
-        public LinkEntity LinkEntity { get; set; } = linkEntity;
+        public int Category { get; set; } = category;
+        public string Name { get; set; } = name;
+        public byte[] ImageRaw { get; set; } = imageRaw;
+        public string Url { get; set; } = url;
     }
 
     private readonly Visual? _root = null;
@@ -164,18 +166,12 @@ public class ProposeAppDialog : Dialog
             return null;
         }
 
-        var appEntity = new AppEntity() {
-            Name = _appName.Text ?? "",
-            Category = _categoryModels[_appCategory.SelectedIndex].Id,
-            ImageRaw = _appIconRaw.ToArray()
-        };
-
-        var linkEntity = new LinkEntity() {
-            App = appEntity.Id,
-            Url = _appLink.Text ?? "",
-        };
-
-        return new(appEntity, linkEntity);
+        return new(
+            _categoryModels[_appCategory.SelectedIndex].Id,
+            _appName.Text ?? "",
+            _appIconRaw.ToArray(),
+            _appLink.Text ?? ""
+        );
     }
 // clang-format on
 }

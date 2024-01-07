@@ -101,7 +101,7 @@ public class BaseService<Type>(ILogger<Type> logger, HuppyContext context)
                 if (isEnumerable)
                 {
                     // TODO: better way of checking this?
-                    equalCount += entityPropertyValue.ToJSON() == entityUpdatedPropertyValue.ToJSON() ? 1 : 0;
+                    equalCount += entityPropertyValue.ToMsgPack() == entityUpdatedPropertyValue.ToMsgPack() ? 1 : 0;
                 }
             }
 

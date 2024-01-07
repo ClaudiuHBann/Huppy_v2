@@ -9,7 +9,7 @@ namespace Huppy.API.Controllers
 public class CategoryController
 (ILogger<CategoryController> logger, CategoryService service) : BaseController<CategoryController>(logger)
 {
-    [HttpGet(nameof(GetCategoryToApps))]
-    public async Task<ActionResult> GetCategoryToApps() => Ok(await service.GetCategoryToApps());
+    [HttpGet(nameof(GetCALs))]
+    public async Task<ActionResult> GetCALs() => MakeOk(await service.GetCALs());
 }
 }

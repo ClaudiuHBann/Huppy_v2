@@ -21,7 +21,7 @@ public class AppController
             return MakeAndLogBadRequest(service.LastError);
         }
 
-        return Ok(new AppResponse(entity));
+        return MakeOk(new AppResponse(entity));
     }
 
     [HttpPost(nameof(Update))]
@@ -33,7 +33,7 @@ public class AppController
             return MakeAndLogBadRequest(service.LastError);
         }
 
-        return Ok(new AppResponse(entity, true));
+        return MakeOk(new AppResponse(entity, true));
     }
 
     [HttpPost(nameof(Load))]
@@ -45,7 +45,7 @@ public class AppController
             return MakeAndLogBadRequest(service.LastError);
         }
 
-        return Ok(new AppResponse(entity));
+        return MakeOk(new AppResponse(entity));
     }
 }
 }

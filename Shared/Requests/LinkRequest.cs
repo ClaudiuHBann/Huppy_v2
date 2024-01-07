@@ -1,5 +1,8 @@
-﻿namespace Shared.Requests
+﻿using MessagePack;
+
+namespace Shared.Requests
 {
+[MessagePackObject(true)]
 public class LinkRequest
 {
     public int Id { get; set; } = -1;

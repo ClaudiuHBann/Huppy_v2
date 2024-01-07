@@ -21,7 +21,7 @@ public class LinkController
             return MakeAndLogBadRequest(service.LastError);
         }
 
-        return Ok(new LinkResponse(entity));
+        return MakeOk(new LinkResponse(entity));
     }
 
     [HttpPost(nameof(Update))]
@@ -33,7 +33,7 @@ public class LinkController
             return MakeAndLogBadRequest(service.LastError);
         }
 
-        return Ok(new LinkResponse(entity, true));
+        return MakeOk(new LinkResponse(entity, true));
     }
 
     [HttpPost(nameof(Load))]
@@ -45,7 +45,7 @@ public class LinkController
             return MakeAndLogBadRequest(service.LastError);
         }
 
-        return Ok(new LinkResponse(entity));
+        return MakeOk(new LinkResponse(entity));
     }
 }
 }

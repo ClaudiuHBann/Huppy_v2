@@ -1,9 +1,10 @@
-﻿using Shared.Requests;
+﻿using MessagePack;
 
-using System.Text.Json.Serialization;
+using Shared.Requests;
 
 namespace Shared.Models
 {
+[MessagePackObject(true)]
 public partial class LinkEntity
 {
     public int Id { get; set; } = -1;
@@ -12,7 +13,7 @@ public partial class LinkEntity
 
     public string Url { get; set; } = null!;
 
-    [JsonIgnore]
+    [IgnoreMember]
     public virtual AppEntity AppNavigation { get; set; } = null!;
 
     public LinkEntity()

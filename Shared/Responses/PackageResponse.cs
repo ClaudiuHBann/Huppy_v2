@@ -1,7 +1,9 @@
-﻿using Shared.Models;
+﻿using MessagePack;
+using Shared.Models;
 
 namespace Shared.Responses
 {
+[MessagePackObject(true)]
 public class PackageResponse
 {
     public int Id { get; set; } = -1;

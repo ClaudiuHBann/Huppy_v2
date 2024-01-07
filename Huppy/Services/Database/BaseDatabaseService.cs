@@ -1,6 +1,7 @@
 ﻿using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
+
+using Shared.Utilities;
 
 namespace Huppy.Services.Database
 {
@@ -42,7 +43,7 @@ public abstract class BaseDatabaseService
             break;
 
         case RequestType.Post:
-            response = await _client.PostAsJsonAsync(uri, value);
+            response = await _client.PostAsync(uri, new ByteArrayContent(value!.ToMsgPack()));
             break;
 
         default:
@@ -59,7 +60,7 @@ public abstract class BaseDatabaseService
 
         if (response.IsSuccessStatusCode)
         {
-            return await response.Content.ReadFromJsonAsync<ResponseType>();
+            return (await response.Content.ReadAsByteArrayAsync()).FromMsgPack<ResponseType>();
         }
         else
         {

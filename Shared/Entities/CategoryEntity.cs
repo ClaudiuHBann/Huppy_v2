@@ -1,7 +1,8 @@
-﻿using System.Text.Json.Serialization;
+﻿using MessagePack;
 
 namespace Shared.Models
 {
+[MessagePackObject(true)]
 public partial class CategoryEntity
 {
     public int Id { get; set; } = -1;
@@ -12,21 +13,7 @@ public partial class CategoryEntity
 
     public int? Count { get; set; } = 0;
 
-    [JsonIgnore]
+    [IgnoreMember]
     public virtual ICollection<AppEntity> Apps { get; set; } = new List<AppEntity>();
-
-    public override int GetHashCode()
-    {
-        return Id;
-    }
-    public override bool Equals(object? obj)
-    {
-        return Equals(obj as CategoryEntity);
-    }
-
-    public bool Equals(CategoryEntity? category)
-    {
-        return category != null && category.Id == this.Id;
-    }
 }
 }

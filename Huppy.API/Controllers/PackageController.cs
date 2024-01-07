@@ -22,7 +22,7 @@ public class PackageController
             return MakeAndLogBadRequest(service.LastError);
         }
 
-        return Ok(new PackageResponse(entity));
+        return MakeOk(new PackageResponse(entity));
     }
 
     [HttpPost(nameof(Update))]
@@ -34,7 +34,7 @@ public class PackageController
             return MakeAndLogBadRequest(service.LastError);
         }
 
-        return Ok(new PackageResponse(entity, true));
+        return MakeOk(new PackageResponse(entity, true));
     }
 
     [HttpPost(nameof(Load))]
@@ -46,7 +46,7 @@ public class PackageController
             return MakeAndLogBadRequest(service.LastError);
         }
 
-        return Ok(new PackageResponse(entity));
+        return MakeOk(new PackageResponse(entity));
     }
 }
 }

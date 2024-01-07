@@ -1,10 +1,11 @@
-﻿using System.Text.Json.Serialization;
-
-using Shared.Requests;
+﻿using Shared.Requests;
 using Shared.Responses;
+
+using MessagePack;
 
 namespace Shared.Models
 {
+[MessagePackObject(true)]
 public partial class AppEntity
 {
     public int Id { get; set; } = -1;
@@ -17,10 +18,10 @@ public partial class AppEntity
 
     public byte[] Image { get; set; } = null!;
 
-    [JsonIgnore]
+    [IgnoreMember]
     public virtual CategoryEntity CategoryNavigation { get; set; } = null!;
 
-    [JsonIgnore]
+    [IgnoreMember]
     public virtual ICollection<LinkEntity> Links { get; set; } = new List<LinkEntity>();
 
     public AppEntity()

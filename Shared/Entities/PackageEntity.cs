@@ -1,8 +1,11 @@
-﻿using Shared.Requests;
+﻿using MessagePack;
+
+using Shared.Requests;
 using Shared.Responses;
 
 namespace Shared.Models
 {
+[MessagePackObject(true)]
 public partial class PackageEntity
 {
     public int Id { get; set; } = -1;

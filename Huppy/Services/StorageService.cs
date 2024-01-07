@@ -36,14 +36,14 @@ public class StorageService : BaseService
             return null;
         }
 
-        var json = File.ReadAllText(path);
-        return json.FromJSON<T>();
+        var json = File.ReadAllBytes(path);
+        return json.FromMsgPack<T>();
     }
 
     public void Save(string key, object obj)
     {
         var path = Path.Combine(AppDataHuppyDirectory, key);
-        File.WriteAllText(path, obj.ToJSON());
+        File.WriteAllBytes(path, obj.ToMsgPack());
     }
 }
 }

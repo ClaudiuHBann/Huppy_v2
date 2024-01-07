@@ -2,26 +2,14 @@
 
 using Huppy.API.Services;
 
-using Shared.Utilities;
-
 namespace Huppy.API.Controllers
 {
 [ApiController]
 [Route("[controller]")]
-public class CategoryController : BaseController<CategoryController>
+public class CategoryController
+(ILogger<CategoryController> logger, CategoryService service) : BaseController<CategoryController>(logger)
 {
-    private readonly CategoryService _categoryService;
-
-    public CategoryController(ILogger<CategoryController> logger, CategoryService categoryService) : base(logger)
-    {
-        _categoryService = categoryService;
-    }
-
     [HttpGet(nameof(GetCategoryToApps))]
-    public async Task<ActionResult> GetCategoryToApps()
-    {
-        var categoryToApps = await _categoryService.GetCategoryToApps();
-        return Ok(categoryToApps.ToJSON());
-    }
+    public async Task<ActionResult> GetCategoryToApps() => Ok(await service.GetCategoryToApps());
 }
 }

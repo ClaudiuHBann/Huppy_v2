@@ -16,7 +16,7 @@ public class BaseService<Type>(ILogger<Type> logger, HuppyContext context)
     protected async Task<EntityType?> FindBy<EntityType>(object key)
         where EntityType : class => await context.FindAsync(typeof(EntityType), key) as EntityType;
 
-  protected async Task<EntityType ?> Add<EntityType>(EntityType entity)
+  protected async Task<EntityType ?> Create<EntityType>(EntityType entity)
         where EntityType : class
     {
         var propertyID = entity.GetType().GetProperty("Id");

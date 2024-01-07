@@ -14,17 +14,20 @@ public class AppResponse
 
     public byte[] ImageRaw { get; set; } = null!;
 
+    public bool Updated { get; set; } = false;
+
     public AppResponse()
     {
     }
 
-    public AppResponse(AppEntity appEntity)
+    public AppResponse(AppEntity appEntity, bool updated = false)
     {
         Id = appEntity.Id;
         Category = appEntity.Category;
         Name = appEntity.Name;
         Proposed = appEntity.Proposed;
         ImageRaw = appEntity.ImageRaw;
+        Updated = updated;
     }
 }
 }

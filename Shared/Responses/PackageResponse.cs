@@ -13,16 +13,12 @@ public class PackageResponse
     {
     }
 
-    public PackageResponse(bool updated)
-    {
-        Updated = updated;
-    }
-
-    public PackageResponse(PackageEntity packageEntity)
+    public PackageResponse(PackageEntity packageEntity, bool updated = false)
     {
         Id = packageEntity.Id;
         Apps = packageEntity.Apps;
         Name = packageEntity.Name;
+        Updated = updated;
     }
 }
 }

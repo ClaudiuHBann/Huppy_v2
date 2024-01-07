@@ -14,6 +14,8 @@ public partial class AppModel : ObservableObject
 {
     public AppEntity App { get; set; }
 
+    public static Bitmap ImageDefault { get; } = new(AssetLoader.Open(new("avares://Huppy/Assets/Icons/App.png")));
+
     [ObservableProperty]
     private Bitmap image;
 
@@ -30,7 +32,7 @@ public partial class AppModel : ObservableObject
 
         if (App.ImageRaw.Length == 0)
         {
-            Image = new(AssetLoader.Open(new("avares://Huppy/Assets/Icons/App.png")));
+            Image = ImageDefault;
         }
         else
         {

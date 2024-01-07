@@ -8,10 +8,12 @@ using Shared.Models;
 namespace Huppy.API.Services
 {
 public class CategoryService
-(ILogger<PackageController> logger, HuppyContext context)
+(ILogger<CategoryController> logger, HuppyContext context) : BaseService<CategoryController>(logger, context)
 {
     public async Task<List<KeyValuePair<CategoryEntity, List<AppEntity>>>> GetCategoryToApps()
     {
+        ClearLastError();
+
         List<KeyValuePair<CategoryEntity, List<AppEntity>>> categoryToApps = [];
 
         var groupsUnordered = await context.Apps.GroupBy(app => app.CategoryNavigation).ToListAsync();

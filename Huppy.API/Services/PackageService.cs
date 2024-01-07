@@ -11,6 +11,58 @@ namespace Huppy.API.Services
 public class PackageService
 (ILogger<PackageController> logger, HuppyContext context) : BaseService<PackageController>(logger, context)
 {
+    public async Task < PackageEntity ? > Create(PackageRequest request)
+    {
+        ClearLastError();
+
+        if (!await ValideApps(request.Apps))
+        {
+            return null;
+        }
+
+        // this method will never fail on name not unqiue so:
+        request.Name = await FindUniquePackageName(request.Name);
+
+        var entity = await Create(new PackageEntity(request));
+        if (entity == null)
+        {
+            SetLastError("The package could not be created.");
+        }
+
+        return entity;
+    }
+
+    public async Task < PackageEntity ? > Update(PackageRequest request)
+    {
+        ClearLastError();
+
+        if (!await ValidateForUpdate(request))
+        {
+            return null;
+        }
+
+        var entity = await Update(new PackageEntity(request));
+        if (entity == null)
+        {
+            SetLastError("The package could not be updated.");
+        }
+
+        return entity;
+    }
+
+    public async Task < PackageEntity ? > Load(PackageRequest request)
+    {
+        ClearLastError();
+
+        var entity = await FindByIdOrName(request.Id, request.Name);
+        if (entity == null)
+        {
+            SetLastError("The package could not be loaded.");
+        }
+
+        return entity;
+    }
+
     private async Task<bool> ValideApps(int[] apps)
     {
         ClearLastError();
@@ -28,78 +80,26 @@ public class PackageService
         return true;
     }
 
-    public async Task < PackageEntity ? > Create(PackageRequest packageRequest)
+    private async Task<bool> ValidateForUpdate(PackageRequest request)
     {
         ClearLastError();
 
-        if (!await ValideApps(packageRequest.Apps))
-        {
-            return null;
-        }
-
-        // this method will never fail on name not unqiue so:
-        packageRequest.Name = await FindUniquePackageName(packageRequest.Name);
-
-        var packageEntity = await Add(new PackageEntity(packageRequest));
-        if (packageEntity == null)
-        {
-            SetLastError("The package could not be created.");
-        }
-
-        return packageEntity;
-    }
-
-    public async Task < PackageEntity ? > Update(PackageRequest packageRequest)
-    {
-        ClearLastError();
-
-        if (!await ValidateForUpdate(packageRequest))
-        {
-            return null;
-        }
-
-        var packageEntity = await Update(new PackageEntity(packageRequest));
-        if (packageEntity == null)
-        {
-            SetLastError("The package could not be updated.");
-        }
-
-        return packageEntity;
-    }
-
-    public async Task < PackageEntity ? > Load(PackageRequest packageRequest)
-    {
-        ClearLastError();
-
-        var packageEntity = await FindByIdOrName(packageRequest.Id, packageRequest.Name);
-        if (packageEntity == null)
-        {
-            SetLastError("The package could not be loaded.");
-        }
-
-        return packageEntity;
-    }
-
-    private async Task<bool> ValidateForUpdate(PackageRequest packageRequest)
-    {
-        ClearLastError();
-
-        if (!await ValideApps(packageRequest.Apps))
+        if (!await ValideApps(request.Apps))
         {
             return false;
         }
 
-        var packageEntity = await FindBy<PackageEntity>(packageRequest.Id);
-        if (packageEntity == null)
+        var entity = await FindBy<PackageEntity>(request.Id);
+        if (entity == null)
         {
             SetLastError("The package could not be found!");
             return false;
         }
 
-        var packageEntityWithSameName = await FindBy<PackageEntity>(packageRequest.Name);
-        if (packageEntityWithSameName != null && packageRequest.Id != packageEntityWithSameName.Id)
+        var entityWithSameName = await FindBy<PackageEntity>(request.Name);
+        if (entityWithSameName != null && request.Id != entityWithSameName.Id)
         {
-            SetLastError($"The package \"{packageRequest.Name}\" already exists!");
+            SetLastError($"The package \"{request.Name}\" already exists!");
             return false;
         }
 
@@ -110,13 +110,13 @@ public class PackageService
     {
         ClearLastError();
 
-        var packageEntity = await FindBy<PackageEntity>(id != -1 ? id : name);
-        if (packageEntity == null)
+        var entity = await FindBy<PackageEntity>(id != -1 ? id : name);
+        if (entity == null)
         {
             SetLastError("The package could not be found!");
         }
 
-        return packageEntity;
+        return entity;
     }
 
     private async Task<string> FindUniquePackageName(string name)

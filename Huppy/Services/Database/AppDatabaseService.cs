@@ -17,10 +17,7 @@ public class AppDatabaseService : BaseDatabaseService
         Create,
     }
 
-    private async Task<AppResponse?> PackageEx(AppRequest appRequest, PackageAction action)
-    {
-        var response = await Request(RequestType.Post, action.ToString(), appRequest);
-        return response?.FromJSON<AppResponse>();
-    }
+    private async Task<AppResponse?> PackageEx(AppRequest appRequest, PackageAction action) =>
+        await Request<AppResponse>(RequestType.Post, action.ToString(), appRequest);
 }
 }

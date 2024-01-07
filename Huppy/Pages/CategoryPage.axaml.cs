@@ -44,8 +44,7 @@ public partial class CategoryView : UserControl
             return;
         }
 
-        var appRequest =
-            new AppRequest() { Category = result.Category, Name = result.Name, ImageRaw = result.ImageRaw };
+        var appRequest = new AppRequest() { Category = result.Category, Name = result.Name, Image = result.Image };
 
         var appEntity = await categoryViewModel.AppCreate(appRequest);
         if (appEntity == null)

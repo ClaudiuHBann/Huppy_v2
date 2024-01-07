@@ -15,7 +15,7 @@ public partial class AppEntity
 
     public bool Proposed { get; set; } = true;
 
-    public byte[] ImageRaw { get; set; } = null!;
+    public byte[] Image { get; set; } = null!;
 
     [JsonIgnore]
     public virtual CategoryEntity CategoryNavigation { get; set; } = null!;
@@ -29,9 +29,10 @@ public partial class AppEntity
 
     public AppEntity(AppRequest appRequest)
     {
+        Id = appRequest.Id;
         Category = appRequest.Category;
         Name = appRequest.Name;
-        ImageRaw = appRequest.ImageRaw;
+        Image = appRequest.Image;
     }
 
     public AppEntity(AppResponse appResponse)
@@ -40,7 +41,7 @@ public partial class AppEntity
         Category = appResponse.Category;
         Name = appResponse.Name;
         Proposed = appResponse.Proposed;
-        ImageRaw = appResponse.ImageRaw;
+        Image = appResponse.Image;
     }
 }
 }

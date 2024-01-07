@@ -1,9 +1,12 @@
-﻿using Shared.Models;
+﻿using Microsoft.EntityFrameworkCore;
 
-using Microsoft.EntityFrameworkCore;
+using Shared.Models;
 
-namespace Huppy.API.Models;
-
+namespace Huppy.API.Models
+{
+// clang-format off
+    // Scaffold-DbContext 'User ID=huppy;Password=sarmale1;Host=162.55.32.18;Port=5432;Database=Huppy' Npgsql.EntityFrameworkCore.PostgreSQL -Tables _ -ExcludeTable _ -OutputDir Models
+// clang-format on
 public partial class HuppyContext : DbContext
 {
     public HuppyContext()
@@ -20,20 +23,26 @@ public partial class HuppyContext : DbContext
     public virtual DbSet<PackageEntity> Packages { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseNpgsql("User ID=huppy;Password=sarmale1;Host=162.55.32.18;Port=5432;Database=Huppy");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasPostgresEnum("Arch", ["32", "64"])
+            .HasPostgresEnum("Format", ["EXE", "DMG"])
+            .HasPostgresEnum("OS", ["Windows", "Mac"]);
+
         modelBuilder.Entity<AppEntity>(entity =>
                                        {
                                            entity.HasKey(e => e.Id).HasName("app_id_pk");
 
                                            entity.ToTable("app", tb => tb.HasComment("Apps"));
 
+                                           entity.HasIndex(e => e.Name, "unique_app_name").IsUnique();
+
                                            entity.Property(e => e.Id).ValueGeneratedNever().HasColumnName("id");
                                            entity.Property(e => e.Category).HasColumnName("category");
-                                           entity.Property(e => e.ImageRaw).HasColumnName("image");
+                                           entity.Property(e => e.Image).HasColumnName("image");
                                            entity.Property(e => e.Name).HasMaxLength(128).HasColumnName("name");
                                            entity.Property(e => e.Proposed).HasColumnName("proposed");
 
@@ -52,7 +61,7 @@ public partial class HuppyContext : DbContext
                 entity.ToTable("category", tb => tb.HasComment("Apps categories"));
 
                 entity.Property(e => e.Id).ValueGeneratedNever().HasColumnName("id");
-                entity.Property(e => e.Count).HasDefaultValueSql("0").HasColumnName("count");
+                entity.Property(e => e.Count).HasDefaultValue(0).HasColumnName("count");
                 entity.Property(e => e.Description).HasMaxLength(256).HasColumnName("description");
                 entity.Property(e => e.Name).HasMaxLength(64).HasColumnName("name");
             });
@@ -62,6 +71,8 @@ public partial class HuppyContext : DbContext
                                             entity.HasKey(e => e.Id).HasName("link_id_pk");
 
                                             entity.ToTable("link", tb => tb.HasComment("App's Links"));
+
+                                            entity.HasIndex(e => e.Url, "unique_link_url").IsUnique();
 
                                             entity.Property(e => e.Id).ValueGeneratedNever().HasColumnName("id");
                                             entity.Property(e => e.App).HasColumnName("app");
@@ -80,13 +91,16 @@ public partial class HuppyContext : DbContext
 
                                                entity.ToTable("package");
 
-                                               entity.Property(e => e.Id).ValueGeneratedNever().HasColumnName("id");
+                                               entity.HasIndex(e => e.Name, "unique_package_name").IsUnique();
+
+                                               entity.Property(e => e.Id).HasColumnName("id");
+                                               entity.Property(e => e.Name).HasMaxLength(36).HasColumnName("name");
                                                entity.Property(e => e.Apps).HasColumnName("apps");
-                                               entity.Property(e => e.Name).HasMaxLength(32).HasColumnName("name");
                                            });
 
         OnModelCreatingPartial(modelBuilder);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+}
 }

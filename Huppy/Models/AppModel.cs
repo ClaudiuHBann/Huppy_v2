@@ -30,13 +30,13 @@ public partial class AppModel : ObservableObject
         App = app;
         IsVisible = !App.Proposed;
 
-        if (App.ImageRaw.Length == 0)
+        if (App.Image.Length == 0)
         {
             Image = ImageDefault;
         }
         else
         {
-            Image = new(new MemoryStream(App.ImageRaw));
+            Image = new(new MemoryStream(App.Image));
         }
     }
 

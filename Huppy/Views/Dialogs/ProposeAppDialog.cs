@@ -23,11 +23,11 @@ namespace Huppy.Views.Dialogs
 public class ProposeAppDialog : Dialog
 {
     public class Context
-    (int category, string name, byte[] imageRaw, string url)
+    (int category, string name, byte[] image, string url)
     {
         public int Category { get; set; } = category;
         public string Name { get; set; } = name;
-        public byte[] ImageRaw { get; set; } = imageRaw;
+        public byte[] Image { get; set; } = image;
         public string Url { get; set; } = url;
     }
 

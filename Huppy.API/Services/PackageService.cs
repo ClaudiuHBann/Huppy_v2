@@ -89,14 +89,14 @@ public class PackageService
             return false;
         }
 
-        var entity = await FindBy<PackageEntity>(request.Id);
+        var entity = await FindByKeys<PackageEntity>(request.Id);
         if (entity == null)
         {
             SetLastError("The package could not be found!");
             return false;
         }
 
-        var entityWithSameName = await FindBy<PackageEntity>(request.Name);
+        var entityWithSameName = await context.Packages.FirstOrDefaultAsync(package => package.Name == request.Name);
         if (entityWithSameName != null && request.Id != entityWithSameName.Id)
         {
             SetLastError($"The package \"{request.Name}\" already exists!");
@@ -110,13 +110,20 @@ public class PackageService
     {
         ClearLastError();
 
-        var entity = await FindBy<PackageEntity>(id != -1 ? id : name);
-        if (entity == null)
+        var entity = await context.Packages.FirstOrDefaultAsync(package => package.Name == name);
+        if (entity != null)
         {
-            SetLastError("The package could not be found!");
+            return entity;
         }
 
-        return entity;
+        entity = await FindByKeys<PackageEntity>(id);
+        if (entity != null)
+        {
+            return entity;
+        }
+
+        SetLastError("The package could not be found!");
+        return null;
     }
 
     private async Task<string> FindUniquePackageName(string name)

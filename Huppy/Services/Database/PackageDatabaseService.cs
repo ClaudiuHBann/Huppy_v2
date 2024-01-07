@@ -26,10 +26,7 @@ public class PackageDatabaseService : BaseDatabaseService
         Load
     }
 
-    private async Task<PackageResponse?> PackageEx(PackageRequest packageRequest, PackageAction action)
-    {
-        var response = await Request(RequestType.Post, action.ToString(), packageRequest);
-        return response?.FromJSON<PackageResponse>();
-    }
+    private async Task<PackageResponse?> PackageEx(PackageRequest packageRequest, PackageAction action) =>
+        await Request<PackageResponse>(RequestType.Post, action.ToString(), packageRequest);
 }
 }

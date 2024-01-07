@@ -20,7 +20,7 @@ public class LinkService
     {
         ClearLastError();
 
-        if (!await Validate(request))
+        if (!await ValidateCreate(request))
         {
             return null;
         }
@@ -38,7 +38,7 @@ public class LinkService
     {
         ClearLastError();
 
-        if (!await Validate(request))
+        if (!await ValidateUpdate(request))
         {
             return null;
         }
@@ -56,7 +56,7 @@ public class LinkService
     {
         ClearLastError();
 
-        var entity = await FindBy<LinkEntity>(request.Id);
+        var entity = await FindByKeys<LinkEntity>(request.Id);
         if (entity == null)
         {
             SetLastError("The link could not be loaded.");
@@ -65,7 +65,7 @@ public class LinkService
         return entity;
     }
 
-    private async Task<bool> Validate(LinkRequest request)
+    private async Task<bool> ValidateCreate(LinkRequest request)
     {
         ClearLastError();
 
@@ -81,7 +81,32 @@ public class LinkService
             return false;
         }
 
-        if (!await ScanURL(request.Url))
+        if (await ScanURL(request.Url))
+        {
+            SetLastError("The link has been flagged as a malware by VirusTotal!");
+            return false;
+        }
+
+        return true;
+    }
+
+    private async Task<bool> ValidateUpdate(LinkRequest request)
+    {
+        ClearLastError();
+
+        if (await FindByKeys<PackageEntity>(request.Id) == null)
+        {
+            SetLastError("The link could not be found!");
+            return false;
+        }
+
+        if (!await CheckURL(request.Url))
+        {
+            SetLastError("The link is not a file!");
+            return false;
+        }
+
+        if (await ScanURL(request.Url))
         {
             SetLastError("The link has been flagged as a malware by VirusTotal!");
             return false;
@@ -92,22 +117,23 @@ public class LinkService
 
     private static async Task<bool> CheckURL(string url)
     {
-        var uri = new Uri(url);
-        var fileInfo = new FileInfo(uri.AbsolutePath);
-        if (!string.IsNullOrWhiteSpace(fileInfo.Extension))
-        {
-            return false;
-        }
+        // TODO: better check here !!!
 
-        // TODO: check the file from url for extension too
-        using var client = new HttpClient();
         try
         {
+            var uri = new Uri(url);
+            var fileInfo = new FileInfo(uri.AbsolutePath);
+            if (string.IsNullOrWhiteSpace(fileInfo.Extension))
+            {
+                return false;
+            }
+
+            using var client = new HttpClient();
             var response = await client.SendAsync(new(HttpMethod.Head, url));
             if (response.IsSuccessStatusCode && response.Content.Headers.ContentType != null)
             {
                 var contentType = response.Content.Headers.ContentType.MediaType ?? "";
-                return contentType.StartsWith("application/octet-stream");
+                return contentType.StartsWith("application/");
             }
         }
         finally

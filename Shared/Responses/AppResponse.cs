@@ -12,7 +12,7 @@ public class AppResponse
 
     public bool Proposed { get; set; } = true;
 
-    public byte[] ImageRaw { get; set; } = null!;
+    public byte[] Image { get; set; } = null!;
 
     public bool Updated { get; set; } = false;
 
@@ -26,7 +26,7 @@ public class AppResponse
         Category = appEntity.Category;
         Name = appEntity.Name;
         Proposed = appEntity.Proposed;
-        ImageRaw = appEntity.ImageRaw;
+        Image = appEntity.Image;
         Updated = updated;
     }
 }

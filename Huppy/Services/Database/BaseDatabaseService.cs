@@ -26,7 +26,9 @@ public abstract class BaseDatabaseService
         Post
     }
 
-    protected async Task<string?> Request(RequestType requestType, string action, object? value = null)
+    protected async Task<ResponseType?> Request<ResponseType>(RequestType requestType, string action,
+                                                              object? value = null)
+        where ResponseType : class
     {
         ClearLastError();
 
@@ -47,26 +49,21 @@ public abstract class BaseDatabaseService
             return null;
         }
 
-        return await ProcessResponse(response);
+        return await ProcessResponse<ResponseType>(response);
     }
 
-    private async Task<string?> ProcessResponse(HttpResponseMessage response)
+    private async Task<ResponseType?> ProcessResponse<ResponseType>(HttpResponseMessage response)
+        where ResponseType : class
     {
         ClearLastError();
 
-        var result = await response.Content.ReadAsStringAsync();
-        if (result == null)
-        {
-            return null;
-        }
-
         if (response.IsSuccessStatusCode)
         {
-            return result;
+            return await response.Content.ReadFromJsonAsync<ResponseType>();
         }
         else
         {
-            SetLastError(result);
+            SetLastError(await response.Content.ReadAsStringAsync());
             return null;
         }
     }

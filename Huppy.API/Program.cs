@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<HuppyContext>();
 builder.Services.AddTransient<AppService>();
+builder.Services.AddTransient<LinkService>();
 builder.Services.AddTransient<PackageService>();
 builder.Services.AddTransient<CategoryService>();
 

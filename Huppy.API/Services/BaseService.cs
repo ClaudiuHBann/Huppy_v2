@@ -13,8 +13,8 @@ public class BaseService<Type>(ILogger<Type> logger, HuppyContext context)
     protected void ClearLastError() => LastError = "";
     protected void SetLastError(string error) => LastError = error;
 
-    protected async Task<EntityType?> FindBy<EntityType>(object key)
-        where EntityType : class => await context.FindAsync(typeof(EntityType), key) as EntityType;
+    protected async Task<EntityType?> FindByKeys<EntityType>(params object?[]? keyValues)
+        where EntityType : class => await context.FindAsync(typeof(EntityType), keyValues) as EntityType;
 
   protected async Task<EntityType ?> Create<EntityType>(EntityType entity)
         where EntityType : class
@@ -56,9 +56,14 @@ public class BaseService<Type>(ILogger<Type> logger, HuppyContext context)
     /// Finds the entity by it's id and updates all it's properties
     /// </summary>
     /// <returns>true even if no properties changed</returns>
-    protected async Task<EntityType?> Update<EntityType>(EntityType entity)
+    protected async Task<EntityType?> Update<EntityType>(EntityType? entity)
         where EntityType : class
     {
+        if (entity == null)
+        {
+            return null;
+        }
+
         var propertyID = entity.GetType().GetProperty("Id");
         if (propertyID == null)
         {
@@ -71,7 +76,7 @@ public class BaseService<Type>(ILogger<Type> logger, HuppyContext context)
             return null;
         }
 
-        var entityUpdated = await FindBy<EntityType>(propertyIDValue);
+        var entityUpdated = await FindByKeys<EntityType>(propertyIDValue);
         if (entityUpdated == null)
         {
             return null;
@@ -95,7 +100,7 @@ public class BaseService<Type>(ILogger<Type> logger, HuppyContext context)
                     t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>));
                 if (isEnumerable)
                 {
-                    // TODO: wtf brah
+                    // TODO: better way of checking this?
                     equalCount += entityPropertyValue.ToJSON() == entityUpdatedPropertyValue.ToJSON() ? 1 : 0;
                 }
             }

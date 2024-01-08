@@ -12,7 +12,6 @@ using Avalonia.Threading;
 using Shared.Models;
 using Shared.Entities;
 using Shared.Requests;
-using Shared.Responses;
 
 namespace Huppy.ViewModels
 {
@@ -40,23 +39,37 @@ public partial class CategoryViewModel : ViewModelBase
 
     public async void Populate()
     {
-        foreach (var pair in await _database.Category.GetCategoryToApps())
+        var response = await _database.Categories.GetCALs();
+        if (response == null)
+        {
+            return;
+        }
+
+        foreach (var cal in response.CALs)
         {
             ObservableCollection<AppModel> collection = [];
 
             // order by name first and next by proposed because the proposed apps are at the end
-            pair.Value.OrderBy(app => app.Name)
-                .OrderBy(app => app.Proposed)
-                .Select(app =>
+            cal.ALs.OrderBy(al => al.App.Name)
+                .OrderBy(al => al.App.Proposed)
+                .Select(al =>
                         {
-                            var appModel = new AppModel(app);
+                            string url = AppModel.UrlDefault;
+                            var link = al.Link.FirstOrDefault();
+                            if (link != null)
+                            {
+                                url = link.Url;
+                            }
+
+                            var appModel = new AppModel(al.App, url);
                             appModel.Update(_settings.Settings);
                             return appModel;
                         })
                 .ToList()
                 .ForEach(collection.Add);
 
-            await Dispatcher.UIThread.InvokeAsync(() => CategoryToApps.Add(new(new(pair.Key), new(collection, Apps))));
+            await Dispatcher.UIThread.InvokeAsync(
+                () => CategoryToApps.Add(new(new(cal.Category), new(collection, Apps))));
         }
     }
 
@@ -69,10 +82,10 @@ public partial class CategoryViewModel : ViewModelBase
 
     public async Task<AppEntity?> AppCreate(AppRequest appRequest)
     {
-        var response = await _database.App.Create(appRequest);
+        var response = await _database.Apps.Create(appRequest);
         if (response == null)
         {
-            _notification.NotifyE(_database.Package.LastError);
+            _notification.NotifyE(_database.Packages.LastError);
             return null;
         }
 

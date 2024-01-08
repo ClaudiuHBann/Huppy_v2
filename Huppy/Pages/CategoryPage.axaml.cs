@@ -53,7 +53,7 @@ public partial class CategoryView : UserControl
         }
 
         categoryViewModel.CategoryToApps.First(pair => pair.Key.Category.Id == appEntity.Category)
-            .Value.Apps.Add(new(appEntity));
+            .Value.Apps.Add(new(appEntity, result.Url));
     }
 }
 }

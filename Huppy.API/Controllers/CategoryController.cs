@@ -2,6 +2,8 @@
 
 using Huppy.API.Services;
 
+using Shared.Responses;
+
 namespace Huppy.API.Controllers
 {
 [ApiController]
@@ -10,6 +12,6 @@ public class CategoryController
 (ILogger<CategoryController> logger, CategoryService service) : BaseController<CategoryController>(logger)
 {
     [HttpGet(nameof(GetCALs))]
-    public async Task<ActionResult> GetCALs() => MakeOk(await service.GetCALs());
+    public async Task<ActionResult> GetCALs() => MakeOk(new CategoryResponse(await service.GetCALs()));
 }
 }

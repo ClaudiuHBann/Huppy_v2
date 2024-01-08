@@ -12,9 +12,13 @@ namespace Huppy.Models
 {
 public partial class AppModel : ObservableObject
 {
+    public static Bitmap ImageDefault { get; } = new(AssetLoader.Open(new("avares://Huppy/Assets/Icons/App.png")));
+    public const string UrlDefault = "https://www.example.com/";
+
     public AppEntity App { get; set; }
 
-    public static Bitmap ImageDefault { get; } = new(AssetLoader.Open(new("avares://Huppy/Assets/Icons/App.png")));
+    [ObservableProperty]
+    public string url;
 
     [ObservableProperty]
     private Bitmap image;
@@ -25,7 +29,7 @@ public partial class AppModel : ObservableObject
     [ObservableProperty]
     private bool isVisible;
 
-    public AppModel(AppEntity app)
+    public AppModel(AppEntity app, string url)
     {
         App = app;
         IsVisible = !App.Proposed;
@@ -38,6 +42,8 @@ public partial class AppModel : ObservableObject
         {
             Image = new(new MemoryStream(App.Image));
         }
+
+        Url = url;
     }
 
     public bool Update(SettingsEntity settings) => IsVisible = !App.Proposed || settings.ShowProposedApps;

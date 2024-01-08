@@ -11,22 +11,15 @@ public class PackageDatabaseService : BaseDatabaseService
     protected override string GetControllerName() => "Package";
 
     public async Task<PackageResponse?> Create(PackageRequest packageRequest) => await PackageEx(packageRequest,
-                                                                                                 PackageAction.Create);
+                                                                                                 Action.Create);
 
     public async Task<PackageResponse?> Update(PackageRequest packageRequest) => await PackageEx(packageRequest,
-                                                                                                 PackageAction.Update);
+                                                                                                 Action.Update);
 
     public async Task<PackageResponse?> Load(PackageRequest packageRequest) => await PackageEx(packageRequest,
-                                                                                               PackageAction.Load);
+                                                                                               Action.Load);
 
-    private enum PackageAction
-    {
-        Create,
-        Update,
-        Load
-    }
-
-    private async Task<PackageResponse?> PackageEx(PackageRequest packageRequest, PackageAction action) =>
+    private async Task<PackageResponse?> PackageEx(PackageRequest packageRequest, Action action) =>
         await Request<PackageResponse>(RequestType.Post, action.ToString(), packageRequest);
 }
 }

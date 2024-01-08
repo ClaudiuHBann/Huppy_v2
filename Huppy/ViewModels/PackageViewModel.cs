@@ -34,10 +34,10 @@ public class PackageViewModel : ViewModelBase
 
     public async Task<PackageEntity?> PackageCreate(PackageEntity packageEntity)
     {
-        var response = await _database.Package.Create(new(packageEntity));
+        var response = await _database.Packages.Create(new(packageEntity));
         if (response == null)
         {
-            _notification.NotifyE(_database.Package.LastError);
+            _notification.NotifyE(_database.Packages.LastError);
             return null;
         }
 
@@ -46,10 +46,10 @@ public class PackageViewModel : ViewModelBase
 
     public async Task<bool?> PackageUpdate(PackageEntity packageEntity)
     {
-        var response = await _database.Package.Update(new(packageEntity));
+        var response = await _database.Packages.Update(new(packageEntity));
         if (response == null)
         {
-            _notification.NotifyE(_database.Package.LastError);
+            _notification.NotifyE(_database.Packages.LastError);
             return null;
         }
 
@@ -58,10 +58,10 @@ public class PackageViewModel : ViewModelBase
 
     public async Task<PackageEntity?> PackageLoad(PackageEntity packageEntity)
     {
-        var response = await _database.Package.Load(new(packageEntity));
+        var response = await _database.Packages.Load(new(packageEntity));
         if (response == null)
         {
-            _notification.NotifyE(_database.Package.LastError);
+            _notification.NotifyE(_database.Packages.LastError);
             return null;
         }
 

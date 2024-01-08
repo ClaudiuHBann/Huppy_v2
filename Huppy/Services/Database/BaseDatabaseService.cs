@@ -1,6 +1,8 @@
 ﻿using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 
+using Shared.Responses;
 using Shared.Utilities;
 
 namespace Huppy.Services.Database
@@ -20,6 +22,14 @@ public abstract class BaseDatabaseService
     protected void SetLastError(string error) => LastError = error;
 
     protected abstract string GetControllerName();
+
+    protected enum Action
+    {
+        Create,
+        Load, // TODO: rename to read
+        Update,
+        Delete
+    }
 
     protected enum RequestType
     {
@@ -43,7 +53,7 @@ public abstract class BaseDatabaseService
             break;
 
         case RequestType.Post:
-            response = await _client.PostAsync(uri, new ByteArrayContent(value!.ToMsgPack()));
+            response = await _client.PostAsJsonAsync(uri, value);
             break;
 
         default:
@@ -58,13 +68,21 @@ public abstract class BaseDatabaseService
     {
         ClearLastError();
 
+        var bytes = await response.Content.ReadFromJsonAsync<byte[]>();
+        if (bytes == null)
+        {
+            return null;
+        }
+
         if (response.IsSuccessStatusCode)
         {
-            return (await response.Content.ReadAsByteArrayAsync()).FromMsgPack<ResponseType>();
+            return bytes.FromMsgPack<ResponseType>();
         }
         else
         {
-            SetLastError(await response.Content.ReadAsStringAsync());
+            var error = bytes.FromMsgPack<ErrorResponse>();
+            SetLastError(error.Message);
+
             return null;
         }
     }

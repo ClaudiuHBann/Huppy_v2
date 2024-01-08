@@ -3,24 +3,25 @@ using Huppy.API.Controllers;
 
 using Microsoft.EntityFrameworkCore;
 
-using Shared.Models;
+using Shared.Utilities;
 
 namespace Huppy.API.Services
 {
 public class CategoryService
 (ILogger<CategoryController> logger, HuppyContext context) : BaseService<CategoryController>(logger, context)
 {
-    public async Task<List<KeyValuePair<CategoryEntity, List<AppEntity>>>> GetCategoryToApps()
+    public async Task<List<CAL>> GetCALs()
     {
         ClearLastError();
 
-        List<KeyValuePair<CategoryEntity, List<AppEntity>>> categoryToApps = [];
+        List<CAL> categoryToApps = [];
 
         var groupsUnordered = await context.Apps.GroupBy(app => app.CategoryNavigation).ToListAsync();
         var groupsOrdered = groupsUnordered.OrderBy(group => group.Key.Name);
         foreach (var group in groupsOrdered)
         {
-            categoryToApps.Add(new(group.Key, [..group]));
+            var als = group.Select(app => new AL(app, [..context.Links.Where(link => link.App == app.Id)])).ToList();
+            categoryToApps.Add(new(group.Key, als));
         }
 
         return categoryToApps;

@@ -1,8 +1,6 @@
-﻿using System.Net;
-using System.Net.Http.Headers;
+﻿using Microsoft.AspNetCore.Mvc;
 
-using Microsoft.AspNetCore.Mvc;
-
+using Shared.Responses;
 using Shared.Utilities;
 
 namespace Huppy.API.Controllers
@@ -15,14 +13,13 @@ public abstract class BaseController<Type>(ILogger<Type> logger) : ControllerBas
     protected ActionResult MakeAndLogBadRequest(string message)
     {
         Logger.LogError(message);
-        return BadRequest(message);
+        var error = new ErrorResponse(message);
+        return BadRequest(error.ToMsgPack());
     }
 
     protected ActionResult MakeOk(object data)
     {
-        var response = new HttpResponseMessage(HttpStatusCode.OK) { Content = new ByteArrayContent(data.ToMsgPack()) };
-        response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-        return Ok(response);
+        return Ok(data.ToMsgPack());
     }
 }
 }

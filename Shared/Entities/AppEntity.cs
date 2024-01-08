@@ -5,21 +5,26 @@ using MessagePack;
 
 namespace Shared.Models
 {
-[MessagePackObject(true)]
+[MessagePackObject]
 public partial class AppEntity
 {
+    [Key(0)]
     public int Id { get; set; } = -1;
 
+    [Key(1)]
     public int Category { get; set; } = -1;
 
-    public string Name { get; set; } = null!;
+    [Key(2)]
+    public string Name { get; set; } = "";
 
+    [Key(3)]
     public bool Proposed { get; set; } = true;
 
-    public byte[] Image { get; set; } = null!;
+    [Key(4)]
+    public byte[] Image { get; set; } = Array.Empty<byte>();
 
     [IgnoreMember]
-    public virtual CategoryEntity CategoryNavigation { get; set; } = null!;
+    public virtual CategoryEntity CategoryNavigation { get; set; } = new();
 
     [IgnoreMember]
     public virtual ICollection<LinkEntity> Links { get; set; } = new List<LinkEntity>();

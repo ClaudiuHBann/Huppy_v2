@@ -5,14 +5,17 @@ using Shared.Responses;
 
 namespace Shared.Models
 {
-[MessagePackObject(true)]
+[MessagePackObject]
 public partial class PackageEntity
 {
+    [Key(0)]
     public int Id { get; set; } = -1;
 
-    public int[] Apps { get; set; } = null!;
+    [Key(1)]
+    public int[] Apps { get; set; } = Array.Empty<int>();
 
-    public string Name { get; set; } = null!;
+    [Key(2)]
+    public string Name { get; set; } = "";
 
     public PackageEntity()
     {

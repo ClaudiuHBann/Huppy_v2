@@ -2,9 +2,14 @@
 
 namespace Shared.Entities
 {
-[MessagePackObject(true)]
+[MessagePackObject]
 public class SettingsEntity
 {
+    [Key(0)]
     public bool ShowProposedApps { get; set; } = false;
+
+    public SettingsEntity()
+    {
+    }
 }
 }

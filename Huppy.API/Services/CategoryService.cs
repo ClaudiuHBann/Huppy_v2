@@ -1,14 +1,13 @@
 ﻿using Huppy.API.Models;
-using Huppy.API.Controllers;
-
 using Microsoft.EntityFrameworkCore;
 
+using Shared.Models;
 using Shared.Utilities;
 
 namespace Huppy.API.Services
 {
 public class CategoryService
-(ILogger<CategoryController> logger, HuppyContext context) : BaseService<CategoryController>(logger, context)
+(HuppyContext context) : BaseService<CategoryEntity>(context)
 {
     public async Task<List<CAL>> GetCALs()
     {

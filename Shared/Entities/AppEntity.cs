@@ -1,26 +1,21 @@
-﻿using Shared.Requests;
-using Shared.Responses;
+﻿using MessagePack;
 
-using MessagePack;
+using Shared.Requests;
+using Shared.Responses;
 
 namespace Shared.Models
 {
-[MessagePackObject]
+[MessagePackObject(true)]
 public partial class AppEntity
 {
-    [Key(0)]
     public int Id { get; set; } = -1;
 
-    [Key(1)]
     public int Category { get; set; } = -1;
 
-    [Key(2)]
     public string Name { get; set; } = "";
 
-    [Key(3)]
     public bool Proposed { get; set; } = true;
 
-    [Key(4)]
     public byte[] Image { get; set; } = Array.Empty<byte>();
 
     [IgnoreMember]

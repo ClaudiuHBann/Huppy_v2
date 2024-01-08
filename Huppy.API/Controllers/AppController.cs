@@ -10,7 +10,7 @@ namespace Huppy.API.Controllers
 [ApiController]
 [Route("[controller]")]
 public class AppController
-(ILogger<AppController> logger, AppService service) : BaseController<AppController>(logger)
+(AppService service) : BaseController
 {
     [HttpPost(nameof(Create))]
     public async Task<ActionResult> Create([FromBody] AppRequest request)
@@ -18,7 +18,19 @@ public class AppController
         var entity = await service.Create(request);
         if (entity == null)
         {
-            return MakeAndLogBadRequest(service.LastError);
+            return MakeBadRequest(service.LastError);
+        }
+
+        return MakeOk(new AppResponse(entity));
+    }
+
+    [HttpPost(nameof(Read))]
+    public async Task<ActionResult> Read([FromBody] AppRequest request)
+    {
+        var entity = await service.Read(request);
+        if (entity == null)
+        {
+            return MakeBadRequest(service.LastError);
         }
 
         return MakeOk(new AppResponse(entity));
@@ -30,22 +42,10 @@ public class AppController
         var entity = await service.Update(request);
         if (entity == null)
         {
-            return MakeAndLogBadRequest(service.LastError);
+            return MakeBadRequest(service.LastError);
         }
 
         return MakeOk(new AppResponse(entity, true));
-    }
-
-    [HttpPost(nameof(Read))]
-    public async Task<ActionResult> Read([FromBody] AppRequest request)
-    {
-        var entity = await service.Read(request);
-        if (entity == null)
-        {
-            return MakeAndLogBadRequest(service.LastError);
-        }
-
-        return MakeOk(new AppResponse(entity));
     }
 }
 }

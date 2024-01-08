@@ -4,16 +4,13 @@ using Shared.Requests;
 
 namespace Shared.Models
 {
-[MessagePackObject]
+[MessagePackObject(true)]
 public partial class LinkEntity
 {
-    [Key(0)]
     public int Id { get; set; } = -1;
 
-    [Key(1)]
     public int App { get; set; } = -1;
 
-    [Key(2)]
     public string Url { get; set; } = "";
 
     [IgnoreMember]

@@ -2,8 +2,8 @@
 
 namespace Shared.Requests
 {
-[MessagePackObject]
-public class CategoryRequest
+[MessagePackObject(true)]
+public class CategoryRequest : BaseRequest
 {
     public CategoryRequest()
     {

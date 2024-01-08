@@ -4,10 +4,9 @@ using Shared.Utilities;
 
 namespace Shared.Responses
 {
-[MessagePackObject]
-public class CategoryResponse
+[MessagePackObject(true)]
+public class CategoryResponse : BaseResponse
 {
-    [Key(0)]
     public List<CAL> CALs { get; set; } = new();
 
     public CategoryResponse()

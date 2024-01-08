@@ -1,5 +1,4 @@
 ﻿using Huppy.API.Models;
-using Huppy.API.Controllers;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -9,7 +8,7 @@ using Shared.Requests;
 namespace Huppy.API.Services
 {
 public class AppService
-(ILogger<AppController> logger, HuppyContext context) : BaseService<AppController>(logger, context)
+(HuppyContext context) : BaseService<AppEntity>(context)
 {
     public async Task < AppEntity ? > Create(AppRequest request)
     {
@@ -90,7 +89,7 @@ public class AppService
             return entity;
         }
 
-        entity = await FindByKeys<AppEntity>(id);
+        entity = await FindByKeys(id);
         if (entity != null)
         {
             return entity;

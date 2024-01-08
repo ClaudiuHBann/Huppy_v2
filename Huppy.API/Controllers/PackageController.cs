@@ -10,7 +10,7 @@ namespace Huppy.API.Controllers
 [ApiController]
 [Route("[controller]")]
 public class PackageController
-(ILogger<PackageController> logger, PackageService service) : BaseController<PackageController>(logger)
+(PackageService service) : BaseController
 {
 
     [HttpPost(nameof(Create))]
@@ -19,7 +19,7 @@ public class PackageController
         var entity = await service.Create(request);
         if (entity == null)
         {
-            return MakeAndLogBadRequest(service.LastError);
+            return MakeBadRequest(service.LastError);
         }
 
         return MakeOk(new PackageResponse(entity));
@@ -31,7 +31,7 @@ public class PackageController
         var entity = await service.Update(request);
         if (entity == null)
         {
-            return MakeAndLogBadRequest(service.LastError);
+            return MakeBadRequest(service.LastError);
         }
 
         return MakeOk(new PackageResponse(entity, true));
@@ -43,7 +43,7 @@ public class PackageController
         var entity = await service.Read(request);
         if (entity == null)
         {
-            return MakeAndLogBadRequest(service.LastError);
+            return MakeBadRequest(service.LastError);
         }
 
         return MakeOk(new PackageResponse(entity));

@@ -6,18 +6,19 @@ using Shared.Utilities;
 
 namespace Huppy.API.Services
 {
-public class BaseService<Type>(ILogger<Type> logger, HuppyContext context)
+public class BaseService<Entity>(HuppyContext context)
+    where Entity : class
 {
     public string LastError { get; private set; } = "";
 
     protected void ClearLastError() => LastError = "";
     protected void SetLastError(string error) => LastError = error;
 
-    protected async Task<EntityType?> FindByKeys<EntityType>(params object?[]? keyValues)
-        where EntityType : class => await context.FindAsync(typeof(EntityType), keyValues) as EntityType;
+    protected async Task<Entity?> FindByKeys(params object?[]? keyValues)
 
-  protected async Task<EntityType ?> Create<EntityType>(EntityType entity)
-        where EntityType : class
+        => await context.FindAsync(typeof(Entity), keyValues) as Entity;
+
+    protected async Task<Entity?> Create(Entity entity)
     {
         var propertyID = entity.GetType().GetProperty("Id");
         if (propertyID == null)
@@ -25,7 +26,7 @@ public class BaseService<Type>(ILogger<Type> logger, HuppyContext context)
             return null;
         }
 
-        var dbSet = GetDbSet<EntityType>();
+        var dbSet = GetDbSet();
         if (dbSet == null)
         {
             return null;
@@ -36,16 +37,15 @@ public class BaseService<Type>(ILogger<Type> logger, HuppyContext context)
         return await context.SaveChangesAsync() > 0 ? entity : null;
     }
 
-    private DbSet<T>? GetDbSet<T>()
-        where T : class
+    private DbSet<Entity>? GetDbSet()
     {
         foreach (var property in context.GetType().GetProperties())
         {
             if (property.PropertyType.IsGenericType &&
                 property.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>) &&
-                property.PropertyType.GetGenericArguments()[0] == typeof(T))
+                property.PropertyType.GetGenericArguments()[0] == typeof(Entity))
             {
-                return (DbSet<T>?)property.GetValue(context);
+                return (DbSet<Entity>?)property.GetValue(context);
             }
         }
 
@@ -56,8 +56,7 @@ public class BaseService<Type>(ILogger<Type> logger, HuppyContext context)
     /// Finds the entity by it's id and updates all it's properties
     /// </summary>
     /// <returns>true even if no properties changed</returns>
-    protected async Task<EntityType?> Update<EntityType>(EntityType? entity)
-        where EntityType : class
+    protected async Task<Entity?> Update(Entity? entity)
     {
         if (entity == null)
         {
@@ -76,7 +75,7 @@ public class BaseService<Type>(ILogger<Type> logger, HuppyContext context)
             return null;
         }
 
-        var entityUpdated = await FindByKeys<EntityType>(propertyIDValue);
+        var entityUpdated = await FindByKeys(propertyIDValue);
         if (entityUpdated == null)
         {
             return null;

@@ -1,5 +1,4 @@
 ﻿using Huppy.API.Models;
-using Huppy.API.Controllers;
 
 using Shared.Models;
 using Shared.Requests;
@@ -12,7 +11,7 @@ using VirusTotalNet.ResponseCodes;
 namespace Huppy.API.Services
 {
 public class LinkService
-(ILogger<LinkController> logger, HuppyContext context) : BaseService<LinkController>(logger, context)
+(HuppyContext context) : BaseService<LinkEntity>(context)
 {
     private const string _virusTotalAPIKey = "9b4a57c29539ad065b0ef6577ce9113ba89674b69e12e79b0336df087731fda4";
 
@@ -56,7 +55,7 @@ public class LinkService
     {
         ClearLastError();
 
-        var entity = await FindByKeys<LinkEntity>(request.Id);
+        var entity = await FindByKeys(request.Id);
         if (entity == null)
         {
             SetLastError("The link could not be read.");
@@ -94,7 +93,7 @@ public class LinkService
     {
         ClearLastError();
 
-        if (await FindByKeys<PackageEntity>(request.Id) == null)
+        if (await FindByKeys(request.Id) == null)
         {
             SetLastError("The link could not be found!");
             return false;

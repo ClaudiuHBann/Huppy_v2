@@ -2,10 +2,9 @@
 
 namespace Shared.Responses
 {
-[MessagePackObject]
-public class ErrorResponse
+[MessagePackObject(true)]
+public class ErrorResponse : BaseResponse
 {
-    [Key(0)]
     public string Message { get; set; } = "";
 
     public ErrorResponse(string message)

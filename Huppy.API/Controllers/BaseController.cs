@@ -6,13 +6,10 @@ using Shared.Utilities;
 namespace Huppy.API.Controllers
 {
 [Controller]
-public abstract class BaseController<Type>(ILogger<Type> logger) : ControllerBase
+public abstract class BaseController : ControllerBase
 {
-    public ILogger<Type> Logger { get; } = logger;
-
-    protected ActionResult MakeAndLogBadRequest(string message)
+    protected ActionResult MakeBadRequest(string message)
     {
-        Logger.LogError(message);
         var error = new ErrorResponse(message);
         return BadRequest(error.ToMsgPack());
     }

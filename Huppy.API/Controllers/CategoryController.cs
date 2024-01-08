@@ -9,7 +9,7 @@ namespace Huppy.API.Controllers
 [ApiController]
 [Route("[controller]")]
 public class CategoryController
-(ILogger<CategoryController> logger, CategoryService service) : BaseController<CategoryController>(logger)
+(CategoryService service) : BaseController
 {
     [HttpGet(nameof(GetCALs))]
     public async Task<ActionResult> GetCALs() => MakeOk(new CategoryResponse(await service.GetCALs()));

@@ -10,7 +10,7 @@ namespace Huppy.API.Controllers
 [ApiController]
 [Route("[controller]")]
 public class LinkController
-(ILogger<LinkController> logger, LinkService service) : BaseController<LinkController>(logger)
+(LinkService service) : BaseController
 {
     [HttpPost(nameof(Create))]
     public async Task<ActionResult> Create([FromBody] LinkRequest request)
@@ -18,7 +18,7 @@ public class LinkController
         var entity = await service.Create(request);
         if (entity == null)
         {
-            return MakeAndLogBadRequest(service.LastError);
+            return MakeBadRequest(service.LastError);
         }
 
         return MakeOk(new LinkResponse(entity));
@@ -30,7 +30,7 @@ public class LinkController
         var entity = await service.Update(request);
         if (entity == null)
         {
-            return MakeAndLogBadRequest(service.LastError);
+            return MakeBadRequest(service.LastError);
         }
 
         return MakeOk(new LinkResponse(entity, true));
@@ -42,7 +42,7 @@ public class LinkController
         var entity = await service.Read(request);
         if (entity == null)
         {
-            return MakeAndLogBadRequest(service.LastError);
+            return MakeBadRequest(service.LastError);
         }
 
         return MakeOk(new LinkResponse(entity));

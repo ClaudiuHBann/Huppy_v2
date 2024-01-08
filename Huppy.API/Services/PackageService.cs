@@ -9,7 +9,7 @@ using Shared.Requests;
 namespace Huppy.API.Services
 {
 public class PackageService
-(ILogger<PackageController> logger, HuppyContext context) : BaseService<PackageController>(logger, context)
+(ILogger<PackageController> logger, HuppyContext context) : BaseService<PackageEntity>(context)
 {
     public async Task < PackageEntity ? > Create(PackageRequest request)
     {
@@ -89,7 +89,7 @@ public class PackageService
             return false;
         }
 
-        var entity = await FindByKeys<PackageEntity>(request.Id);
+        var entity = await FindByKeys(request.Id);
         if (entity == null)
         {
             SetLastError("The package could not be found!");
@@ -116,7 +116,7 @@ public class PackageService
             return entity;
         }
 
-        entity = await FindByKeys<PackageEntity>(id);
+        entity = await FindByKeys(id);
         if (entity != null)
         {
             return entity;

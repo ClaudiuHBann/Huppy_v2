@@ -47,14 +47,14 @@ public class AppService
         return entity;
     }
 
-    public async Task < AppEntity ? > Load(AppRequest request)
+    public async Task < AppEntity ? > Read(AppRequest request)
     {
         ClearLastError();
 
         var entity = await FindByIdOrName(request.Id, request.Name);
         if (entity == null)
         {
-            SetLastError("The app could not be loaded.");
+            SetLastError("The app could not be read.");
         }
 
         return entity;

@@ -37,10 +37,10 @@ public class PackageController
         return MakeOk(new PackageResponse(entity, true));
     }
 
-    [HttpPost(nameof(Load))]
-    public async Task<ActionResult> Load([FromBody] PackageRequest request)
+    [HttpPost(nameof(Read))]
+    public async Task<ActionResult> Read([FromBody] PackageRequest request)
     {
-        var entity = await service.Load(request);
+        var entity = await service.Read(request);
         if (entity == null)
         {
             return MakeAndLogBadRequest(service.LastError);

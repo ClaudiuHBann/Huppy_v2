@@ -52,14 +52,14 @@ public class LinkService
         return entity;
     }
 
-    public async Task < LinkEntity ? > Load(LinkRequest request)
+    public async Task < LinkEntity ? > Read(LinkRequest request)
     {
         ClearLastError();
 
         var entity = await FindByKeys<LinkEntity>(request.Id);
         if (entity == null)
         {
-            SetLastError("The link could not be loaded.");
+            SetLastError("The link could not be read.");
         }
 
         return entity;

@@ -36,10 +36,10 @@ public class AppController
         return MakeOk(new AppResponse(entity, true));
     }
 
-    [HttpPost(nameof(Load))]
-    public async Task<ActionResult> Load([FromBody] AppRequest request)
+    [HttpPost(nameof(Read))]
+    public async Task<ActionResult> Read([FromBody] AppRequest request)
     {
-        var entity = await service.Load(request);
+        var entity = await service.Read(request);
         if (entity == null)
         {
             return MakeAndLogBadRequest(service.LastError);

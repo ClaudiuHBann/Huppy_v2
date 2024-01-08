@@ -7,7 +7,8 @@ using Shared.Utilities;
 
 namespace Huppy.Services.Database
 {
-public abstract class BaseDatabaseService
+public abstract class BaseDatabaseService<TypeRequest, TypeResponse>
+    where TypeResponse : class
 {
     private readonly HttpClient _client = new();
     public string LastError { get; private set; } = "";
@@ -23,36 +24,46 @@ public abstract class BaseDatabaseService
 
     protected abstract string GetControllerName();
 
-    protected enum Action
+    protected enum EDBAction
     {
         Create,
-        Load, // TODO: rename to read
+        Read,
         Update,
         Delete
     }
 
-    protected enum RequestType
+    protected enum EHTTPRequest
     {
         Get,
         Post
     }
 
-    protected async Task<ResponseType?> Request<ResponseType>(RequestType requestType, string action,
-                                                              object? value = null)
-        where ResponseType : class
+    public virtual async Task<TypeResponse?> Create(TypeRequest request) => await RequestCRUD(request,
+                                                                                              EDBAction.Create);
+    public virtual async Task<TypeResponse?> Read(TypeRequest request) => await RequestCRUD(request, EDBAction.Read);
+    public virtual async Task<TypeResponse?> Update(TypeRequest request) => await RequestCRUD(request,
+                                                                                              EDBAction.Update);
+    public virtual async Task<TypeResponse?> Delete(TypeRequest request) => await RequestCRUD(request,
+                                                                                              EDBAction.Delete);
+
+    protected async Task<TypeResponse?> RequestCRUD(TypeRequest request,
+                                                    EDBAction action) => await Request(EHTTPRequest.Post,
+                                                                                       action.ToString(), request);
+
+    protected async Task<TypeResponse?> Request(EHTTPRequest requestHTTP, string action, object? value = null)
     {
         ClearLastError();
 
         var uri = $"{_URLBase}{GetControllerName()}/{action}";
 
         HttpResponseMessage ? response;
-        switch (requestType)
+        switch (requestHTTP)
         {
-        case RequestType.Get:
+        case EHTTPRequest.Get:
             response = await _client.GetAsync(uri);
             break;
 
-        case RequestType.Post:
+        case EHTTPRequest.Post:
             response = await _client.PostAsJsonAsync(uri, value);
             break;
 
@@ -60,11 +71,10 @@ public abstract class BaseDatabaseService
             return null;
         }
 
-        return await ProcessResponse<ResponseType>(response);
+        return await ProcessResponse(response);
     }
 
-    private async Task<ResponseType?> ProcessResponse<ResponseType>(HttpResponseMessage response)
-        where ResponseType : class
+    private async Task<TypeResponse?> ProcessResponse(HttpResponseMessage response)
     {
         ClearLastError();
 
@@ -76,7 +86,7 @@ public abstract class BaseDatabaseService
 
         if (response.IsSuccessStatusCode)
         {
-            return bytes.FromMsgPack<ResponseType>();
+            return bytes.FromMsgPack<TypeResponse>();
         }
         else
         {

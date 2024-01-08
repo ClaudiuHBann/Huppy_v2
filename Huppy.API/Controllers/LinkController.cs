@@ -36,10 +36,10 @@ public class LinkController
         return MakeOk(new LinkResponse(entity, true));
     }
 
-    [HttpPost(nameof(Load))]
-    public async Task<ActionResult> Load([FromBody] LinkRequest request)
+    [HttpPost(nameof(Read))]
+    public async Task<ActionResult> Read([FromBody] LinkRequest request)
     {
-        var entity = await service.Load(request);
+        var entity = await service.Read(request);
         if (entity == null)
         {
             return MakeAndLogBadRequest(service.LastError);

@@ -58,7 +58,7 @@ public class PackageViewModel : ViewModelBase
 
     public async Task<PackageEntity?> PackageLoad(PackageEntity packageEntity)
     {
-        var response = await _database.Packages.Load(new(packageEntity));
+        var response = await _database.Packages.Read(new(packageEntity));
         if (response == null)
         {
             _notification.NotifyE(_database.Packages.LastError);

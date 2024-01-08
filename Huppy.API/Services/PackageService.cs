@@ -50,14 +50,14 @@ public class PackageService
         return entity;
     }
 
-    public async Task < PackageEntity ? > Load(PackageRequest request)
+    public async Task < PackageEntity ? > Read(PackageRequest request)
     {
         ClearLastError();
 
         var entity = await FindByIdOrName(request.Id, request.Name);
         if (entity == null)
         {
-            SetLastError("The package could not be loaded.");
+            SetLastError("The package could not be read.");
         }
 
         return entity;

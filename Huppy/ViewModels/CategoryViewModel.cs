@@ -9,9 +9,8 @@ using Huppy.Services.Database;
 
 using Avalonia.Threading;
 
-using Shared.Models;
 using Shared.Entities;
-using Shared.Requests;
+using Shared.Models;
 
 namespace Huppy.ViewModels
 {
@@ -28,14 +27,26 @@ public partial class CategoryViewModel : ViewModelBase
     public SettingsEntity Settings => _settings.Settings;
 
     public CategoryViewModel(DatabaseService database, SharedService shared, SettingsService settings,
-                             NotificationService notificationService)
+                             NotificationService notification)
     {
         _database = database;
         _shared = shared;
         _settings = settings;
-        _notification = notificationService;
+        _notification = notification;
 
         Populate();
+    }
+
+    public void AppAdd(AppEntity app, LinkEntity link)
+    {
+        CategoryToApps.First(pair => pair.Key.Category.Id == app.Category).Value.Apps.Add(new(app, link));
+    }
+
+    public void AppUpdate(AppEntity app, LinkEntity link)
+    {
+        var apps = CategoryToApps.First(pair => pair.Key.Category.Id == app.Category).Value.Apps;
+        var appModel = apps.First(appModel => appModel.App.Id == app.Id);
+        apps[apps.IndexOf(appModel)] = new(app, link);
     }
 
     public async void Populate()
@@ -62,7 +73,7 @@ public partial class CategoryViewModel : ViewModelBase
                                 url = link.Url;
                             }
 
-                            var appModel = new AppModel(al.App, url);
+                            var appModel = new AppModel(al.App, al.Link.FirstOrDefault());
                             appModel.Update(_settings.Settings);
                             return appModel;
                         })
@@ -70,7 +81,7 @@ public partial class CategoryViewModel : ViewModelBase
                 .ForEach(collection.Add);
 
             await Dispatcher.UIThread.InvokeAsync(
-                () => CategoryToApps.Add(new(new(cal.Category), new(collection, _shared))));
+                () => CategoryToApps.Add(new(new(cal.Category), new(collection, _shared, _database))));
         }
     }
 
@@ -81,16 +92,9 @@ public partial class CategoryViewModel : ViewModelBase
         CategoryToApps.SelectMany(pair => pair.Value.Apps).ToList().ForEach(app => app.Update(_settings.Settings));
     }
 
-    public async Task<AppEntity?> AppCreate(AppRequest appRequest)
+    public async Task<(AppEntity app, LinkEntity link)?> AppCreate(AppEntity appEntity, LinkEntity linkEntity)
     {
-        var response = await _database.Apps.Create(appRequest);
-        if (response == null)
-        {
-            _notification.NotifyE(_database.Packages.LastError);
-            return null;
-        }
-
-        return new(response);
+        return await _database.AppCreate(appEntity, linkEntity);
     }
 }
 }

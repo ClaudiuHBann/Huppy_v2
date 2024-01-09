@@ -6,7 +6,7 @@ using Avalonia.Interactivity;
 
 using Huppy.ViewModels;
 using Huppy.Views.Dialogs;
-
+using Shared.Models;
 using Shared.Requests;
 
 namespace Huppy.Pages
@@ -44,16 +44,16 @@ public partial class CategoryView : UserControl
             return;
         }
 
-        var appRequest = new AppRequest() { Category = result.Category, Name = result.Name, Image = result.Image };
+        var appEntity = new AppEntity() { Category = result.Category, Name = result.Name, Image = result.Image };
+        var linkEntity = new LinkEntity() { Url = result.Url };
 
-        var appEntity = await categoryViewModel.AppCreate(appRequest);
-        if (appEntity == null)
+        var response = await categoryViewModel.AppCreate(appEntity, linkEntity);
+        if (response == null)
         {
             return;
         }
 
-        categoryViewModel.CategoryToApps.First(pair => pair.Key.Category.Id == appEntity.Category)
-            .Value.Apps.Add(new(appEntity, result.Url));
+        categoryViewModel.AppAdd(response.Value.app, response.Value.link);
     }
 }
 }

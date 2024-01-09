@@ -1,5 +1,7 @@
 ﻿using MessagePack;
 
+using Shared.Models;
+
 namespace Shared.Requests
 {
 [MessagePackObject(true)]
@@ -15,6 +17,14 @@ public class AppRequest : BaseRequest
 
     public AppRequest()
     {
+    }
+
+    public AppRequest(AppEntity entity)
+    {
+        Id = entity.Id;
+        Name = entity.Name;
+        Image = entity.Image;
+        Category = entity.Category;
     }
 }
 }

@@ -29,7 +29,7 @@ public partial class AppModel : ObservableObject
     [ObservableProperty]
     private bool isVisible;
 
-    public AppModel(AppEntity app, string url)
+    public AppModel(AppEntity app, LinkEntity? link)
     {
         App = app;
         IsVisible = !App.Proposed;
@@ -43,7 +43,7 @@ public partial class AppModel : ObservableObject
             Image = new(new MemoryStream(App.Image));
         }
 
-        Url = url;
+        Url = link != null ? link.Url : UrlDefault;
     }
 
     public bool Update(SettingsEntity settings) => IsVisible = !App.Proposed || settings.ShowProposedApps;

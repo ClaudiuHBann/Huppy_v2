@@ -52,8 +52,14 @@
 							</StackPanel>
 
 							<Image Source="avares://Huppy/Assets/Icons/Warning.png"
-								   Canvas.Right="0"
 								   ToolTip.Tip="This app was not fully verified!"
+								   IsVisible="{Binding App.Proposed}"
+								   Width="22"
+								   Height="22" />
+							
+							<Image Source="avares://Huppy/Assets/Icons/Edit.png"
+								   Canvas.Right="0"
+								   PointerReleased="OnPointerReleasedImageEdit"
 								   IsVisible="{Binding App.Proposed}"
 								   Width="22"
 								   Height="22" />

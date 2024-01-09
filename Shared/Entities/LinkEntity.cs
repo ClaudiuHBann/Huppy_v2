@@ -1,6 +1,7 @@
 ﻿using MessagePack;
 
 using Shared.Requests;
+using Shared.Responses;
 
 namespace Shared.Models
 {
@@ -25,6 +26,13 @@ public partial class LinkEntity
         Id = request.Id;
         App = request.App;
         Url = request.Url;
+    }
+
+    public LinkEntity(LinkResponse response)
+    {
+        Id = response.Id;
+        App = response.App;
+        Url = response.Url;
     }
 }
 }

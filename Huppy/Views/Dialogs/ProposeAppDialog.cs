@@ -33,9 +33,9 @@ public class ProposeAppDialog : Dialog
 
     private readonly Visual? _root = null;
 
-    private readonly List<CategoryEntity> _categoryModels;
+    private readonly List<CategoryModel> _categoryModels;
 
-    private MemoryStream _appIconRaw = new();
+    private readonly MemoryStream _appIconRaw = new();
 
     private const string _header = "Propose App";
     private const string _headerSub = "Propose an app:";
@@ -48,19 +48,34 @@ public class ProposeAppDialog : Dialog
 
     private const int _appIconSize = 256; // 256x256 WEBP
 
-    private static FilePickerFileType _imageFileType =
+    private static readonly FilePickerFileType _imageFileType =
         new("All Images") { Patterns = new[] { "*.png", "*.jpg", "*.jpeg", "*.webp" },
                             AppleUniformTypeIdentifiers = new[] { "public.image" },
                             MimeTypes = new[] { "image/png", "image/jpeg", "image/webp" } };
 
-    public ProposeAppDialog(Visual? root, List<CategoryEntity> categoryModels) : base(root, _header, _headerSub)
+    public ProposeAppDialog(Visual? root, List<CategoryModel> categoryModels, Context? context = null)
+        : base(root, _header, _headerSub)
     {
         _root = root;
         _categoryModels = categoryModels;
 
-        _appCategory.ItemsSource = categoryModels.Select(category => category.Name);
-        var categoryModelOthers = categoryModels.First(category => category.Id == CategoryModel.CategoryOtherIndex);
-        _appCategory.SelectedIndex = categoryModels.IndexOf(categoryModelOthers);
+        _appCategory.ItemsSource = categoryModels.Select(category => category.Category.Name);
+
+        if (context != null)
+        {
+            var categoryModel = categoryModels.First(category => category.Category.Id == context.Category);
+            _appCategory.SelectedIndex = categoryModels.IndexOf(categoryModel);
+
+            _appName.Text = context.Name;
+            _appLink.Text = context.Url;
+            _appIcon.Source = new Bitmap(new MemoryStream(context.Image));
+        }
+        else
+        {
+            var categoryModelOthers =
+                categoryModels.First(category => category.Category.Id == CategoryModel.CategoryOtherIndex);
+            _appCategory.SelectedIndex = categoryModels.IndexOf(categoryModelOthers);
+        }
 
         _appIconFind.Content = "Choose App Icon";
         _appIconFind.Click += OnClickButtonAppIconFind;
@@ -162,7 +177,7 @@ public class ProposeAppDialog : Dialog
         }
 
         return new(
-            _categoryModels[_appCategory.SelectedIndex].Id,
+            _categoryModels[_appCategory.SelectedIndex].Category.Id,
             _appName.Text ?? "",
             _appIconRaw.ToArray(),
             _appLink.Text ?? ""

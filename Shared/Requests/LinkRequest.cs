@@ -1,5 +1,7 @@
 ﻿using MessagePack;
 
+using Shared.Models;
+
 namespace Shared.Requests
 {
 [MessagePackObject(true)]
@@ -13,6 +15,13 @@ public class LinkRequest : BaseRequest
 
     public LinkRequest()
     {
+    }
+
+    public LinkRequest(LinkEntity entity)
+    {
+        Id = entity.Id;
+        App = entity.App;
+        Url = entity.Url;
     }
 }
 }

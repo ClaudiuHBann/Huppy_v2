@@ -15,10 +15,11 @@ public partial class AppModel : ObservableObject
     public static Bitmap ImageDefault { get; } = new(AssetLoader.Open(new("avares://Huppy/Assets/Icons/App.png")));
     public const string UrlDefault = "https://www.example.com/";
 
-    public AppEntity App { get; set; }
+    [ObservableProperty]
+    public AppEntity app;
 
     [ObservableProperty]
-    public string url;
+    public LinkEntity link;
 
     [ObservableProperty]
     private Bitmap image;
@@ -43,7 +44,7 @@ public partial class AppModel : ObservableObject
             Image = new(new MemoryStream(App.Image));
         }
 
-        Url = link != null ? link.Url : UrlDefault;
+        Link = link ?? new() { Url = UrlDefault };
     }
 
     public bool Update(SettingsEntity settings) => IsVisible = !App.Proposed || settings.ShowProposedApps;

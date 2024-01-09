@@ -20,8 +20,8 @@ public class LinkRequest : BaseRequest
     public LinkRequest(LinkEntity entity)
     {
         Id = entity.Id;
-        App = entity.App;
         Url = entity.Url;
+        App = entity.App;
     }
 }
 }

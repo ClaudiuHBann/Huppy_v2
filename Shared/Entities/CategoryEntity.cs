@@ -14,7 +14,7 @@ public partial class CategoryEntity
     public int? Count { get; set; } = 0;
 
     [IgnoreMember]
-    public virtual ICollection<AppEntity> Apps { get; set; } = new List<AppEntity>();
+    public virtual ICollection<AppEntity> Apps { get; set; } = null!;
 
     public CategoryEntity()
     {

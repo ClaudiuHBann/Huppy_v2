@@ -20,8 +20,8 @@ public class PackageRequest : BaseRequest
     public PackageRequest(PackageEntity packageEntity)
     {
         Id = packageEntity.Id;
-        Apps = packageEntity.Apps ?? Array.Empty<int>();
         Name = packageEntity.Name ?? "";
+        Apps = packageEntity.Apps ?? Array.Empty<int>();
     }
 }
 }

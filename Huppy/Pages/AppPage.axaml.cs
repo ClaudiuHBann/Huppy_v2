@@ -45,7 +45,7 @@ public partial class AppView : UserControl
         }
 
         ProposeAppDialog.Context context =
-            new(appModel.App.Category, appModel.App.Name, appModel.App.Image, appModel.Url);
+            new(appModel.App.Category, appModel.App.Name, appModel.App.Image, appModel.Link.Url);
 
         ProposeAppDialog dialog = new(VisualRoot as Visual, appViewModel.GetCategoryModels(), context);
         var result = await dialog.Show();
@@ -54,8 +54,9 @@ public partial class AppView : UserControl
             return;
         }
 
-        var appEntity = new AppEntity() { Category = result.Category, Name = result.Name, Image = result.Image };
-        var linkEntity = new LinkEntity() { Url = result.Url };
+        var appEntity = new AppEntity() { Id = appModel.App.Id, Category = result.Category, Name = result.Name,
+                                          Image = result.Image };
+        var linkEntity = new LinkEntity() { Id = appModel.Link.Id, Url = result.Url };
 
         var response = await appViewModel.AppUpdate(appEntity, linkEntity);
         if (response == null)

@@ -39,7 +39,7 @@ public class DatabaseService
             return null;
         }
 
-        var linkResponse = await Links.Update(new(linkEntity));
+        var linkResponse = await Links.Update(new(linkEntity) { App = appResponse.Id });
         if (linkResponse == null)
         {
             notification.NotifyE(Links.LastError);

@@ -13,8 +13,6 @@ using FluentAvalonia.UI.Controls;
 
 using Huppy.Models;
 
-using Shared.Models;
-
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 
@@ -44,6 +42,9 @@ public class ProposeAppDialog : Dialog
     private readonly TextBox _appName = new();
     private readonly TextBox _appLink = new();
     private readonly Button _appIconFind = new();
+
+    private readonly ContentControl _content = new();
+
     private readonly Avalonia.Controls.Image _appIcon = new();
 
     private const int _appIconSize = 256; // 256x256 WEBP
@@ -68,7 +69,17 @@ public class ProposeAppDialog : Dialog
 
             _appName.Text = context.Name;
             _appLink.Text = context.Url;
-            _appIcon.Source = new Bitmap(new MemoryStream(context.Image));
+
+            if (context.Image.Length == 0)
+            {
+                _appIcon.Source = AppModel.ImageDefault;
+            }
+            else
+            {
+                _appIcon.Source = new Bitmap(new MemoryStream(context.Image));
+            }
+
+            _content.Content = _appIcon;
         }
         else
         {
@@ -80,6 +91,9 @@ public class ProposeAppDialog : Dialog
         _appIconFind.Content = "Choose App Icon";
         _appIconFind.Click += OnClickButtonAppIconFind;
         _appIconFind.HorizontalAlignment = HorizontalAlignment.Center;
+
+        _content.Width = _appIconSize;
+        _content.Height = _appIconSize;
 
         _appIcon.Width = _appIconSize;
         _appIcon.Height = _appIconSize;
@@ -120,6 +134,7 @@ public class ProposeAppDialog : Dialog
 
         _appIconRaw.Position = 0; // reset position so it can be read
         _appIcon.Source = new Bitmap(_appIconRaw);
+        _content.Content = _appIcon;
     }
 
     protected override Control CreateContent()
@@ -158,11 +173,10 @@ public class ProposeAppDialog : Dialog
         var text =
             new TextBlock() { Text = "Your Icon Will Be Shown Here", VerticalAlignment = VerticalAlignment.Center,
                               HorizontalAlignment = HorizontalAlignment.Center };
-        grid.Children.Add(text);
-        Grid.SetRow(text, 8);
+        grid.Children.Add(_content);
+        Grid.SetRow(_content, 8);
 
-        grid.Children.Add(_appIcon);
-        Grid.SetRow(_appIcon, 8);
+        _content.Content = text;
 
         return grid;
     }

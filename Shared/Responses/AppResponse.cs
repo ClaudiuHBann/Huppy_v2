@@ -24,10 +24,10 @@ public class AppResponse : BaseResponse
     public AppResponse(AppEntity appEntity, bool updated = false) : base(updated)
     {
         Id = appEntity.Id;
-        Category = appEntity.Category;
         Name = appEntity.Name;
-        Proposed = appEntity.Proposed;
         Image = appEntity.Image;
+        Proposed = appEntity.Proposed;
+        Category = appEntity.Category;
     }
 }
 }

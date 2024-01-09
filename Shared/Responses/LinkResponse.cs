@@ -16,8 +16,8 @@ public class LinkResponse : BaseResponse
     public LinkResponse(LinkEntity entity, bool updated = false) : base(updated)
     {
         Id = entity.Id;
-        App = entity.App;
         Url = entity.Url;
+        App = entity.App;
     }
 
     public LinkResponse()

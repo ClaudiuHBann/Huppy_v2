@@ -20,8 +20,8 @@ public class PackageResponse : BaseResponse
     public PackageResponse(PackageEntity packageEntity, bool updated = false) : base(updated)
     {
         Id = packageEntity.Id;
-        Apps = packageEntity.Apps;
         Name = packageEntity.Name;
+        Apps = packageEntity.Apps;
     }
 }
 }

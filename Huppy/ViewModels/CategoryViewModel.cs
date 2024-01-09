@@ -8,9 +8,11 @@ using Huppy.Services;
 using Huppy.Services.Database;
 
 using Avalonia.Threading;
+using Avalonia.Media.Imaging;
 
 using Shared.Entities;
 using Shared.Models;
+using System.IO;
 
 namespace Huppy.ViewModels
 {
@@ -46,7 +48,10 @@ public partial class CategoryViewModel : ViewModelBase
     {
         var apps = CategoryToApps.First(pair => pair.Key.Category.Id == app.Category).Value.Apps;
         var appModel = apps.First(appModel => appModel.App.Id == app.Id);
-        apps[apps.IndexOf(appModel)] = new(app, link);
+
+        appModel.App = app;
+        appModel.Link = link;
+        appModel.Image = new Bitmap(new MemoryStream(app.Image));
     }
 
     public async void Populate()

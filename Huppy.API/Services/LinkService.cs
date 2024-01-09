@@ -74,6 +74,13 @@ public class LinkService
             return false;
         }
 
+        var entityWithSameName = await context.Links.FirstOrDefaultAsync(app => app.Url == request.Url);
+        if (entityWithSameName != null && request.Id != entityWithSameName.Id)
+        {
+            SetLastError($"The link \"{request.Url}\" already exists!");
+            return false;
+        }
+
         if (!await CheckURL(request.Url))
         {
             SetLastError("The link is not a file!");

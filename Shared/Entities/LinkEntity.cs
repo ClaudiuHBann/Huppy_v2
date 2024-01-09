@@ -15,7 +15,7 @@ public partial class LinkEntity
     public string Url { get; set; } = "";
 
     [IgnoreMember]
-    public virtual AppEntity AppNavigation { get; set; } = new();
+    public virtual AppEntity AppNavigation { get; set; } = null!;
 
     public LinkEntity()
     {

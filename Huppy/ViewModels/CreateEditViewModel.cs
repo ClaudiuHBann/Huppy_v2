@@ -1,5 +1,7 @@
 ﻿using Huppy.Services;
 
+using Microsoft.Extensions.DependencyInjection;
+
 namespace Huppy.ViewModels
 {
 public class CreateEditViewModel : ViewModelBase
@@ -12,10 +14,16 @@ public class CreateEditViewModel : ViewModelBase
     {
         PackageViewModel = DI.Create<PackageViewModel>();
         CategoryViewModel = DI.Create<CategoryViewModel>();
-        SearchViewModel = DI.Create<SearchViewModel>(CategoryViewModel);
+        SearchViewModel = DI.Create<SearchViewModel>();
 
-        CategoryViewModel.Apps = PackageViewModel.Apps;
-        PackageViewModel.CategoryToApps = CategoryViewModel.CategoryToApps;
+        var serviceShared = DI.ServiceProvider.GetService<SharedService>();
+        if (serviceShared == null)
+        {
+            return;
+        }
+
+        serviceShared.PackageViewModel = PackageViewModel;
+        serviceShared.CategoryViewModel = CategoryViewModel;
     }
 }
 }

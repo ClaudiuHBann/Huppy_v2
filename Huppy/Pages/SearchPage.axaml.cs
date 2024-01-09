@@ -1,6 +1,8 @@
+using Avalonia.Input;
 using Avalonia.Controls;
 
 using Huppy.ViewModels;
+using System;
 
 namespace Huppy.Pages
 {
@@ -33,6 +35,16 @@ public partial class SearchView : UserControl
 
         searchViewModel.Search.Category = new(categoryView.Category);
         searchViewModel.Filter();
+    }
+
+    private void OnDropDownOpenedComboBoxCategory(object? sender, EventArgs e)
+    {
+        if (DataContext is not SearchViewModel searchViewModel)
+        {
+            return;
+        }
+
+        searchViewModel.Populate();
     }
 }
 }

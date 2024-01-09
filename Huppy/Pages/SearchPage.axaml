@@ -19,6 +19,7 @@
 				  SelectionChanged="OnSelectionChangedCategory"
 				  PlaceholderText="Choose a category"
 				  Margin="10, 0, 10, 0"
+				  DropDownOpened="OnDropDownOpenedComboBoxCategory"
 				  HorizontalAlignment="Stretch"
 				  VerticalAlignment="Center"
 				  ItemsSource="{Binding Categories}">

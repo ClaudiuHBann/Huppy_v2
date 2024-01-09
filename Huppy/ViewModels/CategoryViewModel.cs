@@ -19,18 +19,19 @@ public partial class CategoryViewModel : ViewModelBase
 {
     // TODO: can we make this a map?
     public ObservableCollection<KeyValuePair<CategoryModel, AppViewModel>> CategoryToApps { get; set; } = [];
-    public ObservableCollection<AppModel>? Apps { get; set; } = null;
 
     private readonly DatabaseService _database;
+    private readonly SharedService _shared;
     private readonly SettingsService _settings;
     private readonly NotificationService _notification;
 
     public SettingsEntity Settings => _settings.Settings;
 
-    public CategoryViewModel(DatabaseService database, SettingsService settings,
+    public CategoryViewModel(DatabaseService database, SharedService shared, SettingsService settings,
                              NotificationService notificationService)
     {
         _database = database;
+        _shared = shared;
         _settings = settings;
         _notification = notificationService;
 
@@ -69,7 +70,7 @@ public partial class CategoryViewModel : ViewModelBase
                 .ForEach(collection.Add);
 
             await Dispatcher.UIThread.InvokeAsync(
-                () => CategoryToApps.Add(new(new(cal.Category), new(collection, Apps))));
+                () => CategoryToApps.Add(new(new(cal.Category), new(collection, _shared))));
         }
     }
 

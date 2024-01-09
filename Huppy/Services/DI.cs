@@ -17,6 +17,7 @@ public static class DI
     {
         Services.AddSingleton<DatabaseService>()
             .AddSingleton<ClipboardService>()
+            .AddSingleton<SharedService>()
             .AddSingleton<NotificationService>()
             .AddSingleton<StorageService>()
             .AddSingleton<SettingsService>();

@@ -1,47 +1,25 @@
 ﻿using System.Linq;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 
 using Huppy.Models;
 using Huppy.Services;
 
 namespace Huppy.ViewModels
 {
-public class SearchViewModel : ViewModelBase
+public class SearchViewModel
+(SharedService shared) : ViewModelBase
 {
-    public ObservableCollection<CategoryModel> Categories { get; set; } = [];
+    public ObservableCollection<CategoryModel> Categories { get; set; } = [SearchModel.CategoryAll];
     public SearchModel Search { get; set; } = new();
 
-    private readonly CategoryViewModel _categoryViewModel;
-    private readonly SettingsService _settings;
-
-    public SearchViewModel(CategoryViewModel categoryViewModel, SettingsService settings)
+    public void Populate()
     {
-        _categoryViewModel = categoryViewModel;
-        _settings = settings;
-
-        _categoryViewModel.CategoryToApps.CollectionChanged += OnCollectionChanged;
-        Categories.Insert(0, SearchModel.CategoryAll);
-    }
-
-    private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        if (e.NewItems == null)
+        if (Categories.Count > 1)
         {
             return;
         }
 
-        var pair = (KeyValuePair<CategoryModel, AppViewModel>?)e.NewItems[0];
-        if (pair == null)
-        {
-            return;
-        }
-
-        if (e.Action == NotifyCollectionChangedAction.Add)
-        {
-            Categories.Insert(0, pair.Value.Key);
-        }
+        shared.GetCategoryModels().ForEach(Categories.Add);
     }
 
     private static bool CanBe(string query, string app)
@@ -55,7 +33,7 @@ public class SearchViewModel : ViewModelBase
     public void Filter()
     {
         // clear the visible flag for categories
-        _categoryViewModel.CategoryToApps
+        shared.CategoryViewModel?.CategoryToApps
             .SelectMany(pair =>
                         {
                             pair.Key.IsVisible = true;
@@ -68,19 +46,19 @@ public class SearchViewModel : ViewModelBase
         // first hide whole categories to speed up the app hiding
         if (Search.Category != null && Search.Category.Category.Id != SearchModel.CategoryAll.Category.Id)
         {
-            _categoryViewModel.CategoryToApps.ToList().ForEach(pair => pair.Key.IsVisible =
-                                                                   pair.Key.Category.Id == Search.Category.Category.Id);
+            shared.CategoryViewModel?.CategoryToApps.ToList().ForEach(
+                pair => pair.Key.IsVisible = pair.Key.Category.Id == Search.Category.Category.Id);
         }
 
         if (Search.Query.Length != 0)
         {
-            _categoryViewModel.CategoryToApps.Where(pair => pair.Key.IsVisible)
+            shared.CategoryViewModel?.CategoryToApps.Where(pair => pair.Key.IsVisible)
                 .SelectMany(pair => pair.Value.Apps)
                 .ToList()
                 .ForEach(appView => appView.IsVisible = CanBe(Search.Query, appView.App.Name));
 
             // hide the categories with 0 apps
-            _categoryViewModel.CategoryToApps
+            shared.CategoryViewModel?.CategoryToApps
                 .Where(pair => pair.Key.IsVisible && !pair.Value.Apps.Any(appView => appView.IsVisible))
                 .Select(pair => pair.Key)
                 .ToList()

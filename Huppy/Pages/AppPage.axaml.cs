@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Input;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 
 using Huppy.Models;
 using Huppy.ViewModels;
@@ -36,9 +37,9 @@ public partial class AppView : UserControl
         }
     }
 
-    private async void OnPointerReleasedImageEdit(object? sender, PointerReleasedEventArgs e)
+    private async void OnClickMenuItemEdit(object? sender, RoutedEventArgs e)
     {
-        if (sender is not Image image || image.DataContext is not AppModel appModel ||
+        if (sender is not MenuItem menuItem || menuItem.DataContext is not AppModel appModel ||
             DataContext is not AppViewModel appViewModel)
         {
             return;
@@ -65,6 +66,10 @@ public partial class AppView : UserControl
         }
 
         appViewModel.AppUpdateCTA(response.Value.app, response.Value.link);
+    }
+
+    private void OnClickMenuItemDelete(object? sender, RoutedEventArgs e)
+    {
     }
 }
 }

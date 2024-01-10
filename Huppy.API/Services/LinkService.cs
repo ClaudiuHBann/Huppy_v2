@@ -1,7 +1,6 @@
 ﻿using Huppy.API.Models;
 
 using Shared.Models;
-using Shared.Requests;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -15,79 +14,35 @@ public class LinkService
 {
     private const string _virusTotalAPIKey = "9b4a57c29539ad065b0ef6577ce9113ba89674b69e12e79b0336df087731fda4";
 
-    public async Task < LinkEntity ? > Create(LinkRequest request)
+    protected override async Task<bool> CreateValidate(LinkEntity? entity)
     {
         ClearLastError();
 
-        if (!await ValidateCreate(request))
-        {
-            return null;
-        }
-
-        var entity = await Create(new LinkEntity(request));
         if (entity == null)
         {
-            SetLastError("The link could not be created.");
+            return false;
         }
 
-        return entity;
-    }
-
-    public async Task < LinkEntity ? > Update(LinkRequest request)
-    {
-        ClearLastError();
-
-        if (!await ValidateUpdate(request))
-        {
-            return null;
-        }
-
-        var entity = await Update(new LinkEntity(request));
-        if (entity == null)
-        {
-            SetLastError("The link could not be updated.");
-        }
-
-        return entity;
-    }
-
-    public async Task < LinkEntity ? > Read(LinkRequest request)
-    {
-        ClearLastError();
-
-        var entity = await FindByKeys(request.Id);
-        if (entity == null)
-        {
-            SetLastError("The link could not be read.");
-        }
-
-        return entity;
-    }
-
-    private async Task<bool> ValidateCreate(LinkRequest request)
-    {
-        ClearLastError();
-
-        if (!await context.Apps.AnyAsync(app => app.Id == request.App))
+        if (!await context.Apps.AnyAsync(app => app.Id == entity.App))
         {
             SetLastError("The link's app is not valid!");
             return false;
         }
 
-        var entityWithSameName = await context.Links.FirstOrDefaultAsync(app => app.Url == request.Url);
-        if (entityWithSameName != null && request.Id != entityWithSameName.Id)
+        var entityWithSameName = await context.Links.FirstOrDefaultAsync(app => app.Url == entity.Url);
+        if (entityWithSameName != null && entity.Id != entityWithSameName.Id)
         {
-            SetLastError($"The link \"{request.Url}\" already exists!");
+            SetLastError($"The link \"{entity.Url}\" already exists!");
             return false;
         }
 
-        if (!await CheckURL(request.Url))
+        if (!await CheckURL(entity.Url))
         {
             SetLastError("The link is not a file!");
             return false;
         }
 
-        if (await ScanURL(request.Url))
+        if (await ScanURL(entity.Url))
         {
             SetLastError("The link has been flagged as a malware by VirusTotal!");
             return false;
@@ -96,11 +51,16 @@ public class LinkService
         return true;
     }
 
-    private async Task<bool> ValidateUpdate(LinkRequest request)
+    protected override async Task<bool> UpdateValidate(LinkEntity? entity)
     {
         ClearLastError();
 
-        var entityLink = await FindByKeys(request.Id);
+        if (entity == null)
+        {
+            return false;
+        }
+
+        var entityLink = await ReadEx(entity.Id);
         if (entityLink == null)
         {
             SetLastError("The link could not be found!");
@@ -114,13 +74,13 @@ public class LinkService
             return false;
         }
 
-        if (!await CheckURL(request.Url))
+        if (!await CheckURL(entity.Url))
         {
             SetLastError("The link is not a file!");
             return false;
         }
 
-        if (await ScanURL(request.Url))
+        if (await ScanURL(entity.Url))
         {
             SetLastError("The link has been flagged as a malware by VirusTotal!");
             return false;

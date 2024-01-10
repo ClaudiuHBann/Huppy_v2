@@ -21,7 +21,7 @@ public class AppResponse : BaseResponse
     {
     }
 
-    public AppResponse(AppEntity appEntity, bool updated = false) : base(updated)
+    public AppResponse(AppEntity appEntity)
     {
         Id = appEntity.Id;
         Name = appEntity.Name;

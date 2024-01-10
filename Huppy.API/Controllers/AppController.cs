@@ -15,7 +15,7 @@ public class AppController
     [HttpPost(nameof(Create))]
     public async Task<ActionResult> Create([FromBody] AppRequest request)
     {
-        var entity = await service.Create(request);
+        var entity = await service.Create(new(request));
         if (entity == null)
         {
             return MakeBadRequest(service.LastError);
@@ -27,7 +27,7 @@ public class AppController
     [HttpPost(nameof(Read))]
     public async Task<ActionResult> Read([FromBody] AppRequest request)
     {
-        var entity = await service.Read(request);
+        var entity = await service.Read(new(request));
         if (entity == null)
         {
             return MakeBadRequest(service.LastError);
@@ -39,13 +39,25 @@ public class AppController
     [HttpPost(nameof(Update))]
     public async Task<ActionResult> Update([FromBody] AppRequest request)
     {
-        var entity = await service.Update(request);
+        var entity = await service.Update(new(request));
         if (entity == null)
         {
             return MakeBadRequest(service.LastError);
         }
 
-        return MakeOk(new AppResponse(entity, true));
+        return MakeOk(new AppResponse(entity) { Updated = true });
+    }
+
+    [HttpPost(nameof(Delete))]
+    public async Task<ActionResult> Delete([FromBody] AppRequest request)
+    {
+        var entity = await service.Delete(new(request));
+        if (entity == null)
+        {
+            return MakeBadRequest(service.LastError);
+        }
+
+        return MakeOk(new AppResponse(entity) { Deleted = true });
     }
 }
 }

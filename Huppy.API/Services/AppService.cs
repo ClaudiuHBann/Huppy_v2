@@ -3,87 +3,84 @@
 using Microsoft.EntityFrameworkCore;
 
 using Shared.Models;
-using Shared.Requests;
 
 namespace Huppy.API.Services
 {
 public class AppService
 (HuppyContext context) : BaseService<AppEntity>(context)
 {
-    public async Task < AppEntity ? > Create(AppRequest request)
+    protected override async Task <bool> CreateValidate(AppEntity ? entity) => await Validate(entity);
+    protected override Task <bool> ReadValidate(AppEntity ? entity) => Task.FromResult(true); // Read validates at the same time
+    protected override async Task <bool> UpdateValidate(AppEntity ? entity) => await Validate(entity);
+    protected override Task<bool> DeleteValidate(AppEntity? entity) => Task.FromResult(true); // Delete validates at the same time
+
+    private async Task<bool> Validate(AppEntity? entity)
     {
         ClearLastError();
 
-        if (!await Validate(request))
-        {
-            return null;
-        }
-
-        var entity = await Create(new AppEntity(request));
         if (entity == null)
         {
-            SetLastError("The app could not be created.");
-        }
-
-        return entity;
-    }
-
-    public async Task < AppEntity ? > Update(AppRequest request)
-    {
-        ClearLastError();
-
-        if (!await Validate(request))
-        {
-            return null;
-        }
-
-        var entity = await Update(new AppEntity(request));
-        if (entity == null)
-        {
-            SetLastError("The app could not be updated.");
-        }
-
-        return entity;
-    }
-
-    public async Task < AppEntity ? > Read(AppRequest request)
-    {
-        ClearLastError();
-
-        var entity = await FindByIdOrName(request.Id, request.Name);
-        if (entity == null)
-        {
-            SetLastError("The app could not be read.");
-        }
-
-        return entity;
-    }
-
-    private async Task<bool> Validate(AppRequest request)
-    {
-        ClearLastError();
-
-        if (!await context.Categories.AnyAsync(category => category.Id == request.Category))
-        {
-            SetLastError($"The category is not valid!");
             return false;
         }
 
-        var entity = await FindByKeys(request.Id);
-        if (entity != null && entity.Proposed == false)
+        if (!await context.Categories.AnyAsync(category => category.Id == entity.Category))
+        {
+            SetLastError($"The app's category is not valid!");
+            return false;
+        }
+
+        // only for Update but works for Create too...
+        var entityReal = await ReadEx(entity.Id);
+        if (entityReal != null && entityReal.Proposed == false)
         {
             SetLastError($"A trusted app can not be edited!");
             return false;
         }
 
-        var entityWithSameName = await context.Apps.FirstOrDefaultAsync(app => app.Name == request.Name);
-        if (entityWithSameName != null && request.Id != entityWithSameName.Id)
+        var entityRealWithSameName = await context.Apps.FirstOrDefaultAsync(app => app.Name == entity.Name);
+        if (entityRealWithSameName != null && entity.Id != entityRealWithSameName.Id)
         {
-            SetLastError($"The app \"{request.Name}\" already exists!");
+            SetLastError($"The app \"{entity.Name}\" already exists!");
             return false;
         }
 
         return true;
+    }
+
+    public override async Task < AppEntity ? > Read(AppEntity ? entity)
+    {
+        ClearLastError();
+
+        if (entity == null)
+        {
+            return null;
+        }
+
+        var entityReal = await FindByIdOrName(entity.Id, entity.Name);
+        if (entityReal == null)
+        {
+            SetLastError("The app could not be found!");
+        }
+
+        return entityReal;
+    }
+
+    public override async Task < AppEntity ? > Delete(AppEntity ? entity)
+    {
+        ClearLastError();
+
+        if (entity == null)
+        {
+            return null;
+        }
+
+        var entityReal = await FindByIdOrName(entity.Id, entity.Name);
+        if (entityReal == null)
+        {
+            SetLastError("The app could not be found!");
+        }
+
+        return await DeleteEx(entityReal);
     }
 
     private async Task < AppEntity ? > FindByIdOrName(int id, string name)
@@ -96,14 +93,13 @@ public class AppService
             return entity;
         }
 
-        entity = await FindByKeys(id);
-        if (entity != null)
+        entity = await ReadEx(id);
+        if (entity == null)
         {
-            return entity;
+            SetLastError("The app could not be found!");
         }
 
-        SetLastError("The app could not be found!");
-        return null;
+        return entity;
     }
 }
 }

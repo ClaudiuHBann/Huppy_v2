@@ -15,7 +15,19 @@ public class LinkController
     [HttpPost(nameof(Create))]
     public async Task<ActionResult> Create([FromBody] LinkRequest request)
     {
-        var entity = await service.Create(request);
+        var entity = await service.Create(new(request));
+        if (entity == null)
+        {
+            return MakeBadRequest(service.LastError);
+        }
+
+        return MakeOk(new LinkResponse(entity));
+    }
+
+    [HttpPost(nameof(Read))]
+    public async Task<ActionResult> Read([FromBody] LinkRequest request)
+    {
+        var entity = await service.Read(new(request));
         if (entity == null)
         {
             return MakeBadRequest(service.LastError);
@@ -27,25 +39,25 @@ public class LinkController
     [HttpPost(nameof(Update))]
     public async Task<ActionResult> Update([FromBody] LinkRequest request)
     {
-        var entity = await service.Update(request);
+        var entity = await service.Update(new(request));
         if (entity == null)
         {
             return MakeBadRequest(service.LastError);
         }
 
-        return MakeOk(new LinkResponse(entity, true));
+        return MakeOk(new LinkResponse(entity) { Updated = true });
     }
 
-    [HttpPost(nameof(Read))]
-    public async Task<ActionResult> Read([FromBody] LinkRequest request)
+    [HttpPost(nameof(Delete))]
+    public async Task<ActionResult> Delete([FromBody] LinkRequest request)
     {
-        var entity = await service.Read(request);
+        var entity = await service.Delete(new(request));
         if (entity == null)
         {
             return MakeBadRequest(service.LastError);
         }
 
-        return MakeOk(new LinkResponse(entity));
+        return MakeOk(new LinkResponse(entity) { Deleted = true });
     }
 }
 }

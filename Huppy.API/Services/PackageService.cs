@@ -4,63 +4,122 @@ using Huppy.API.Controllers;
 using Microsoft.EntityFrameworkCore;
 
 using Shared.Models;
-using Shared.Requests;
 
 namespace Huppy.API.Services
 {
 public class PackageService
 (ILogger<PackageController> logger, HuppyContext context) : BaseService<PackageEntity>(context)
 {
-    public async Task < PackageEntity ? > Create(PackageRequest request)
+    protected override async Task<bool> CreateValidate(PackageEntity? entity)
+    {
+        if (entity == null)
+        {
+            return false;
+        }
+
+        if (!await ValideApps(entity.Apps))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected override Task <bool> ReadValidate(PackageEntity? entity) => Task.FromResult(true); // Read validates at the same time
+
+    protected override async Task<bool> UpdateValidate(PackageEntity? entity)
     {
         ClearLastError();
 
-        if (!await ValideApps(request.Apps))
+        if (entity == null)
+        {
+            return false;
+        }
+
+        if (!await ValideApps(entity.Apps))
+        {
+            return false;
+        }
+
+        var entityReal = await ReadEx(entity.Id);
+        if (entityReal == null)
+        {
+            SetLastError("The package could not be found!");
+            return false;
+        }
+
+        var entityWithSameName = await context.Packages.FirstOrDefaultAsync(package => package.Name == entity.Name);
+        if (entityWithSameName != null && entity.Id != entityWithSameName.Id)
+        {
+            SetLastError($"The package \"{entity.Name}\" already exists!");
+            return false;
+        }
+
+        return true;
+    }
+
+    protected override Task<bool> DeleteValidate(PackageEntity? entity) => Task.FromResult(true); // Delete validates at the same time
+
+    public override async Task < PackageEntity ? > Create(PackageEntity ? entity)
+    {
+        ClearLastError();
+
+        if (entity == null)
+        {
+            return null;
+        }
+
+        if (!await CreateValidate(entity))
         {
             return null;
         }
 
         // this method will never fail on name not unqiue so:
-        request.Name = await FindUniquePackageName(request.Name);
+        entity.Name = await FindUniquePackageName(entity.Name);
 
-        var entity = await Create(new PackageEntity(request));
-        if (entity == null)
+        var entityReal = await Create(entity);
+        if (entityReal == null)
         {
             SetLastError("The package could not be created.");
         }
 
-        return entity;
+        return entityReal;
     }
 
-    public async Task < PackageEntity ? > Update(PackageRequest request)
+    public override async Task < PackageEntity ? > Read(PackageEntity ? entity)
     {
         ClearLastError();
 
-        if (!await ValidateForUpdate(request))
+        if (entity == null)
         {
             return null;
         }
 
-        var entity = await Update(new PackageEntity(request));
-        if (entity == null)
-        {
-            SetLastError("The package could not be updated.");
-        }
-
-        return entity;
-    }
-
-    public async Task < PackageEntity ? > Read(PackageRequest request)
-    {
-        ClearLastError();
-
-        var entity = await FindByIdOrName(request.Id, request.Name);
-        if (entity == null)
+        var entityReal = await FindByIdOrName(entity.Id, entity.Name);
+        if (entityReal == null)
         {
             SetLastError("The package could not be read.");
         }
 
-        return entity;
+        return entityReal;
+    }
+
+    public override async Task < PackageEntity ? > Delete(PackageEntity ? entity)
+    {
+        ClearLastError();
+
+        if (entity == null)
+        {
+            return null;
+        }
+
+        var entityReal = await FindByIdOrName(entity.Id, entity.Name);
+        if (entityReal == null)
+        {
+            SetLastError("The package could not be found!");
+        }
+
+        return await DeleteEx(entityReal);
     }
 
     private async Task<bool> ValideApps(int[] apps)
@@ -80,32 +139,6 @@ public class PackageService
         return true;
     }
 
-    private async Task<bool> ValidateForUpdate(PackageRequest request)
-    {
-        ClearLastError();
-
-        if (!await ValideApps(request.Apps))
-        {
-            return false;
-        }
-
-        var entity = await FindByKeys(request.Id);
-        if (entity == null)
-        {
-            SetLastError("The package could not be found!");
-            return false;
-        }
-
-        var entityWithSameName = await context.Packages.FirstOrDefaultAsync(package => package.Name == request.Name);
-        if (entityWithSameName != null && request.Id != entityWithSameName.Id)
-        {
-            SetLastError($"The package \"{request.Name}\" already exists!");
-            return false;
-        }
-
-        return true;
-    }
-
     private async Task < PackageEntity ? > FindByIdOrName(int id, string name)
     {
         ClearLastError();
@@ -116,14 +149,13 @@ public class PackageService
             return entity;
         }
 
-        entity = await FindByKeys(id);
-        if (entity != null)
+        entity = await ReadEx(id);
+        if (entity == null)
         {
-            return entity;
+            SetLastError("The package could not be found!");
         }
 
-        SetLastError("The package could not be found!");
-        return null;
+        return entity;
     }
 
     private async Task<string> FindUniquePackageName(string name)

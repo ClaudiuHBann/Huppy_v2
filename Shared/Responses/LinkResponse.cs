@@ -13,7 +13,7 @@ public class LinkResponse : BaseResponse
 
     public string Url { get; set; } = "";
 
-    public LinkResponse(LinkEntity entity, bool updated = false) : base(updated)
+    public LinkResponse(LinkEntity entity)
     {
         Id = entity.Id;
         Url = entity.Url;

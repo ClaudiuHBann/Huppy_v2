@@ -17,7 +17,7 @@ public class PackageResponse : BaseResponse
     {
     }
 
-    public PackageResponse(PackageEntity packageEntity, bool updated = false) : base(updated)
+    public PackageResponse(PackageEntity packageEntity)
     {
         Id = packageEntity.Id;
         Name = packageEntity.Name;

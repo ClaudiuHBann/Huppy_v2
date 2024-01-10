@@ -6,10 +6,10 @@ namespace Shared.Responses
 public class BaseResponse
 {
     public bool Updated { get; set; } = false;
+    public bool Deleted { get; set; } = false;
 
-    public BaseResponse(bool updated = false)
+    public BaseResponse()
     {
-        Updated = updated;
     }
 }
 }

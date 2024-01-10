@@ -69,6 +69,13 @@ public class AppService
             return false;
         }
 
+        var entity = await FindByKeys(request.Id);
+        if (entity != null && entity.Proposed == false)
+        {
+            SetLastError($"A trusted app can not be edited!");
+            return false;
+        }
+
         var entityWithSameName = await context.Apps.FirstOrDefaultAsync(app => app.Name == request.Name);
         if (entityWithSameName != null && request.Id != entityWithSameName.Id)
         {

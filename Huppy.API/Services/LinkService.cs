@@ -100,9 +100,17 @@ public class LinkService
     {
         ClearLastError();
 
-        if (await FindByKeys(request.Id) == null)
+        var entityLink = await FindByKeys(request.Id);
+        if (entityLink == null)
         {
             SetLastError("The link could not be found!");
+            return false;
+        }
+
+        var entityApp = await context.Apps.FindAsync(entityLink.App);
+        if (entityApp != null && entityApp.Proposed == false)
+        {
+            SetLastError("A trusted link can not be edited!");
             return false;
         }
 

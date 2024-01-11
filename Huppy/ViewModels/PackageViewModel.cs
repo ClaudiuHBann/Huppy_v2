@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 
@@ -57,7 +58,7 @@ public class PackageViewModel
             return new(response);
         }
 
-        public void PackageLoad(int[] apps)
+        public void PackageLoad(Guid[] apps)
         {
             shared.CategoryViewModel?.CategoryToApps.SelectMany(pair => pair.Value.Apps)
                 .ToList()

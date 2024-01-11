@@ -7,9 +7,9 @@ namespace Shared.Responses
 [MessagePackObject(true)]
 public class PackageResponse : BaseResponse
 {
-    public int Id { get; set; } = -1;
+    public Guid Id { get; set; } = Guid.Empty;
 
-    public int[] Apps { get; set; } = Array.Empty<int>();
+    public Guid[] Apps { get; set; } = Array.Empty<Guid>();
 
     public string Name { get; set; } = "";
 

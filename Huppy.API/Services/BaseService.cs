@@ -126,7 +126,7 @@ public class BaseService<Entity>(HuppyContext context)
             return null;
         }
 
-        propertyID.SetValue(entity, await dbSet.CountAsync() + 1);
+        propertyID.SetValue(entity, Guid.NewGuid());
         await dbSet.AddAsync(entity);
         return await context.SaveChangesAsync() > 0 ? entity : null;
     }

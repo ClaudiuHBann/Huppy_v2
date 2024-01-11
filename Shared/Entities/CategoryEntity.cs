@@ -5,7 +5,7 @@ namespace Shared.Models
 [MessagePackObject(true)]
 public partial class CategoryEntity
 {
-    public int Id { get; set; } = -1;
+    public Guid Id { get; set; } = Guid.Empty;
 
     public string Name { get; set; } = "";
 

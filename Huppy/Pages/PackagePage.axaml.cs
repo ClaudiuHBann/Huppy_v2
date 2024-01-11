@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Collections.Specialized;
 
@@ -15,8 +16,8 @@ namespace Huppy.Pages
 {
 public partial class PackageView : UserControl
 {
-    private int _packageCurrentID =>
-        packageID.Content != null && int.TryParse(packageID.Content as string, out int id) ? id : 0;
+    private Guid PackageCurrentID =>
+        packageID.Content != null && Guid.TryParse(packageID.Content as string, out Guid id) ? id : Guid.Empty;
 
     public PackageView()
     {
@@ -51,13 +52,13 @@ public partial class PackageView : UserControl
 
         // can clear if at least an app is in the package
         // can clear if a package was create and it is in edit mode
-        buttonPackageClear.IsEnabled = packageViewModel.Apps.Count > 0 || _packageCurrentID != 0;
+        buttonPackageClear.IsEnabled = packageViewModel.Apps.Count > 0 || PackageCurrentID != Guid.Empty;
     }
 
     private void EnableButtonPackageEdit()
     {
         // can edit if there is a package active
-        buttonPackageEdit.IsEnabled = _packageCurrentID != 0;
+        buttonPackageEdit.IsEnabled = PackageCurrentID != Guid.Empty;
     }
 
     private void EnableButtonPackageCreate()
@@ -68,7 +69,7 @@ public partial class PackageView : UserControl
         }
 
         // can create if there isn't a package active and at least an app in the package
-        buttonPackageCreate.IsEnabled = packageViewModel.Apps.Count > 0 && _packageCurrentID == 0;
+        buttonPackageCreate.IsEnabled = packageViewModel.Apps.Count > 0 && PackageCurrentID == Guid.Empty;
     }
 
     // TODO: if operations are done on apps and they end up the same we dont need to enable save
@@ -78,7 +79,7 @@ public partial class PackageView : UserControl
         // can save if something in the apps has changed
         // can save if the name has changed
         // there must be a package active
-        buttonPackageSave.IsEnabled = _packageCurrentID != 0 && enable;
+        buttonPackageSave.IsEnabled = PackageCurrentID != Guid.Empty && enable;
     }
 
     private void OnButtonClickRemove(object? sender, RoutedEventArgs e)
@@ -107,7 +108,7 @@ public partial class PackageView : UserControl
             return;
         }
 
-        var packageEntity = new PackageEntity() { Id = resultDialog.Id ?? -1, Name = resultDialog.Name ?? "" };
+        var packageEntity = new PackageEntity() { Id = resultDialog.Id ?? Guid.Empty, Name = resultDialog.Name ?? "" };
 
         var resultRequest = await packageViewModel.PackageLoad(packageEntity);
         if (resultRequest == null)
@@ -205,7 +206,7 @@ public partial class PackageView : UserControl
         }
 
         var apps = packageViewModel.Apps.Select(app => app.App.Id).ToArray();
-        var packageEntity = new PackageEntity() { Id = _packageCurrentID, Apps = apps, Name = packageNameContent };
+        var packageEntity = new PackageEntity() { Id = PackageCurrentID, Apps = apps, Name = packageNameContent };
 
         var updated = await packageViewModel.PackageUpdate(packageEntity);
         if (updated == null || updated == false)

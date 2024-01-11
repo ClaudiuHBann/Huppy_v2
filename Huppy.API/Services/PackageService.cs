@@ -122,7 +122,7 @@ public class PackageService
         return await DeleteEx(entityReal);
     }
 
-    private async Task<bool> ValideApps(int[] apps)
+    private async Task<bool> ValideApps(Guid[] apps)
     {
         ClearLastError();
 
@@ -139,7 +139,7 @@ public class PackageService
         return true;
     }
 
-    private async Task < PackageEntity ? > FindByIdOrName(int id, string name)
+    private async Task < PackageEntity ? > FindByIdOrName(Guid id, string name)
     {
         ClearLastError();
 

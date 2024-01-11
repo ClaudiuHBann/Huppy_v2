@@ -7,9 +7,9 @@ namespace Shared.Requests
 [MessagePackObject(true)]
 public class PackageRequest : BaseRequest
 {
-    public int Id { get; set; } = -1;
+    public Guid Id { get; set; } = Guid.Empty;
 
-    public int[] Apps { get; set; } = Array.Empty<int>();
+    public Guid[] Apps { get; set; } = Array.Empty<Guid>();
 
     public string Name { get; set; } = "";
 
@@ -21,7 +21,7 @@ public class PackageRequest : BaseRequest
     {
         Id = packageEntity.Id;
         Name = packageEntity.Name ?? "";
-        Apps = packageEntity.Apps ?? Array.Empty<int>();
+        Apps = packageEntity.Apps ?? Array.Empty<Guid>();
     }
 }
 }

@@ -5,7 +5,7 @@ using Shared.Models;
 namespace Huppy.API.Models
 {
 // clang-format off
-    // Scaffold-DbContext 'User ID=huppy;Password=sarmale1;Host=162.55.32.18;Port=5432;Database=Huppy' Npgsql.EntityFrameworkCore.PostgreSQL -Tables _ -ExcludeTable _ -OutputDir Models
+// Scaffold-DbContext 'User ID=huppy;Password=sarmale1;Host=162.55.32.18;Port=5432;Database=Huppy' Npgsql.EntityFrameworkCore.PostgreSQL -Tables _ -ExcludeTable _ -OutputDir Models
 // clang-format on
 public partial class HuppyContext : DbContext
 {

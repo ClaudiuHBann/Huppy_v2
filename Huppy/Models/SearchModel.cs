@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System;
+
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Huppy.Models
 {
@@ -10,6 +12,6 @@ public partial class SearchModel : ObservableObject
     [ObservableProperty]
     public CategoryModel? category = null;
 
-    public static readonly CategoryModel CategoryAll = new(new() { Id = -1, Name = "All" });
+    public static readonly CategoryModel CategoryAll = new(new() { Id = Guid.Empty, Name = "All" });
 }
 }

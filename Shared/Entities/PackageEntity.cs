@@ -8,9 +8,9 @@ namespace Shared.Models
 [MessagePackObject(true)]
 public partial class PackageEntity
 {
-    public int Id { get; set; } = -1;
+    public Guid Id { get; set; } = Guid.Empty;
 
-    public int[] Apps { get; set; } = Array.Empty<int>();
+    public Guid[] Apps { get; set; } = Array.Empty<Guid>();
 
     public string Name { get; set; } = "";
 
@@ -21,14 +21,14 @@ public partial class PackageEntity
     public PackageEntity(PackageRequest packageRequest)
     {
         Id = packageRequest.Id;
-        Apps = packageRequest.Apps ?? Array.Empty<int>();
+        Apps = packageRequest.Apps ?? Array.Empty<Guid>();
         Name = packageRequest.Name;
     }
 
     public PackageEntity(PackageResponse packageResponse)
     {
         Id = packageResponse.Id;
-        Apps = packageResponse.Apps ?? Array.Empty<int>();
+        Apps = packageResponse.Apps ?? Array.Empty<Guid>();
         Name = packageResponse.Name;
     }
 }

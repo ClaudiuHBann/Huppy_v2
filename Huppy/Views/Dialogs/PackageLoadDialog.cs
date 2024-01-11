@@ -2,12 +2,11 @@
 using Avalonia.Layout;
 using Avalonia.Controls;
 
+using System;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 
 using FluentAvalonia.UI.Controls;
-
-using Shared.Models;
 
 namespace Huppy.Views.Dialogs
 {
@@ -15,10 +14,10 @@ public class PackageLoadDialog : Dialog
 {
     public class Context
     {
-        public int? Id { get; set; } = null;
+        public Guid? Id { get; set; } = null;
         public string? Name { get; set; } = null;
 
-        public Context(int id) => Id = id;
+        public Context(Guid id) => Id = id;
         public Context(string name) => Name = name;
     }
 
@@ -28,10 +27,10 @@ public class PackageLoadDialog : Dialog
     private readonly ComboBox _nameOrID = new();
     private readonly TextBlock _description = new();
     private readonly TextBox _packageName = new();
-    private readonly NumberBox _packageID = new();
+    private readonly TextBox _packageID = new();
     private readonly ContentControl _content = new();
 
-    private const int _packageNameMaxLength = 36; // 36 for a string GUID
+    private const int _packageIDNameMaxLength = 36; // 36 for a string GUID
 
     public PackageLoadDialog(Visual? root) : base(root, _header, _headerSub)
     {
@@ -42,9 +41,7 @@ public class PackageLoadDialog : Dialog
         _description.VerticalAlignment = VerticalAlignment.Center;
 
         _packageName.TextChanged += OnTextBoxTextChangedPackageName;
-
-        _packageID.Maximum = int.MaxValue;
-        _packageID.Minimum = int.MinValue;
+        _packageID.TextChanged += OnTextBoxTextChangedPackageName;
 
         Buttons.Add(TaskDialogButton.OKButton);
         Buttons.Add(TaskDialogButton.CancelButton);
@@ -52,9 +49,9 @@ public class PackageLoadDialog : Dialog
 
     private void OnTextBoxTextChangedPackageName(object? sender, TextChangedEventArgs e)
     {
-        if (_packageName.Text?.Length > _packageNameMaxLength)
+        if (_packageName.Text?.Length > _packageIDNameMaxLength)
         {
-            _packageName.Text = _packageName.Text[.._packageNameMaxLength];
+            _packageName.Text = _packageName.Text[.._packageIDNameMaxLength];
         }
     }
 
@@ -115,7 +112,7 @@ public class PackageLoadDialog : Dialog
             return (string?)_nameOrID.SelectedValue switch
             {
                 "Name" => new(_packageName.Text ?? ""),
-                "ID" => new((int)_packageID.Value),
+                "ID" => new(Guid.TryParse(_packageID.Text, out Guid id) ? id : Guid.Empty),
                 _ => null,
             };
         }

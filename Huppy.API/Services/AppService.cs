@@ -83,7 +83,7 @@ public class AppService
         return await DeleteEx(entityReal);
     }
 
-    private async Task < AppEntity ? > FindByIdOrName(int id, string name)
+    private async Task < AppEntity ? > FindByIdOrName(Guid id, string name)
     {
         ClearLastError();
 

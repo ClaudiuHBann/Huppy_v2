@@ -62,6 +62,7 @@ public partial class AppView : UserControl
         var response = await appViewModel.AppUpdate(appEntity, linkEntity);
         if (response == null)
         {
+            appViewModel.NotifyE(appViewModel.GetLastError());
             return;
         }
 

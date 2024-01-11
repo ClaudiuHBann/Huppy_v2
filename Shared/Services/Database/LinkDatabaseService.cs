@@ -1,7 +1,7 @@
 ﻿using Shared.Requests;
 using Shared.Responses;
 
-namespace Huppy.Services.Database
+namespace Shared.Services.Database
 {
 public class LinkDatabaseService : BaseDatabaseService<LinkRequest, LinkResponse>
 {

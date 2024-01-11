@@ -1,18 +1,18 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using Huppy.Models;
 using Huppy.Services;
-using Huppy.Services.Database;
 
 using Avalonia.Threading;
 using Avalonia.Media.Imaging;
 
-using Shared.Entities;
 using Shared.Models;
-using System.IO;
+using Shared.Entities;
+using Shared.Services.Database;
 
 namespace Huppy.ViewModels
 {
@@ -86,7 +86,7 @@ public partial class CategoryViewModel : ViewModelBase
                 .ForEach(collection.Add);
 
             await Dispatcher.UIThread.InvokeAsync(
-                () => CategoryToApps.Add(new(new(cal.Category), new(collection, _shared, _database))));
+                () => CategoryToApps.Add(new(new(cal.Category), new(collection, _shared, _database, _notification))));
         }
     }
 
@@ -100,6 +100,16 @@ public partial class CategoryViewModel : ViewModelBase
     public async Task<(AppEntity app, LinkEntity link)?> AppCreate(AppEntity appEntity, LinkEntity linkEntity)
     {
         return await _database.AppCreate(appEntity, linkEntity);
+    }
+
+    public void NotifyE(string message)
+    {
+        _notification.NotifyE(message);
+    }
+
+    public string GetLastError()
+    {
+        return _database.LastError;
     }
 }
 }

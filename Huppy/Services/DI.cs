@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-using Huppy.Services.Database;
+using Shared.Services;
+using Shared.Services.Database;
 
 using Microsoft.Extensions.DependencyInjection;
 

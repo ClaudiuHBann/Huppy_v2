@@ -4,9 +4,9 @@ using System.Collections.ObjectModel;
 
 using Huppy.Models;
 using Huppy.Services;
-using Huppy.Services.Database;
 
 using Shared.Models;
+using Shared.Services.Database;
 
 namespace Huppy.ViewModels
 {
@@ -16,12 +16,15 @@ public class AppViewModel : ViewModelBase
 
     private readonly SharedService _shared;
     private readonly DatabaseService _database;
+    private readonly NotificationService _notification;
 
-    public AppViewModel(ObservableCollection<AppModel> apps, SharedService shared, DatabaseService database)
+    public AppViewModel(ObservableCollection<AppModel> apps, SharedService shared, DatabaseService database,
+                        NotificationService notification)
     {
         Apps = apps;
         _shared = shared;
         _database = database;
+        _notification = notification;
     }
 
     public void PackageAdd(AppModel app)
@@ -47,6 +50,16 @@ public class AppViewModel : ViewModelBase
     public async Task<(AppEntity app, LinkEntity link)?> AppUpdate(AppEntity appEntity, LinkEntity linkEntity)
     {
         return await _database.AppUpdate(appEntity, linkEntity);
+    }
+
+    public void NotifyE(string message)
+    {
+        _notification.NotifyE(message);
+    }
+
+    public string GetLastError()
+    {
+        return _database.LastError;
     }
 }
 }

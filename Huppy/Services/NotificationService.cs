@@ -5,7 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Controls.ApplicationLifetimes;
 
-using Huppy.Services;
+using Shared.Services;
 
 namespace Huppy.Services
 {

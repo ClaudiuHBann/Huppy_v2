@@ -1,4 +1,5 @@
 ﻿using Shared.Entities;
+using Shared.Services;
 
 namespace Huppy.Services
 {

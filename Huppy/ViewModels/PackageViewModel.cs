@@ -5,9 +5,9 @@ using System.Collections.ObjectModel;
 
 using Huppy.Models;
 using Huppy.Services;
-using Huppy.Services.Database;
 
 using Shared.Models;
+using Shared.Services.Database;
 
 namespace Huppy.ViewModels
 {

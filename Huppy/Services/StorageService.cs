@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 
+using Shared.Services;
 using Shared.Utilities;
 
 namespace Huppy.Services

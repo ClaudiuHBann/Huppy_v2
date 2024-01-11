@@ -1,9 +1,7 @@
-﻿using System.Threading.Tasks;
-
-using Shared.Requests;
+﻿using Shared.Requests;
 using Shared.Responses;
 
-namespace Huppy.Services.Database
+namespace Shared.Services.Database
 {
 public class CategoryDatabaseService : BaseDatabaseService<CategoryRequest, CategoryResponse>
 {

@@ -6,6 +6,8 @@ using Avalonia.Controls;
 using Avalonia.Input.Platform;
 using Avalonia.Controls.ApplicationLifetimes;
 
+using Shared.Services;
+
 namespace Huppy.Services
 {
 public class ClipboardService : BaseService

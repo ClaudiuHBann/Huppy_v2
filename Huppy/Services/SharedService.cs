@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Huppy.Models;
 using Huppy.ViewModels;
 
+using Shared.Services;
+
 namespace Huppy.Services
 {
 public class SharedService : BaseService

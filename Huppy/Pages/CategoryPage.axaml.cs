@@ -50,6 +50,7 @@ public partial class CategoryView : UserControl
         var response = await categoryViewModel.AppCreate(appEntity, linkEntity);
         if (response == null)
         {
+            categoryViewModel.NotifyE(categoryViewModel.GetLastError());
             return;
         }
 

@@ -17,6 +17,8 @@ using Huppy.Models;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 
+using Shared.Models;
+
 namespace Huppy.Views.Dialogs
 {
 public class ProposeAppDialog : Dialog
@@ -85,7 +87,7 @@ public class ProposeAppDialog : Dialog
         else
         {
             var categoryModelOthers =
-                categoryModels.First(category => category.Category.Id == CategoryModel.CategoryOtherIndex);
+                categoryModels.First(category => category.Category.Id == CategoryEntity.CategoryOther);
             _appCategory.SelectedIndex = categoryModels.IndexOf(categoryModelOthers);
         }
 

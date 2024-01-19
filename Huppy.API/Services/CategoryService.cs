@@ -11,8 +11,6 @@ public class CategoryService
 {
     public async Task<List<CAL>> GetCALs()
     {
-        ClearLastError();
-
         List<CAL> categoryToApps = [];
 
         var groupsUnordered = await context.Apps.GroupBy(app => app.CategoryNavigation).ToListAsync();

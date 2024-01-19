@@ -1,6 +1,9 @@
-﻿using Huppy.API.Models;
+﻿using System.Net;
+
+using Huppy.API.Models;
 
 using Shared.Models;
+using Shared.Exceptions;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -14,79 +17,55 @@ public class LinkService
 {
     private const string _virusTotalAPIKey = "9b4a57c29539ad065b0ef6577ce9113ba89674b69e12e79b0336df087731fda4";
 
-    protected override async Task<bool> CreateValidate(LinkEntity? entity)
+    protected override async Task CreateValidate(LinkEntity entity)
     {
-        ClearLastError();
-
-        if (entity == null)
-        {
-            return false;
-        }
-
         if (!await context.Apps.AnyAsync(app => app.Id == entity.App))
         {
-            SetLastError("The link's app is not valid!");
-            return false;
+            throw new DatabaseException(new(HttpStatusCode.BadRequest, "The link's app is not valid!"));
         }
 
         var entityWithSameName = await context.Links.FirstOrDefaultAsync(app => app.Url == entity.Url);
         if (entityWithSameName != null && entity.Id != entityWithSameName.Id)
         {
-            SetLastError($"The link \"{entity.Url}\" already exists!");
-            return false;
+            throw new DatabaseException(new(HttpStatusCode.BadRequest, $"The link \"{entity.Url}\" already exists!"));
         }
 
         if (!await CheckURL(entity.Url))
         {
-            SetLastError("The link is not a file!");
-            return false;
+            throw new DatabaseException(new(HttpStatusCode.BadRequest, "The link is not a file!"));
         }
 
         if (await ScanURL(entity.Url))
         {
-            SetLastError("The link has been flagged as a malware by VirusTotal!");
-            return false;
+            throw new DatabaseException(
+                new(HttpStatusCode.BadRequest, "The link has been flagged as a malware by VirusTotal!"));
         }
-
-        return true;
     }
 
-    protected override async Task<bool> UpdateValidate(LinkEntity? entity)
+    protected override async Task UpdateValidate(LinkEntity entity)
     {
-        ClearLastError();
-
-        if (entity == null)
-        {
-            return false;
-        }
-
         var entityLink = await ReadEx(entity.Id);
         if (entityLink == null)
         {
-            SetLastError("The link could not be found!");
-            return false;
+            throw new DatabaseException(new(HttpStatusCode.BadRequest, "The link is not a file!"));
         }
 
         var entityApp = await context.Apps.FindAsync(entityLink.App);
         if (entityApp != null && entityApp.Proposed == false)
         {
-            SetLastError("A trusted link can not be edited!");
-            return false;
+            throw new DatabaseException(new(HttpStatusCode.Unauthorized, "A trusted link can not be edited!"));
         }
 
         if (!await CheckURL(entity.Url))
         {
-            SetLastError("The link is not a file!");
-            return false;
+            throw new DatabaseException(new(HttpStatusCode.BadRequest, "The link is not a file!"));
         }
 
         if (await ScanURL(entity.Url))
         {
-            SetLastError("The link has been flagged as a malware by VirusTotal!");
-            return false;
+            throw new DatabaseException(
+                new(HttpStatusCode.BadRequest, "The link has been flagged as a malware by VirusTotal!"));
         }
-
-        return true;
     }
 
     private static async Task<bool> CheckURL(string url)

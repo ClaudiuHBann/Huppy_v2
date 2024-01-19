@@ -2,6 +2,7 @@
 
 using Shared.Responses;
 using Shared.Utilities;
+using Shared.Exceptions;
 
 namespace Shared.Services.Database
 {
@@ -9,16 +10,12 @@ public abstract class BaseDatabaseService<TypeRequest, TypeResponse>
     where TypeResponse : class
 {
     private readonly HttpClient _client = new();
-    public string LastError { get; private set; } = "";
 
 #if DEBUG
     private const string _URLBase = "https://localhost:7194/";
 #else
     private const string _URLBase = "https://162.55.32.18:80/";
 #endif
-
-    protected void ClearLastError() => LastError = "";
-    protected void SetLastError(string error) => LastError = error;
 
     protected abstract string GetControllerName();
 
@@ -32,66 +29,49 @@ public abstract class BaseDatabaseService<TypeRequest, TypeResponse>
 
     protected enum EHTTPRequest
     {
+        Post,
         Get,
-        Post
+        Put,
+        Delete
     }
 
-    public virtual async Task<TypeResponse?> Create(TypeRequest request) => await RequestCRUD(request,
-                                                                                              EDBAction.Create);
-    public virtual async Task<TypeResponse?> Read(TypeRequest request) => await RequestCRUD(request, EDBAction.Read);
-    public virtual async Task<TypeResponse?> Update(TypeRequest request) => await RequestCRUD(request,
-                                                                                              EDBAction.Update);
-    public virtual async Task<TypeResponse?> Delete(TypeRequest request) => await RequestCRUD(request,
-                                                                                              EDBAction.Delete);
+    public virtual async Task<TypeResponse> Create(TypeRequest request) => await Request(EHTTPRequest.Post,
+                                                                                         EDBAction.Create.ToString(),
+                                                                                         request);
+    public virtual async Task<TypeResponse> Read(TypeRequest request) => await Request(EHTTPRequest.Get,
+                                                                                       EDBAction.Read.ToString(),
+                                                                                       request);
+    public virtual async Task<TypeResponse> Update(TypeRequest request) => await Request(EHTTPRequest.Put,
+                                                                                         EDBAction.Update.ToString(),
+                                                                                         request);
+    public virtual async Task<TypeResponse> Delete(TypeRequest request) => await Request(EHTTPRequest.Delete,
+                                                                                         EDBAction.Delete.ToString(),
+                                                                                         request);
 
-    protected async Task<TypeResponse?> RequestCRUD(TypeRequest request,
-                                                    EDBAction action) => await Request(EHTTPRequest.Post,
-                                                                                       action.ToString(), request);
-
-    protected async Task<TypeResponse?> Request(EHTTPRequest requestHTTP, string action, object? value = null)
+    protected async Task<TypeResponse> Request(EHTTPRequest requestHTTP, string action, object? value = null)
     {
-        ClearLastError();
-
         var uri = $"{_URLBase}{GetControllerName()}/{action}";
 
-        HttpResponseMessage ? response;
-        switch (requestHTTP)
-        {
-        case EHTTPRequest.Get:
-            response = await _client.GetAsync(uri);
-            break;
-
-        case EHTTPRequest.Post:
-            response = await _client.PostAsJsonAsync(uri, value);
-            break;
-
-        default:
-            return null;
-        }
+        HttpResponseMessage? response = requestHTTP switch {
+            EHTTPRequest.Get => await _client.GetAsync(uri),
+            EHTTPRequest.Post => await _client.PostAsJsonAsync(uri, value),
+            _ => throw new ArgumentException($"The EHTTPRequest type '{requestHTTP}' is not allowed!"),
+        };
 
         return await ProcessResponse(response);
     }
 
-    private async Task<TypeResponse?> ProcessResponse(HttpResponseMessage response)
+    private static async Task<TypeResponse> ProcessResponse(HttpResponseMessage response)
     {
-        ClearLastError();
-
-        var bytes = await response.Content.ReadFromJsonAsync<byte[]>();
-        if (bytes == null)
-        {
-            return null;
-        }
-
+        var bytes = await response.Content.ReadFromJsonAsync<byte[]>() ??
+                    throw new ArgumentException("Could not ReadFromJsonAsync the response content!");
         if (response.IsSuccessStatusCode)
         {
             return bytes.FromMsgPack<TypeResponse>();
         }
         else
         {
-            var error = bytes.FromMsgPack<ErrorResponse>();
-            SetLastError(error.Message);
-
-            return null;
+            throw new DatabaseException(bytes.FromMsgPack<ErrorResponse>());
         }
     }
 }

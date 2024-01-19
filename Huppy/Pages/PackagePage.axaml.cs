@@ -108,16 +108,19 @@ public partial class PackageView : UserControl
             return;
         }
 
-        var packageEntity = new PackageEntity() { Id = resultDialog.Id ?? Guid.Empty, Name = resultDialog.Name ?? "" };
-
-        var resultRequest = await packageViewModel.PackageLoad(packageEntity);
-        if (resultRequest == null)
+        try
         {
-            return;
-        }
+            var packageEntity =
+                new PackageEntity() { Id = resultDialog.Id ?? Guid.Empty, Name = resultDialog.Name ?? "" };
+            var resultRequest = await packageViewModel.PackageLoad(packageEntity);
 
-        PackageReset();
-        PackageLoad(resultRequest);
+            PackageReset();
+            PackageLoad(resultRequest);
+        }
+        catch (Exception exception)
+        {
+            packageViewModel.Notification.NotifyE(exception.Message);
+        }
     }
 
     private async void OnClickButtonCreatePackage(object? sender, RoutedEventArgs e)
@@ -128,19 +131,22 @@ public partial class PackageView : UserControl
             return;
         }
 
-        var apps = packageViewModel.Apps.Select(app => app.App.Id).ToArray();
-        var packageEntity = await packageViewModel.PackageCreate(new() { Apps = apps, Name = packageNameContent });
-        if (packageEntity == null)
+        try
         {
-            return;
+            var apps = packageViewModel.Apps.Select(app => app.App.Id).ToArray();
+            var packageEntity = await packageViewModel.PackageCreate(new() { Apps = apps, Name = packageNameContent });
+
+            packageID.Content = packageEntity.Id.ToString();
+            packageName.Content = packageEntity.Name;
+
+            EnableButtonPackageCreate();
+            EnableButtonPackageClear();
+            EnableButtonPackageEdit();
         }
-
-        packageID.Content = packageEntity.Id.ToString();
-        packageName.Content = packageEntity.Name;
-
-        EnableButtonPackageCreate();
-        EnableButtonPackageClear();
-        EnableButtonPackageEdit();
+        catch (Exception exception)
+        {
+            packageViewModel.Notification.NotifyE(exception.Message);
+        }
     }
 
     private async void OnClickButtonEdit(object? sender, RoutedEventArgs e)
@@ -205,16 +211,18 @@ public partial class PackageView : UserControl
             return;
         }
 
-        var apps = packageViewModel.Apps.Select(app => app.App.Id).ToArray();
-        var packageEntity = new PackageEntity() { Id = PackageCurrentID, Apps = apps, Name = packageNameContent };
-
-        var updated = await packageViewModel.PackageUpdate(packageEntity);
-        if (updated == null || updated == false)
+        try
         {
-            return;
-        }
+            var apps = packageViewModel.Apps.Select(app => app.App.Id).ToArray();
+            var packageEntity = new PackageEntity() { Id = PackageCurrentID, Apps = apps, Name = packageNameContent };
 
-        EnableButtonPackageSave(false);
+            await packageViewModel.PackageUpdate(packageEntity);
+            EnableButtonPackageSave(false);
+        }
+        catch (Exception exception)
+        {
+            packageViewModel.Notification.NotifyE(exception.Message);
+        }
     }
 
     private void OnClickButtonPackageIDName(object? sender, RoutedEventArgs e)

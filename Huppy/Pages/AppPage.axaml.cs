@@ -58,15 +58,15 @@ public partial class AppView : UserControl
         var appEntity = new AppEntity() { Id = appModel.App.Id, Category = result.Category, Name = result.Name,
                                           Image = result.Image };
         var linkEntity = new LinkEntity() { Id = appModel.Link.Id, Url = result.Url };
-
-        var response = await appViewModel.AppUpdate(appEntity, linkEntity);
-        if (response == null)
-        {
-            appViewModel.NotifyE(appViewModel.GetLastError());
-            return;
-        }
-
-        appViewModel.AppUpdateCTA(response.Value.app, response.Value.link);
+        // TODO: the dialog and logic has to change
+        // var response = await appViewModel.AppUpdate(appEntity, linkEntity);
+        // if (response == null)
+        //{
+        //    appViewModel.NotifyE(appViewModel.GetLastError());
+        //    return;
+        //}
+        //
+        // appViewModel.AppUpdateCTA(response.Value.app, response.Value.link);
     }
 
     private void OnClickMenuItemDelete(object? sender, RoutedEventArgs e)

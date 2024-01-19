@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -56,37 +57,40 @@ public partial class CategoryViewModel : ViewModelBase
 
     public async void Populate()
     {
-        var response = await _database.Categories.CategoriesToAppsWithLinks();
-        if (response == null)
+        try
         {
-            return;
-        }
+            var response = await _database.Categories.CategoriesToAppsWithLinks();
+            foreach (var cal in response.CALs)
+            {
+                ObservableCollection<AppModel> collection = [];
 
-        foreach (var cal in response.CALs)
-        {
-            ObservableCollection<AppModel> collection = [];
-
-            // order by name first and next by proposed because the proposed apps are at the end
-            cal.ALs.OrderBy(al => al.App.Name)
-                .OrderBy(al => al.App.Proposed)
-                .Select(al =>
-                        {
-                            string url = AppModel.UrlDefault;
-                            var link = al.Link.FirstOrDefault();
-                            if (link != null)
+                // order by name first and next by proposed because the proposed apps are at the end
+                cal.ALs.OrderBy(al => al.App.Name)
+                    .OrderBy(al => al.App.Proposed)
+                    .Select(al =>
                             {
-                                url = link.Url;
-                            }
+                                string url = AppModel.UrlDefault;
+                                var link = al.Link.FirstOrDefault();
+                                if (link != null)
+                                {
+                                    url = link.Url;
+                                }
 
-                            var appModel = new AppModel(al.App, al.Link.FirstOrDefault());
-                            appModel.Update(_settings.Settings);
-                            return appModel;
-                        })
-                .ToList()
-                .ForEach(collection.Add);
+                                var appModel = new AppModel(al.App, al.Link.FirstOrDefault());
+                                appModel.Update(_settings.Settings);
+                                return appModel;
+                            })
+                    .ToList()
+                    .ForEach(collection.Add);
 
-            await Dispatcher.UIThread.InvokeAsync(
-                () => CategoryToApps.Add(new(new(cal.Category), new(collection, _shared, _database, _notification))));
+                await Dispatcher.UIThread.InvokeAsync(
+                    () =>
+                        CategoryToApps.Add(new(new(cal.Category), new(collection, _shared, _database, _notification))));
+            }
+        }
+        catch (Exception exception)
+        {
+            _notification.NotifyE(exception.Message);
         }
     }
 
@@ -97,19 +101,6 @@ public partial class CategoryViewModel : ViewModelBase
         CategoryToApps.SelectMany(pair => pair.Value.Apps).ToList().ForEach(app => app.Update(_settings.Settings));
     }
 
-    public async Task<(AppEntity app, LinkEntity link)?> AppCreate(AppEntity appEntity, LinkEntity linkEntity)
-    {
-        return await _database.AppCreate(appEntity, linkEntity);
-    }
-
-    public void NotifyE(string message)
-    {
-        _notification.NotifyE(message);
-    }
-
-    public string GetLastError()
-    {
-        return _database.LastError;
-    }
+    public async Task<AppEntity> AppCreate(AppEntity appEntity) => new(await _database.Apps.Create(new(appEntity)));
 }
 }

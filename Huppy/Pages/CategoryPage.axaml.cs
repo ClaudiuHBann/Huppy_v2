@@ -46,15 +46,15 @@ public partial class CategoryView : UserControl
 
         var appEntity = new AppEntity() { Category = result.Category, Name = result.Name, Image = result.Image };
         var linkEntity = new LinkEntity() { Url = result.Url };
-
-        var response = await categoryViewModel.AppCreate(appEntity, linkEntity);
-        if (response == null)
-        {
-            categoryViewModel.NotifyE(categoryViewModel.GetLastError());
-            return;
-        }
-
-        categoryViewModel.AppAdd(response.Value.app, response.Value.link);
+        // TODO: the dialog and logic has to change
+        // var response = await categoryViewModel.AppCreate(appEntity, linkEntity);
+        // if (response == null)
+        //{
+        //    categoryViewModel.NotifyE(categoryViewModel.GetLastError());
+        //    return;
+        //}
+        //
+        // categoryViewModel.AppAdd(response.Value.app, response.Value.link);
     }
 }
 }

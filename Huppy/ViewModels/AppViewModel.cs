@@ -16,7 +16,7 @@ public class AppViewModel : ViewModelBase
 
     private readonly SharedService _shared;
     private readonly DatabaseService _database;
-    private readonly NotificationService _notification;
+    public readonly NotificationService Notification;
 
     public AppViewModel(ObservableCollection<AppModel> apps, SharedService shared, DatabaseService database,
                         NotificationService notification)
@@ -24,7 +24,7 @@ public class AppViewModel : ViewModelBase
         Apps = apps;
         _shared = shared;
         _database = database;
-        _notification = notification;
+        Notification = notification;
     }
 
     public void PackageAdd(AppModel app)
@@ -47,19 +47,6 @@ public class AppViewModel : ViewModelBase
         _shared.CategoryViewModel?.AppUpdate(appEntity, linkEntity);
     }
 
-    public async Task<(AppEntity app, LinkEntity link)?> AppUpdate(AppEntity appEntity, LinkEntity linkEntity)
-    {
-        return await _database.AppUpdate(appEntity, linkEntity);
-    }
-
-    public void NotifyE(string message)
-    {
-        _notification.NotifyE(message);
-    }
-
-    public string GetLastError()
-    {
-        return _database.LastError;
-    }
+    public async Task<AppEntity> AppUpdate(AppEntity appEntity) => new(await _database.Apps.Update(new(appEntity)));
 }
 }

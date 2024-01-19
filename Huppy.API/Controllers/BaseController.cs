@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net;
+
+using Microsoft.AspNetCore.Mvc;
 
 using Shared.Responses;
 using Shared.Utilities;
@@ -10,7 +12,7 @@ public abstract class BaseController : ControllerBase
 {
     protected ActionResult MakeBadRequest(string message)
     {
-        var error = new ErrorResponse(message);
+        var error = new ErrorResponse(HttpStatusCode.BadRequest, message);
         return BadRequest(error.ToMsgPack());
     }
 

@@ -7,6 +7,7 @@ public class CategoryDatabaseService : BaseDatabaseService<CategoryRequest, Cate
 {
     protected override string GetControllerName() => "Category";
 
-    public async Task<CategoryResponse?> GetCALs() => await Request(EHTTPRequest.Get, nameof(GetCALs));
+    public async Task<CategoryResponse?> CategoriesToAppsWithLinks() =>
+        await Request(EHTTPRequest.Get, nameof(CategoriesToAppsWithLinks));
 }
 }

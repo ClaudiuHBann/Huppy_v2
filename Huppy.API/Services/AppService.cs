@@ -9,9 +9,15 @@ using Shared.Models;
 
 namespace Huppy.API.Services
 {
-public class AppService
-(HuppyContext context) : BaseService<AppEntity>(context)
+public class AppService : BaseService<AppEntity>
 {
+    private readonly HuppyContext _context;
+
+    public AppService(HuppyContext context) : base(context)
+    {
+        _context = context;
+    }
+
     protected override async Task CreateValidate(AppEntity entity) => await Validate(entity);
     // Read validates at the same time
     protected override Task ReadValidate(AppEntity entity) => Task.CompletedTask;
@@ -21,7 +27,7 @@ public class AppService
 
     private async Task Validate(AppEntity entity)
     {
-        if (!await context.Categories.AnyAsync(category => category.Id == entity.Category))
+        if (!await _context.Categories.AnyAsync(category => category.Id == entity.Category))
         {
             throw new DatabaseException(new(HttpStatusCode.BadRequest, "The app's category is not valid!"));
         }
@@ -33,7 +39,7 @@ public class AppService
             throw new DatabaseException(new(HttpStatusCode.Unauthorized, "A trusted app can not be edited!"));
         }
 
-        var entityRealWithSameName = await context.Apps.FirstOrDefaultAsync(app => app.Name == entity.Name);
+        var entityRealWithSameName = await _context.Apps.FirstOrDefaultAsync(app => app.Name == entity.Name);
         if (entityRealWithSameName != null && entity.Id != entityRealWithSameName.Id)
         {
             throw new DatabaseException(new(HttpStatusCode.BadRequest, $"The app '{entity.Name}' already exists!"));
@@ -46,7 +52,7 @@ public class AppService
 
     private async Task<AppEntity> FindByIdOrName(Guid id, string name)
     {
-        var entity = await context.Apps.FirstOrDefaultAsync(app => app.Name == name);
+        var entity = await _context.Apps.FirstOrDefaultAsync(app => app.Name == name);
         if (entity != null)
         {
             return entity;

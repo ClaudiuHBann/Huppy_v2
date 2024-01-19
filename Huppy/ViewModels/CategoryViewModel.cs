@@ -56,7 +56,7 @@ public partial class CategoryViewModel : ViewModelBase
 
     public async void Populate()
     {
-        var response = await _database.Categories.GetCALs();
+        var response = await _database.Categories.CategoriesToAppsWithLinks();
         if (response == null)
         {
             return;

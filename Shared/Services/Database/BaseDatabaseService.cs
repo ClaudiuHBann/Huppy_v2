@@ -53,8 +53,10 @@ public abstract class BaseDatabaseService<TypeRequest, TypeResponse>
         var uri = $"{_URLBase}{GetControllerName()}/{action}";
 
         HttpResponseMessage? response = requestHTTP switch {
-            EHTTPRequest.Get => await _client.GetAsync(uri),
             EHTTPRequest.Post => await _client.PostAsJsonAsync(uri, value),
+            EHTTPRequest.Get => await _client.GetAsJsonAsync(uri, value),
+            EHTTPRequest.Put => await _client.PutAsJsonAsync(uri, value),
+            EHTTPRequest.Delete => await _client.DeleteAsJsonAsync(uri, value),
             _ => throw new ArgumentException($"The EHTTPRequest type '{requestHTTP}' is not allowed!"),
         };
 

@@ -12,19 +12,25 @@ using VirusTotalNet.ResponseCodes;
 
 namespace Huppy.API.Services
 {
-public class LinkService
-(HuppyContext context) : BaseService<LinkEntity>(context)
+public class LinkService : BaseService<LinkEntity>
 {
     private const string _virusTotalAPIKey = "9b4a57c29539ad065b0ef6577ce9113ba89674b69e12e79b0336df087731fda4";
 
+    private readonly HuppyContext _context;
+
+    public LinkService(HuppyContext context) : base(context)
+    {
+        _context = context;
+    }
+
     protected override async Task CreateValidate(LinkEntity entity)
     {
-        if (!await context.Apps.AnyAsync(app => app.Id == entity.App))
+        if (!await _context.Apps.AnyAsync(app => app.Id == entity.App))
         {
             throw new DatabaseException(new(HttpStatusCode.BadRequest, "The link's app is not valid!"));
         }
 
-        var entityWithSameName = await context.Links.FirstOrDefaultAsync(app => app.Url == entity.Url);
+        var entityWithSameName = await _context.Links.FirstOrDefaultAsync(app => app.Url == entity.Url);
         if (entityWithSameName != null && entity.Id != entityWithSameName.Id)
         {
             throw new DatabaseException(new(HttpStatusCode.BadRequest, $"The link \"{entity.Url}\" already exists!"));
@@ -50,7 +56,7 @@ public class LinkService
             throw new DatabaseException(new(HttpStatusCode.BadRequest, "The link is not a file!"));
         }
 
-        var entityApp = await context.Apps.FindAsync(entityLink.App);
+        var entityApp = await _context.Apps.FindAsync(entityLink.App);
         if (entityApp != null && entityApp.Proposed == false)
         {
             throw new DatabaseException(new(HttpStatusCode.Unauthorized, "A trusted link can not be edited!"));

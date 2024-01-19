@@ -10,9 +10,17 @@ using Shared.Exceptions;
 
 namespace Huppy.API.Services
 {
-public class PackageService
-(ILogger<PackageController> logger, HuppyContext context) : BaseService<PackageEntity>(context)
+public class PackageService : BaseService<PackageEntity>
 {
+    private readonly HuppyContext _context;
+    private readonly ILogger<PackageController> _logger;
+
+    public PackageService(ILogger<PackageController> logger, HuppyContext context) : base(context)
+    {
+        _logger = logger;
+        _context = context;
+    }
+
     protected override async Task CreateValidate(PackageEntity entity) => await ValideApps(entity.Apps);
 
     // Read validates at the same time
@@ -23,7 +31,7 @@ public class PackageService
         await ValideApps(entity.Apps);
         await ReadEx(entity.Id); // checks for it's existance
 
-        var entityWithSameName = await context.Packages.FirstOrDefaultAsync(package => package.Name == entity.Name);
+        var entityWithSameName = await _context.Packages.FirstOrDefaultAsync(package => package.Name == entity.Name);
         if (entityWithSameName != null && entity.Id != entityWithSameName.Id)
         {
             throw new DatabaseException(
@@ -44,8 +52,8 @@ public class PackageService
         return await Create(entity);
     }
 
-    public override async Task<PackageEntity> Read(PackageEntity entity) =>
-        await FindByIdOrName(entity.Id, entity.Name);
+    public override async Task<PackageEntity> Read(PackageEntity entity) => await FindByIdOrName(entity.Id,
+                                                                                                 entity.Name);
 
     public override async Task<PackageEntity> Delete(PackageEntity entity) => await DeleteEx(await Read(entity));
 
@@ -54,7 +62,7 @@ public class PackageService
         // TODO: a better way of not doing 69 million requests?
         foreach (var app in apps)
         {
-            if (await context.Apps.FindAsync(app) == null)
+            if (await _context.Apps.FindAsync(app) == null)
             {
                 throw new DatabaseException(new(HttpStatusCode.BadRequest, "The package's apps contain invalid apps!"));
             }
@@ -63,7 +71,7 @@ public class PackageService
 
     private async Task<PackageEntity> FindByIdOrName(Guid id, string name)
     {
-        var entity = await context.Packages.FirstOrDefaultAsync(package => package.Name == name);
+        var entity = await _context.Packages.FirstOrDefaultAsync(package => package.Name == name);
         if (entity != null)
         {
             return entity;
@@ -74,10 +82,10 @@ public class PackageService
 
     private async Task<string> FindUniquePackageName(string name)
     {
-        if (string.IsNullOrWhiteSpace(name) || await context.Packages.AnyAsync(package => package.Name == name))
+        if (string.IsNullOrWhiteSpace(name) || await _context.Packages.AnyAsync(package => package.Name == name))
         {
             name = Guid.NewGuid().ToString();
-            logger.LogInformation($"The package's name was not unique so we generated one: {name}");
+            _logger.LogInformation($"The package's name was not unique so we generated one: {name}");
         }
 
         return name;

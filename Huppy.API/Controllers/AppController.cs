@@ -13,51 +13,19 @@ public class AppController
 (AppService service) : BaseController
 {
     [HttpPost(nameof(Create))]
-    public async Task<ActionResult> Create([FromBody] AppRequest request)
-    {
-        var entity = await service.Create(new(request));
-        if (entity == null)
-        {
-            return MakeBadRequest(service.LastError);
-        }
+    public async Task<ActionResult> Create([FromBody] AppRequest request) =>
+        await Try(async () => new AppResponse(await service.Create(new(request))));
 
-        return MakeOk(new AppResponse(entity));
-    }
+    [HttpGet(nameof(Read))]
+    public async Task<ActionResult> Read([FromBody] AppRequest request) =>
+        await Try(async () => new AppResponse(await service.Read(new(request))));
 
-    [HttpPost(nameof(Read))]
-    public async Task<ActionResult> Read([FromBody] AppRequest request)
-    {
-        var entity = await service.Read(new(request));
-        if (entity == null)
-        {
-            return MakeBadRequest(service.LastError);
-        }
+    [HttpPut(nameof(Update))]
+    public async Task<ActionResult> Update([FromBody] AppRequest request) =>
+        await Try(async () => new AppResponse(await service.Update(new(request))) { Updated = true });
 
-        return MakeOk(new AppResponse(entity));
-    }
-
-    [HttpPost(nameof(Update))]
-    public async Task<ActionResult> Update([FromBody] AppRequest request)
-    {
-        var entity = await service.Update(new(request));
-        if (entity == null)
-        {
-            return MakeBadRequest(service.LastError);
-        }
-
-        return MakeOk(new AppResponse(entity) { Updated = true });
-    }
-
-    [HttpPost(nameof(Delete))]
-    public async Task<ActionResult> Delete([FromBody] AppRequest request)
-    {
-        var entity = await service.Delete(new(request));
-        if (entity == null)
-        {
-            return MakeBadRequest(service.LastError);
-        }
-
-        return MakeOk(new AppResponse(entity) { Deleted = true });
-    }
+    [HttpDelete(nameof(Delete))]
+    public async Task<ActionResult> Delete([FromBody] AppRequest request) =>
+        await Try(async () => new AppResponse(await service.Delete(new(request))) { Deleted = true });
 }
 }

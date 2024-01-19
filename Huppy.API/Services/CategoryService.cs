@@ -9,7 +9,7 @@ namespace Huppy.API.Services
 public class CategoryService
 (HuppyContext context) : BaseService<CategoryEntity>(context)
 {
-    public async Task<List<CAL>> GetCALs()
+    public async Task<List<CAL>> CategoriesToAppsWithLinks()
     {
         List<CAL> categoryToApps = [];
 

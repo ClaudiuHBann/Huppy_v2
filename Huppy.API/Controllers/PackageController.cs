@@ -14,51 +14,19 @@ public class PackageController
 {
 
     [HttpPost(nameof(Create))]
-    public async Task<ActionResult> Create([FromBody] PackageRequest request)
-    {
-        var entity = await service.Create(new(request));
-        if (entity == null)
-        {
-            return MakeBadRequest(service.LastError);
-        }
+    public async Task<ActionResult> Create([FromBody] PackageRequest request) =>
+        await Try(async () => new PackageResponse(await service.Create(new(request))));
 
-        return MakeOk(new PackageResponse(entity));
-    }
+    [HttpGet(nameof(Read))]
+    public async Task<ActionResult> Read([FromBody] PackageRequest request) =>
+        await Try(async () => new PackageResponse(await service.Read(new(request))));
 
-    [HttpPost(nameof(Read))]
-    public async Task<ActionResult> Read([FromBody] PackageRequest request)
-    {
-        var entity = await service.Read(new(request));
-        if (entity == null)
-        {
-            return MakeBadRequest(service.LastError);
-        }
+    [HttpPut(nameof(Update))]
+    public async Task<ActionResult> Update([FromBody] PackageRequest request) =>
+        await Try(async () => new PackageResponse(await service.Update(new(request))) { Updated = true });
 
-        return MakeOk(new PackageResponse(entity));
-    }
-
-    [HttpPost(nameof(Update))]
-    public async Task<ActionResult> Update([FromBody] PackageRequest request)
-    {
-        var entity = await service.Update(new(request));
-        if (entity == null)
-        {
-            return MakeBadRequest(service.LastError);
-        }
-
-        return MakeOk(new PackageResponse(entity) { Updated = true });
-    }
-
-    [HttpPost(nameof(Delete))]
-    public async Task<ActionResult> Delete([FromBody] PackageRequest request)
-    {
-        var entity = await service.Delete(new(request));
-        if (entity == null)
-        {
-            return MakeBadRequest(service.LastError);
-        }
-
-        return MakeOk(new PackageResponse(entity));
-    }
+    [HttpDelete(nameof(Delete))]
+    public async Task<ActionResult> Delete([FromBody] PackageRequest request) =>
+        await Try(async () => new PackageResponse(await service.Delete(new(request))) { Deleted = true });
 }
 }

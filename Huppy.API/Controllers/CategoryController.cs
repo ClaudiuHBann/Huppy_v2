@@ -11,7 +11,8 @@ namespace Huppy.API.Controllers
 public class CategoryController
 (CategoryService service) : BaseController
 {
-    [HttpGet(nameof(GetCALs))]
-    public async Task<ActionResult> GetCALs() => MakeOk(new CategoryResponse(await service.GetCALs()));
+    [HttpGet(nameof(CategoriesToAppsWithLinks))]
+    public async Task<ActionResult> CategoriesToAppsWithLinks() =>
+        await Try(async () => new CategoryResponse(await service.CategoriesToAppsWithLinks()));
 }
 }

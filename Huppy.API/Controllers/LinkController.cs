@@ -13,51 +13,19 @@ public class LinkController
 (LinkService service) : BaseController
 {
     [HttpPost(nameof(Create))]
-    public async Task<ActionResult> Create([FromBody] LinkRequest request)
-    {
-        var entity = await service.Create(new(request));
-        if (entity == null)
-        {
-            return MakeBadRequest(service.LastError);
-        }
+    public async Task<ActionResult> Create([FromBody] LinkRequest request) =>
+        await Try(async () => new LinkResponse(await service.Create(new(request))));
 
-        return MakeOk(new LinkResponse(entity));
-    }
+    [HttpGet(nameof(Read))]
+    public async Task<ActionResult> Read([FromBody] LinkRequest request) =>
+        await Try(async () => new LinkResponse(await service.Read(new(request))));
 
-    [HttpPost(nameof(Read))]
-    public async Task<ActionResult> Read([FromBody] LinkRequest request)
-    {
-        var entity = await service.Read(new(request));
-        if (entity == null)
-        {
-            return MakeBadRequest(service.LastError);
-        }
+    [HttpPut(nameof(Update))]
+    public async Task<ActionResult> Update([FromBody] LinkRequest request) =>
+        await Try(async () => new LinkResponse(await service.Update(new(request))) { Updated = true });
 
-        return MakeOk(new LinkResponse(entity));
-    }
-
-    [HttpPost(nameof(Update))]
-    public async Task<ActionResult> Update([FromBody] LinkRequest request)
-    {
-        var entity = await service.Update(new(request));
-        if (entity == null)
-        {
-            return MakeBadRequest(service.LastError);
-        }
-
-        return MakeOk(new LinkResponse(entity) { Updated = true });
-    }
-
-    [HttpPost(nameof(Delete))]
-    public async Task<ActionResult> Delete([FromBody] LinkRequest request)
-    {
-        var entity = await service.Delete(new(request));
-        if (entity == null)
-        {
-            return MakeBadRequest(service.LastError);
-        }
-
-        return MakeOk(new LinkResponse(entity) { Deleted = true });
-    }
+    [HttpDelete(nameof(Delete))]
+    public async Task<ActionResult> Delete([FromBody] LinkRequest request) =>
+        await Try(async () => new LinkResponse(await service.Delete(new(request))) { Deleted = true });
 }
 }

@@ -1,5 +1,7 @@
 ﻿using MessagePack;
 
+using Shared.Requests;
+
 namespace Shared.Models
 {
 [MessagePackObject(true)]
@@ -20,6 +22,11 @@ public partial class CategoryEntity
 
     public CategoryEntity()
     {
+    }
+
+    public CategoryEntity(CategoryRequest request)
+    {
+        Id = request.Id;
     }
 }
 }

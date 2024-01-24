@@ -103,7 +103,7 @@ public class LinkService : BaseService<LinkEntity>
         return false;
     }
 
-    private static async Task<bool> ScanURL(string url)
+    private async Task<bool> ScanURL(string url)
     {
         var virusTotal = new VirusTotal(_virusTotalAPIKey) { UseTLS = true };
 

@@ -30,5 +30,19 @@ public class CategoryService : BaseService<CategoryEntity>
 
         return categoryToApps;
     }
+
+    public override async Task<CategoryEntity> Read(CategoryEntity entity) => await FindByIdOrName(entity.Id,
+                                                                                                   entity.Name);
+
+    private async Task<CategoryEntity> FindByIdOrName(Guid id, string name)
+    {
+        var entity = await _context.Categories.FirstOrDefaultAsync(app => app.Name == name);
+        if (entity != null)
+        {
+            return entity;
+        }
+
+        return await ReadEx(id);
+    }
 }
 }

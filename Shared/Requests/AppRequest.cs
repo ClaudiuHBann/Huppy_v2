@@ -19,6 +19,14 @@ public class AppRequest : BaseRequest
     {
     }
 
+    public AppRequest(AppRequest request)
+    {
+        Id = request.Id;
+        Category = request.Category;
+        Name = request.Name;
+        Image = request.Image;
+    }
+
     public AppRequest(AppEntity entity)
     {
         Id = entity.Id;

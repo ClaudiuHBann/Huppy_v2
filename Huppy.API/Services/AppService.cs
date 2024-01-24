@@ -4,13 +4,18 @@ using Huppy.API.Models;
 
 using Microsoft.EntityFrameworkCore;
 
-using Shared.Exceptions;
 using Shared.Models;
+using Shared.Exceptions;
+
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace Huppy.API.Services
 {
 public class AppService : BaseService<AppEntity>
 {
+    private const int _appIconSize = 256; // 256x256 WEBP
+
     private readonly HuppyContext _context;
 
     public AppService(HuppyContext context) : base(context)
@@ -44,6 +49,19 @@ public class AppService : BaseService<AppEntity>
         {
             throw new DatabaseException(new(HttpStatusCode.BadRequest, $"The app '{entity.Name}' already exists!"));
         }
+    }
+
+    public override async Task<AppEntity> Create(AppEntity entity)
+    {
+        MemoryStream stream = new(entity.Image);
+        Image image = await Image.LoadAsync(stream);
+
+        image.Mutate(config => config.Resize(_appIconSize, _appIconSize));
+        stream.Position = 0; // reset for writing
+        await image.SaveAsWebpAsync(stream);
+
+        entity.Proposed = true;
+        return await CreateEx(entity);
     }
 
     public override async Task<AppEntity> Read(AppEntity entity) => await FindByIdOrName(entity.Id, entity.Name);

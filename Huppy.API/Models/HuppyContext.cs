@@ -10,11 +10,7 @@ public partial class HuppyContext : DbContext
 
     public HuppyContext(IConfiguration config)
     {
-#if DEBUG
         _connectionString = config["ConnectionStringHuppyTest"] ?? "";
-#else
-        _connectionString = config["ConnectionStringHuppy"] ?? "";
-#endif
     }
 
     public HuppyContext(DbContextOptions<HuppyContext> options) : base(options)

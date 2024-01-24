@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddUserSecrets<Program>();
 
-builder.Services.AddDbContext<HuppyContext>();
+builder.Services.AddTransient<HuppyContext>();
 builder.Services.AddTransient<AppService>();
 builder.Services.AddTransient<LinkService>();
 builder.Services.AddTransient<PackageService>();

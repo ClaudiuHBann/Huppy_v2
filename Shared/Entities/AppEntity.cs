@@ -2,6 +2,7 @@
 
 using Shared.Requests;
 using Shared.Responses;
+using Shared.Utilities;
 
 namespace Shared.Models
 {
@@ -28,21 +29,35 @@ public partial class AppEntity
     {
     }
 
-    public AppEntity(AppRequest appRequest)
+    public AppEntity(AppEntity entity)
     {
-        Id = appRequest.Id;
-        Name = appRequest.Name;
-        Image = appRequest.Image;
-        Category = appRequest.Category;
+        Id = entity.Id;
+        Name = entity.Name;
+        Image = entity.Image;
+        Proposed = entity.Proposed;
+        Category = entity.Category;
     }
 
-    public AppEntity(AppResponse appResponse)
+    public AppEntity(AppRequest request)
     {
-        Id = appResponse.Id;
-        Name = appResponse.Name;
-        Image = appResponse.Image;
-        Proposed = appResponse.Proposed;
-        Category = appResponse.Category;
+        Id = request.Id;
+        Name = request.Name;
+        Image = request.Image;
+        Category = request.Category;
+    }
+
+    public AppEntity(AppResponse response)
+    {
+        Id = response.Id;
+        Name = response.Name;
+        Image = response.Image;
+        Proposed = response.Proposed;
+        Category = response.Category;
+    }
+
+    public override string ToString()
+    {
+        return this.ToJSON(true);
     }
 }
 }

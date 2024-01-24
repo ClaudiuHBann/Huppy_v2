@@ -37,10 +37,10 @@ public abstract class BaseController : ControllerBase
     {
         return error.Code switch {
             HttpStatusCode.BadRequest => MakeBadRequest(error.Message),
-            HttpStatusCode.Unauthorized => Unauthorized(error.Message),
-            HttpStatusCode.NotFound => NotFound(error.Message),
+            HttpStatusCode.Unauthorized => Unauthorized(error.ToMsgPack()),
+            HttpStatusCode.NotFound => NotFound(error.ToMsgPack()),
             HttpStatusCode.InternalServerError =>
-                new ObjectResult(error.Message) { StatusCode = StatusCodes.Status500InternalServerError },
+                new ObjectResult(error.ToMsgPack()) { StatusCode = StatusCodes.Status500InternalServerError },
             _ => MakeBadRequest("IDK Brah..."),
         };
     }

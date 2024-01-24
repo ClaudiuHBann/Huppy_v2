@@ -13,7 +13,7 @@ namespace Huppy.API.Services
 public class BaseService<Entity>(HuppyContext context)
     where Entity : class
 {
-    protected virtual async Task CreateValidate(Entity entity) => await Exists(entity);
+    protected virtual async Task CreateValidate(Entity entity) => await Exists(entity, true);
     protected virtual async Task ReadValidate(Entity entity) => await Exists(entity);
     protected virtual async Task UpdateValidate(Entity entity) => await Exists(entity);
     protected virtual async Task DeleteValidate(Entity entity) => await Exists(entity);
@@ -150,11 +150,21 @@ public class BaseService<Entity>(HuppyContext context)
                    : throw new DatabaseException(new(HttpStatusCode.BadRequest, $"Failed to delete {entity}!"));
     }
 
-    private async Task<bool> Exists(Entity entity)
+    private async Task Exists(Entity entity, bool throwIfExists = false)
     {
         var propertyID = entity.GetType().GetProperty("Id");
         var propertyIDValue = propertyID?.GetValue(entity);
-        return await ReadEx(propertyIDValue) != null;
+
+        // we don't use ReadEx because we need a try catch and stuff will stink
+        var exists = await context.FindAsync(typeof(Entity), propertyIDValue) != null;
+        if (exists && throwIfExists)
+        {
+            throw new DatabaseException(new(HttpStatusCode.NotFound, $"The {typeof(Entity)} already exists!"));
+        }
+        else if (!exists && !throwIfExists)
+        {
+            throw new DatabaseException(new(HttpStatusCode.NotFound, $"The {typeof(Entity)} could not be found!"));
+        }
     }
 }
 }

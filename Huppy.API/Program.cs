@@ -3,6 +3,8 @@ using Huppy.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddUserSecrets<Program>();
+
 builder.Services.AddDbContext<HuppyContext>();
 builder.Services.AddTransient<AppService>();
 builder.Services.AddTransient<LinkService>();

@@ -4,13 +4,17 @@ using Shared.Models;
 
 namespace Huppy.API.Models
 {
-// clang-format off
-// Scaffold-DbContext 'User ID=huppy;Password=sarmale1;Host=162.55.32.18;Port=5432;Database=Huppy' Npgsql.EntityFrameworkCore.PostgreSQL -Tables _ -ExcludeTable _ -OutputDir Models
-// clang-format on
 public partial class HuppyContext : DbContext
 {
-    public HuppyContext()
+    private readonly string _connectionString = "";
+
+    public HuppyContext(IConfiguration config)
     {
+#if DEBUG
+        _connectionString = config["ConnectionStringHuppyTest"] ?? "";
+#else
+        _connectionString = config["ConnectionStringHuppy"] ?? "";
+#endif
     }
 
     public HuppyContext(DbContextOptions<HuppyContext> options) : base(options)
@@ -22,9 +26,8 @@ public partial class HuppyContext : DbContext
     public virtual DbSet<LinkEntity> Links { get; set; }
     public virtual DbSet<PackageEntity> Packages { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("User ID=huppy;Password=sarmale1;Host=162.55.32.18;Port=5432;Database=Huppy");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
+        optionsBuilder.UseNpgsql(_connectionString);
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

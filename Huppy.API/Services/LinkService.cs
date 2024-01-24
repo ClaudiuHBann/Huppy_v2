@@ -14,13 +14,14 @@ namespace Huppy.API.Services
 {
 public class LinkService : BaseService<LinkEntity>
 {
-    private const string _virusTotalAPIKey = "9b4a57c29539ad065b0ef6577ce9113ba89674b69e12e79b0336df087731fda4";
+    private readonly string _virusTotalAPIKey = "";
 
     private readonly HuppyContext _context;
 
-    public LinkService(HuppyContext context) : base(context)
+    public LinkService(HuppyContext context, IConfiguration config) : base(context)
     {
         _context = context;
+        _virusTotalAPIKey = config["APIKeyVirusTotal"] ?? "";
     }
 
     protected override async Task CreateValidate(LinkEntity entity)
